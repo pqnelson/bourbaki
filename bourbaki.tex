@@ -1,0 +1,1676 @@
+% -*- mode: LaTeX -*-
+\documentclass{amsart}
+%% ODER: format ==         = "\mathrel{==}"
+%% ODER: format /=         = "\neq "
+%
+%
+\makeatletter
+\@ifundefined{lhs2tex.lhs2tex.sty.read}%
+  {\@namedef{lhs2tex.lhs2tex.sty.read}{}%
+   \newcommand\SkipToFmtEnd{}%
+   \newcommand\EndFmtInput{}%
+   \long\def\SkipToFmtEnd#1\EndFmtInput{}%
+  }\SkipToFmtEnd
+
+\newcommand\ReadOnlyOnce[1]{\@ifundefined{#1}{\@namedef{#1}{}}\SkipToFmtEnd}
+\usepackage{amstext}
+\usepackage{amssymb}
+\usepackage{stmaryrd}
+\DeclareFontFamily{OT1}{cmtex}{}
+\DeclareFontShape{OT1}{cmtex}{m}{n}
+  {<5><6><7><8>cmtex8
+   <9>cmtex9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmtex10}{}
+\DeclareFontShape{OT1}{cmtex}{m}{it}
+  {<-> ssub * cmtt/m/it}{}
+\newcommand{\texfamily}{\fontfamily{cmtex}\selectfont}
+\DeclareFontShape{OT1}{cmtt}{bx}{n}
+  {<5><6><7><8>cmtt8
+   <9>cmbtt9
+   <10><10.95><12><14.4><17.28><20.74><24.88>cmbtt10}{}
+\DeclareFontShape{OT1}{cmtex}{bx}{n}
+  {<-> ssub * cmtt/bx/n}{}
+\newcommand{\tex}[1]{\text{\texfamily#1}}	% NEU
+
+\newcommand{\Sp}{\hskip.33334em\relax}
+
+
+\newcommand{\Conid}[1]{\mathit{#1}}
+\newcommand{\Varid}[1]{\mathit{#1}}
+\newcommand{\anonymous}{\kern0.06em \vbox{\hrule\@width.5em}}
+\newcommand{\plus}{\mathbin{+\!\!\!+}}
+\newcommand{\bind}{\mathbin{>\!\!\!>\mkern-6.7mu=}}
+\newcommand{\rbind}{\mathbin{=\mkern-6.7mu<\!\!\!<}}% suggested by Neil Mitchell
+\newcommand{\sequ}{\mathbin{>\!\!\!>}}
+\renewcommand{\leq}{\leqslant}
+\renewcommand{\geq}{\geqslant}
+\usepackage{polytable}
+
+%mathindent has to be defined
+\@ifundefined{mathindent}%
+  {\newdimen\mathindent\mathindent\leftmargini}%
+  {}%
+
+\def\resethooks{%
+  \global\let\SaveRestoreHook\empty
+  \global\let\ColumnHook\empty}
+\newcommand*{\savecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\savecolumns[#1]}}
+\newcommand*{\restorecolumns}[1][default]%
+  {\g@addto@macro\SaveRestoreHook{\restorecolumns[#1]}}
+\newcommand*{\aligncolumn}[2]%
+  {\g@addto@macro\ColumnHook{\column{#1}{#2}}}
+
+\resethooks
+
+\newcommand{\onelinecommentchars}{\quad-{}- }
+\newcommand{\commentbeginchars}{\enskip\{-}
+\newcommand{\commentendchars}{-\}\enskip}
+
+\newcommand{\visiblecomments}{%
+  \let\onelinecomment=\onelinecommentchars
+  \let\commentbegin=\commentbeginchars
+  \let\commentend=\commentendchars}
+
+\newcommand{\invisiblecomments}{%
+  \let\onelinecomment=\empty
+  \let\commentbegin=\empty
+  \let\commentend=\empty}
+
+\visiblecomments
+
+\newlength{\blanklineskip}
+\setlength{\blanklineskip}{0.66084ex}
+
+\newcommand{\hsindent}[1]{\quad}% default is fixed indentation
+\let\hspre\empty
+\let\hspost\empty
+\newcommand{\NB}{\textbf{NB}}
+\newcommand{\Todo}[1]{$\langle$\textbf{To do:}~#1$\rangle$}
+
+\EndFmtInput
+\makeatother
+%
+%
+%
+%
+%
+%
+% This package provides two environments suitable to take the place
+% of hscode, called "plainhscode" and "arrayhscode". 
+%
+% The plain environment surrounds each code block by vertical space,
+% and it uses \abovedisplayskip and \belowdisplayskip to get spacing
+% similar to formulas. Note that if these dimensions are changed,
+% the spacing around displayed math formulas changes as well.
+% All code is indented using \leftskip.
+%
+% Changed 19.08.2004 to reflect changes in colorcode. Should work with
+% CodeGroup.sty.
+%
+\ReadOnlyOnce{polycode.fmt}%
+\makeatletter
+
+\newcommand{\hsnewpar}[1]%
+  {{\parskip=0pt\parindent=0pt\par\vskip #1\noindent}}
+
+% can be used, for instance, to redefine the code size, by setting the
+% command to \small or something alike
+\newcommand{\hscodestyle}{}
+
+% The command \sethscode can be used to switch the code formatting
+% behaviour by mapping the hscode environment in the subst directive
+% to a new LaTeX environment.
+
+\newcommand{\sethscode}[1]%
+  {\expandafter\let\expandafter\hscode\csname #1\endcsname
+   \expandafter\let\expandafter\endhscode\csname end#1\endcsname}
+
+% "compatibility" mode restores the non-polycode.fmt layout.
+
+\newenvironment{compathscode}%
+  {\par\noindent
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed\)%
+   \par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\compaths}{\sethscode{compathscode}}
+
+% "plain" mode is the proposed default.
+% It should now work with \centering.
+% This required some changes. The old version
+% is still available for reference as oldplainhscode.
+
+\newenvironment{plainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\hspre\(\let\hspost\)%
+   \pboxed}%
+  {\endpboxed%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newenvironment{oldplainhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+% Here, we make plainhscode the default environment.
+
+\newcommand{\plainhs}{\sethscode{plainhscode}}
+\newcommand{\oldplainhs}{\sethscode{oldplainhscode}}
+\plainhs
+
+% The arrayhscode is like plain, but makes use of polytable's
+% parray environment which disallows page breaks in code blocks.
+
+\newenvironment{arrayhscode}%
+  {\hsnewpar\abovedisplayskip
+   \advance\leftskip\mathindent
+   \hscodestyle
+   \let\\=\@normalcr
+   \(\parray}%
+  {\endparray\)%
+   \hsnewpar\belowdisplayskip
+   \ignorespacesafterend}
+
+\newcommand{\arrayhs}{\sethscode{arrayhscode}}
+
+% The mathhscode environment also makes use of polytable's parray 
+% environment. It is supposed to be used only inside math mode 
+% (I used it to typeset the type rules in my thesis).
+
+\newenvironment{mathhscode}%
+  {\parray}{\endparray}
+
+\newcommand{\mathhs}{\sethscode{mathhscode}}
+
+% texths is similar to mathhs, but works in text mode.
+
+\newenvironment{texthscode}%
+  {\(\parray}{\endparray\)}
+
+\newcommand{\texths}{\sethscode{texthscode}}
+
+% The framed environment places code in a framed box.
+
+\def\codeframewidth{\arrayrulewidth}
+\RequirePackage{calc}
+
+\newenvironment{framedhscode}%
+  {\parskip=\abovedisplayskip\par\noindent
+   \hscodestyle
+   \arrayrulewidth=\codeframewidth
+   \tabular{@{}|p{\linewidth-2\arraycolsep-2\arrayrulewidth-2pt}|@{}}%
+   \hline\framedhslinecorrect\\{-1.5ex}%
+   \let\endoflinesave=\\
+   \let\\=\@normalcr
+   \(\pboxed}%
+  {\endpboxed\)%
+   \framedhslinecorrect\endoflinesave{.5ex}\hline
+   \endtabular
+   \parskip=\belowdisplayskip\par\noindent
+   \ignorespacesafterend}
+
+\newcommand{\framedhslinecorrect}[2]%
+  {#1[#2]}
+
+\newcommand{\framedhs}{\sethscode{framedhscode}}
+
+% The inlinehscode environment is an experimental environment
+% that can be used to typeset displayed code inline.
+
+\newenvironment{inlinehscode}%
+  {\(\def\column##1##2{}%
+   \let\>\undefined\let\<\undefined\let\\\undefined
+   \newcommand\>[1][]{}\newcommand\<[1][]{}\newcommand\\[1][]{}%
+   \def\fromto##1##2##3{##3}%
+   \def\nextline{}}{\) }%
+
+\newcommand{\inlinehs}{\sethscode{inlinehscode}}
+
+% The joincode environment is a separate environment that
+% can be used to surround and thereby connect multiple code
+% blocks.
+
+\newenvironment{joincode}%
+  {\let\orighscode=\hscode
+   \let\origendhscode=\endhscode
+   \def\endhscode{\def\hscode{\endgroup\def\@currenvir{hscode}\\}\begingroup}
+   %\let\SaveRestoreHook=\empty
+   %\let\ColumnHook=\empty
+   %\let\resethooks=\empty
+   \orighscode\def\hscode{\endgroup\def\@currenvir{hscode}}}%
+  {\origendhscode
+   \global\let\hscode=\orighscode
+   \global\let\endhscode=\origendhscode}%
+
+\makeatother
+\EndFmtInput
+%
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{graphicx}
+\def\abs#1{\lvert#1\rvert}
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\Eq}{Eq}
+\def\pair{\mathrel{\rotatebox[origin=c]{180}{\textsf{C}}}}
+\title{Bourbaki's Formal System in Haskell}
+\author{Alex Nelson}
+\date{January 7, 2024}
+\begin{document}
+\maketitle
+
+\section{Formal Language of Bourbaki}
+
+Bourbaki's formal system is rather difficult to understand, since it's
+jettisoned almost immediately after construction, and uses many
+idiosyncratic terms. My reference will be the English translation
+published by Springer, the softcover reprint.\footnote{Apparently this
+is the English translation dated 1968 of the French 1970 edition. How
+this time-traveling is possible, well, that's beyond my understanding.}
+The basic ``Rosetta stone'' of terminology appears to be:
+\begin{center}
+\begin{tabular}{rcl}
+Bourbaki & $\approx$ & Modern Terminology\\\hline
+Sign     & $\approx$ & Letter (of a fixed ambient alphabet)\\
+Assembly & $\approx$ & String (over the ambient alphabet)\\
+Letter   & $\approx$ & Variable\\
+Specific Sign & $\approx$ & Primitive notion (of a theory)\\
+Relation & $\approx$ & Logical formula\\
+\end{tabular}
+\end{center}
+Some terms have no modern translation, like ``logical sign'' appears to
+refer to ``primitive notions in their underlying logic''.
+
+We will hide \ensuremath{\Varid{and}} from Prelude, since it is more natural to introduce a
+function which is Bourbaki's conjunction operator.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{import}\;\Conid{\Conid{Data}.Set}{}\<[E]%
+\\
+\>[B]{}\mathbf{import}\;\Conid{Prelude}\;\Varid{hiding}\;(\Varid{and}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Bourbaki's ``letter'' is what we would call a ``variable''. I'm going to
+encode it as an arbitrary string.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{type}\;\Conid{Letter}\mathrel{=}\Conid{String}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Bourbaki's ``term'' resembles what we think of terms (namely, they're
+``mathematical objects'' as opposed to propositions). However, Bourbaki
+uses Hilbert's $\varepsilon$-calculus, which has fallen into relative
+obscurity. Complicating matters, Bourbaki uses a convoluted system of
+``linkages'' to avoid distinguishing \emph{bound variables} from
+\emph{free variables}.
+
+The basic idea of Hilbert's $\varepsilon$-calculus can be understood
+piecemeal. First, we think of a predicate in first-order logic as being
+a term of type
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{type}\;\Conid{Predicate}\mathrel{=}\Conid{Term}\to \Conid{Formula}\mbox{\commentbegin  intuition, not actual code  \commentend}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Then we can understand a ``choice operator'' as taking a predicate;
+if there is an object which satisfies that predicate, then the choice
+operator returns it. If there is no object which satisfies the
+predicate, then an arbitrary-but-fixed object is returned. Hilbert uses
+$\varepsilon_{x}P[x]$ as the notation for this term. Bourbaki sometimes uses
+$\tau_{x}P[x]$ and other times replaces all instances of $x$ by a box
+$\Box$, then draws ``linkages'' (i.e., lines) from those boxes to the $\tau$.
+This is rather difficult to typeset. Instead, we will use de Bruijn
+levels\footnote{The difference between a de Bruijn level and index
+depends on where you start counting.}, and call the bound de Bruijn
+level a \ensuremath{\Conid{TBox}} keeping track of the depth and the variable it replaced.
+
+Bourbaki also introduces the notation for substituting a term $T$ for a
+variable $x$ in an expression $S$ by $(T\mid x)S$. We will add this to the
+abstract syntax tree encoding for a term. Later, we will create a
+typeclass for syntactic classes in Bourbaki's system which support
+substitutions, in order to \emph{actual perform a substiution}.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{data}\;\Conid{Term}\mathrel{=}\Conid{TTau}\;\Conid{Integer}\;\Conid{Letter}\;\Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\hsindent{11}{}\<[11]%
+\>[11]{}\mid \Conid{TBox}\;\Conid{Integer}\;\Conid{Letter}{}\<[E]%
+\\
+\>[B]{}\hsindent{11}{}\<[11]%
+\>[11]{}\mid \Conid{TVar}\;\Conid{Letter}{}\<[E]%
+\\
+\>[B]{}\hsindent{11}{}\<[11]%
+\>[11]{}\mid \Conid{TSubst}\;\Conid{Term}\;\Conid{Letter}\;\Conid{Term}{}\<[E]%
+\\
+\>[B]{}\hsindent{11}{}\<[11]%
+\>[11]{}\mid \Conid{TPair}\;\Conid{Term}\;\Conid{Term}{}\<[E]%
+\\
+\>[B]{}\hsindent{11}{}\<[11]%
+\>[11]{}\mathbf{deriving}\;(\Conid{Show},\Conid{Eq}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+The notion of a ``formula'' in Bourbaki is called a ``relation'', which
+is perhaps an unfortunate choice of words.
+
+Bourbaki works with an adequate set of connectives, namely disjunction
+$A\lor B$ and negation $\neg A$. 
+The other connectives are just abbreviations for expression
+\begin{subequations}
+\begin{equation}
+A\implies B \quad:=\quad (\neg A)\lor B
+\end{equation}
+\begin{equation}
+A\land B\quad :=\quad \neg((\neg A)\lor(\neg B))
+\end{equation}
+\begin{equation}
+A\iff B\quad :=\quad (A\implies B)\land(B\implies A).
+\end{equation}
+\end{subequations}
+We introduce helper functions to improve the readability of encodings.
+
+We can substitute a term for a variable in a relation, which Bourbaki
+denotes by $(T\mid x)A$ where $T$ is a term and $A$ is a relation. Like
+we did for terms, we are forming an abstract syntax tree for relations,
+and we have a node encoding this.
+
+The only primitives in Bourbaki's system of set theory are equality of
+terms $t_{1}=t_{2}$ and set membershing $t_{1}\in t_{2}$.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{data}\;\Conid{Relation}\mathrel{=}\Conid{ROr}\;\Conid{Relation}\;\Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\hsindent{15}{}\<[15]%
+\>[15]{}\mid \Conid{RNot}\;\Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\hsindent{15}{}\<[15]%
+\>[15]{}\mid \Conid{RSubst}\;\Conid{Term}\;\Conid{Letter}\;\Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\hsindent{15}{}\<[15]%
+\>[15]{}\mid \Conid{REq}\;\Conid{Term}\;\Conid{Term}{}\<[E]%
+\\
+\>[B]{}\hsindent{15}{}\<[15]%
+\>[15]{}\mid \Conid{RIn}\;\Conid{Term}\;\Conid{Term}{}\<[E]%
+\\
+\>[B]{}\hsindent{15}{}\<[15]%
+\>[15]{}\mathbf{deriving}\;(\Conid{Show},\Conid{Eq}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{and}{}\<[16]%
+\>[16]{}\mathbin{::}\Conid{Relation}\to \Conid{Relation}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{and}\;{}\<[10]%
+\>[10]{}\Varid{a}\;{}\<[13]%
+\>[13]{}\Varid{b}{}\<[16]%
+\>[16]{}\mathrel{=}\Conid{RNot}\;(\Conid{ROr}\;(\Conid{RNot}\;\Varid{a})\;(\Conid{RNot}\;\Varid{b})){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{implies}{}\<[16]%
+\>[16]{}\mathbin{::}\Conid{Relation}\to \Conid{Relation}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{implies}\;{}\<[10]%
+\>[10]{}\Varid{a}\;{}\<[13]%
+\>[13]{}\Varid{b}{}\<[16]%
+\>[16]{}\mathrel{=}\Conid{ROr}\;(\Conid{RNot}\;\Varid{a})\;\Varid{b}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{iff}{}\<[16]%
+\>[16]{}\mathbin{::}\Conid{Relation}\to \Conid{Relation}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{iff}\;{}\<[10]%
+\>[10]{}\Varid{a}\;{}\<[13]%
+\>[13]{}\Varid{b}{}\<[16]%
+\>[16]{}\mathrel{=}{}\<[19]%
+\>[19]{}\Varid{and}\;(\Varid{implies}\;\Varid{a}\;\Varid{b})\;(\Varid{implies}\;\Varid{b}\;\Varid{a}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\subsection{Substitutions}
+
+Now we can introduce a type class which abstracts the notion of
+\emph{performing substitutions}. This is justified by formative criteria
+CF8 from I\S1.4 which states that the assembly $(T\mid x)A$ is a term
+when $A$ is a term, and it's a relation when $A$ is a relation.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{class}\;\Conid{Subst}\;\Varid{a}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{subst}\mathbin{::}\Conid{Letter}\to \Conid{Term}\to \Varid{a}\to \Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+When we work with terms, we can consider the following cases:
+\begin{enumerate}
+\item $\displaystyle{(T\mid x)y=\begin{cases}T &\mbox{if }x=y\\y &\mbox{otherwise}\end{cases}}$
+\item $(T\mid x)\tau_{x}A=\tau_{x}A$ since $x$ no longer appears in $\tau_{x}A$
+\item $(T\mid x)\tau_{y}A=\tau_{y}((T\mid x)A)$ if $y\neq x$ (and we use
+  the notion of substitution in a relation)
+\item $(T\mid x)\Box = \Box$ since $\Box$ is ``just'' a constant term expression
+\end{enumerate}
+As far as $(T\mid x)\bigl((T'\mid y)T''\bigr)$ for terms $T'$, $T''$ and
+variable $y$, this requires a bit of care. If $x=y$, then nothing is
+done. On the other hand, if $x\neq y$, criteria CS2 (I\S1.2) tells us
+how to ``commute'' substitutions:
+\begin{equation}
+(B\mid x)(C\mid y)A=((B\mid x)C\mid y)(B\mid x)A.
+\end{equation}
+This gives us enough information to define substitution for terms:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{5}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{8}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{8E}{@{}l@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{15E}{@{}l@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{21}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{21E}{@{}l@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Subst}\;\Conid{Term}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{t'}\mathrel{=}\mathbf{case}\;\Varid{t'}\;\mathbf{of}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}(\Conid{TVar}\;\Varid{x}){}\<[15]%
+\>[15]{}\to {}\<[15E]%
+\>[19]{}\mathbf{if}\;\Varid{x}\equiv \Varid{y}{}\<[E]%
+\\
+\>[19]{}\mathbf{then}\;\Varid{t}{}\<[E]%
+\\
+\>[19]{}\mathbf{else}\;\Varid{t'}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}(\Conid{TSubst}\;\Varid{b}\;\Varid{x}\;\Varid{a}){}\<[21]%
+\>[21]{}\to {}\<[21E]%
+\>[25]{}\mathbf{if}\;\Varid{x}\equiv \Varid{y}{}\<[E]%
+\\
+\>[25]{}\mathbf{then}\;(\Conid{TSubst}\;\Varid{b}\;\Varid{x}\;\Varid{a}){}\<[E]%
+\\
+\>[25]{}\mathbf{else}\;(\Conid{TSubst}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{b})\;\Varid{x}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{a})){}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}\anonymous {}\<[8]%
+\>[8]{}\to {}\<[8E]%
+\>[12]{}\Varid{t'}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+When we work with relations, criteria of substitution CS5 from I\S1.2
+gives us the explicit definition for almost all relations:
+\begin{enumerate}
+\item $(T\mid x)(A\lor B)=((T\mid x)A)\lor((T\mid x)B)$
+\item $(T\mid x)(\neg A)=\neg((T\mid x)A)$
+\item $(T\mid x)(t_{1}=t_{2})\quad=\quad((T\mid x)t_{1})=((T\mid x)t_{2})$
+\item $(T\mid x)(t_{1}\in t_{2})=((T\mid x)t_{1})\in((T\mid x)t_{2})$
+\end{enumerate}
+Bourbaki also includes in CS5 instructions for the derived connectives
+$(T\mid x)(A\implies B)$, $(T\mid x)(A\land B)$, $(T\mid x)(A\iff B)$,
+but these are not needed.
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{24E}{@{}l@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{29}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{29E}{@{}l@{}}%
+\column{32}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Subst}\;\Conid{Relation}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{subst}\;\Varid{y}\;\Varid{t}\;(\Conid{ROr}\;\Varid{a}\;\Varid{b}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{ROr}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{a})\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{subst}\;\Varid{y}\;\Varid{t}\;(\Conid{RNot}\;\Varid{a}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{RNot}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{a}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{subst}\;\Varid{y}\;\Varid{t}\;(\Conid{RSubst}\;\Varid{b}\;\Varid{x}\;\Varid{r}){}\<[29]%
+\>[29]{}\mathrel{=}{}\<[29E]%
+\>[32]{}\mathbf{if}\;\Varid{y}\equiv \Varid{x}\;\mathbf{then}\;(\Conid{RSubst}\;\Varid{b}\;\Varid{x}\;\Varid{r}){}\<[E]%
+\\
+\>[32]{}\mathbf{else}\;\Conid{RSubst}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{b})\;\Varid{x}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{r}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{subst}\;\Varid{y}\;\Varid{t}\;(\Conid{REq}\;\Varid{a}\;\Varid{b}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{REq}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{a})\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{subst}\;\Varid{y}\;\Varid{t}\;(\Conid{RIn}\;\Varid{a}\;\Varid{b}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{RIn}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{a})\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Simplification}
+As far as actually \emph{simplifying} expressions, we have this
+operation abstracted away in its own typeclass.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{class}\;\Conid{Simplifier}\;\Varid{a}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\mathbin{::}\Varid{a}\to \Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+There are a few sources of simplification of formulas: performing
+substitutions, replacing $A\lor\neg A$ with a simpler tautology, and
+eliminating double negatives.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{19E}{@{}l@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{25E}{@{}l@{}}%
+\column{26}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{28}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{31}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{31E}{@{}l@{}}%
+\column{34}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Simplifier}\;\Conid{Relation}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{ROr}\;\Varid{a}\;\Varid{b}){}\<[19]%
+\>[19]{}\mathrel{=}{}\<[19E]%
+\>[22]{}\mathbf{let}\;{}\<[27]%
+\>[27]{}\Varid{a'}{}\<[31]%
+\>[31]{}\mathrel{=}{}\<[31E]%
+\>[34]{}\Varid{simp}\;\Varid{a}{}\<[E]%
+\\
+\>[27]{}\Varid{b'}{}\<[31]%
+\>[31]{}\mathrel{=}{}\<[31E]%
+\>[34]{}\Varid{simp}\;\Varid{b}{}\<[E]%
+\\
+\>[22]{}\mathbf{in}\;{}\<[26]%
+\>[26]{}\mathbf{if}\;(\Varid{simp}\;(\Conid{RNot}\;\Varid{a'}))\equiv \Varid{b'}{}\<[E]%
+\\
+\>[26]{}\mathbf{then}\;(\Conid{REq}\;(\Conid{TVar}\;\text{\ttfamily \char34 \char95 \char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 \char95 \char34})){}\<[E]%
+\\
+\>[26]{}\mathbf{else}\;\Conid{ROr}\;\Varid{a'}\;\Varid{b'}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{RNot}\;(\Conid{RNot}\;\Varid{a})){}\<[25]%
+\>[25]{}\mathrel{=}{}\<[25E]%
+\>[28]{}\Varid{simp}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{RNot}\;\Varid{a}){}\<[19]%
+\>[19]{}\mathrel{=}{}\<[19E]%
+\>[22]{}\Conid{RNot}\;(\Varid{simp}\;\Varid{a}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{RSubst}\;\Varid{t}\;\Varid{x}\;\Varid{r}){}\<[25]%
+\>[25]{}\mathrel{=}{}\<[25E]%
+\>[28]{}\Varid{subst}\;\Varid{x}\;\Varid{t}\;\Varid{r}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{REq}\;\Varid{a}\;\Varid{b}){}\<[19]%
+\>[19]{}\mathrel{=}{}\<[19E]%
+\>[22]{}\Conid{REq}\;(\Varid{simp}\;\Varid{a})\;(\Varid{simp}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{RIn}\;\Varid{a}\;\Varid{b}){}\<[19]%
+\>[19]{}\mathrel{=}{}\<[19E]%
+\>[22]{}\Conid{RIn}\;(\Varid{simp}\;\Varid{a})\;(\Varid{simp}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+Simplifying terms boils down to performing substitutions. Variables and
+bound variables (\ensuremath{\Conid{TBox}}) are in simplest form.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{24E}{@{}l@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Simplifier}\;\Conid{Term}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{TTau}\;\Varid{m}\;\Varid{x}\;\Varid{r}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{TTau}\;\Varid{m}\;\Varid{x}\;(\Varid{simp}\;\Varid{r}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{TBox}\;\Varid{m}\;\Varid{x}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{TBox}\;\Varid{m}\;\Varid{x}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{TVar}\;\Varid{x}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{TVar}\;\Varid{x}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{TSubst}\;\Varid{t}\;\Varid{x}\;\Varid{b}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Varid{subst}\;\Varid{x}\;\Varid{t}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{simp}\;(\Conid{TPair}\;\Varid{a}\;\Varid{b}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{TPair}\;(\Varid{simp}\;\Varid{a})\;(\Varid{simp}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\section{Epsilon Calculus Implementation}
+
+\subsection{De Bruijn levels}
+We don't actually need to keep track of which object a $\tau_{x}A$
+refers to. We encode the $\Box$ using de Bruijn levels. As a consistency
+check, we keep track of the depth of the $\tau$ (which will match the de
+Bruijn level).
+
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{class}\;\Conid{Shift}\;\Varid{a}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\mathbin{::}\Varid{a}\to \Varid{a}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+For terms, this amounts to adding 1 to the level of $\tau$ and $\Box$
+instances. For substitutions, this requires shifting in both the body
+and the term being substituted in.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{24E}{@{}l@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Shift}\;\Conid{Term}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\;(\Conid{TTau}\;\Varid{m}\;\Varid{x}\;\Varid{r}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{TTau}\;(\Varid{m}\mathbin{+}\mathrm{1})\;\Varid{x}\;\Varid{r}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\;(\Conid{TBox}\;\Varid{m}\;\Varid{x}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{TBox}\;(\Varid{m}\mathbin{+}\mathrm{1})\;\Varid{x}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\;(\Conid{TVar}\;\Varid{x}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{TVar}\;\Varid{x}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\;(\Conid{TSubst}\;\Varid{b}\;\Varid{x}\;\Varid{a})\mathrel{=}{}\<[27]%
+\>[27]{}\Conid{TSubst}\;(\Varid{shift}\;\Varid{b})\;\Varid{x}\;(\Varid{shift}\;\Varid{a}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\;(\Conid{TPair}\;\Varid{a}\;\Varid{b}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Conid{TPair}\;(\Varid{shift}\;\Varid{a})\;(\Varid{shift}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+For relations, this ``descends'' the syntax tree to terms, which are
+then shifted.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Shift}\;\Conid{Relation}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\;(\Conid{ROr}\;\Varid{a}\;\Varid{b})\mathrel{=}\Conid{ROr}\;(\Varid{shift}\;\Varid{a})\;(\Varid{shift}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\;(\Conid{RNot}\;\Varid{a})\mathrel{=}\Conid{RNot}\;(\Varid{shift}\;\Varid{a}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\;(\Conid{RSubst}\;\Varid{a}\;\Varid{x}\;\Varid{r})\mathrel{=}\Conid{RSubst}\;(\Varid{shift}\;\Varid{a})\;\Varid{x}\;(\Varid{shift}\;\Varid{r}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\;(\Conid{REq}\;\Varid{a}\;\Varid{b})\mathrel{=}\Conid{REq}\;(\Varid{shift}\;\Varid{a})\;(\Varid{shift}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{shift}\;(\Conid{RIn}\;\Varid{a}\;\Varid{b})\mathrel{=}\Conid{RIn}\;(\Varid{shift}\;\Varid{a})\;(\Varid{shift}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Tau operator}
+The $\tau_{x}R$ can be formed using this helper function \ensuremath{\Varid{tau}\;\Varid{x}\;\Conid{R}},
+which will handle the substitution of $\Box$ for $x$ in $R$ (along with
+all necessary shifting).
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{10}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{10E}{@{}l@{}}%
+\column{14}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{tau}{}\<[10]%
+\>[10]{}\mathbin{::}{}\<[10E]%
+\>[14]{}\Conid{Letter}\to \Conid{Relation}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{tau}\;\Varid{x}\;\Varid{r}{}\<[10]%
+\>[10]{}\mathrel{=}{}\<[10E]%
+\>[14]{}\Conid{TTau}\;\mathrm{0}\;\Varid{x}\mathbin{\$}\Varid{subst}\;\Varid{x}\;(\Conid{TBox}\;\mathrm{0}\;\Varid{x})\;(\Varid{shift}\;\Varid{r}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Logical quantifiers}
+We can introduce logical quantifiers (with some simplification handled
+automatically) since Bourbaki follows Hilbert and defines
+\begin{equation}
+\exists x.A[x]\quad:=\quad A[\tau_{x}A[x]]
+\end{equation}
+and by de Morgan's law,\footnote{If we let $B[x]=\neg A[x]$, and using
+de Morgan's law $\neg(\exists x\neg A[x])\iff\forall x.A[x]$,
+then $\neg(\exists x\neg A[x])\iff\neg(\exists x.B[x])\iff\neg B[\tau_{x}B[x]]\iff \neg\neg A[\tau_{x}B[x]]$.
+Double negation simplifies this to $\forall x.A[x]\iff A[\tau_{x}\neg A[x]]$.}
+\begin{equation}
+\forall x.A[x]\quad:=\quad A[\tau_{x}\neg A[x]].
+\end{equation}
+But since I'm more skeptical of accidentally writing some kind of bug,
+I'm just going to use $\neg(\exists x.\neg A[x])$ as the definition for
+the universal quantifier.
+This gives us the code:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{9}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{15E}{@{}l@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{exists}{}\<[15]%
+\>[15]{}\mathbin{::}{}\<[15E]%
+\>[19]{}\Conid{Letter}\to \Conid{Relation}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{exists}\;{}\<[9]%
+\>[9]{}\Varid{x}\;{}\<[12]%
+\>[12]{}\Varid{r}{}\<[15]%
+\>[15]{}\mathrel{=}{}\<[15E]%
+\>[19]{}\Varid{simp}\mathbin{\$}\Varid{subst}\;(\Varid{tau}\;\Varid{x}\;\Varid{r})\;\Varid{x}\;\Varid{r}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{forall}{}\<[15]%
+\>[15]{}\mathbin{::}{}\<[15E]%
+\>[19]{}\Conid{Letter}\to \Conid{Relation}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{forall}\;{}\<[9]%
+\>[9]{}\Varid{x}\;{}\<[12]%
+\>[12]{}\Varid{r}{}\<[15]%
+\>[15]{}\mathrel{=}{}\<[15E]%
+\>[19]{}\Varid{simp}\mathbin{\$}\Conid{RNot}\;(\Varid{exists}\;\Varid{x}\;(\Conid{RNot}\;\Varid{r})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+
+\section{Fresh Variables for Assemblies}
+
+\subsection{Set of all variables}
+We need to form the set of all variables (including, for the sake of
+caution, the variables which were captured by $\tau$ expressions). 
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{class}\;\Conid{Vars}\;\Varid{a}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\mathbin{::}\Varid{a}\to \Conid{Set}\;\Conid{Letter}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+For terms, this operation just descends to $\Box$ and letters, removing
+any variables which are substituted out. Since we use \ensuremath{\Varid{tau}} to perform
+the choice operation, substitutions should have already occurred.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{24E}{@{}l@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Vars}\;\Conid{Term}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\;(\Conid{TTau}\;\anonymous \;\Varid{x}\;\Varid{r}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Varid{\Conid{Data}.\Conid{Set}.union}\;(\Varid{\Conid{Data}.\Conid{Set}.singleton}\;\Varid{x})\;(\Varid{vars}\;\Varid{r}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\;(\Conid{TBox}\;\anonymous \;\Varid{x}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}(\Varid{\Conid{Data}.\Conid{Set}.singleton}\;\Varid{x}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\;(\Conid{TVar}\;\Varid{x}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Varid{\Conid{Data}.\Conid{Set}.singleton}\;\Varid{x}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\;(\Conid{TSubst}\;\Varid{b}\;\Varid{x}\;\Varid{a}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Varid{\Conid{Data}.\Conid{Set}.delete}\;\Varid{x}\;(\Varid{\Conid{Data}.\Conid{Set}.union}\;(\Varid{vars}\;\Varid{a})\;(\Varid{vars}\;\Varid{b})){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\;(\Conid{TPair}\;\Varid{a}\;\Varid{b}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Varid{\Conid{Data}.\Conid{Set}.union}\;(\Varid{vars}\;\Varid{a})\;(\Varid{vars}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+For relations, this just descends down to terms, and form the unions of
+the subtrees. As for terms, upon the substitution nodes we simply remove
+the variable being replaced by terms. (And, as for terms, this shouldn't
+really occur since simplification will perform the replacement.)
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{24E}{@{}l@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Vars}\;\Conid{Relation}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\;(\Conid{ROr}\;\Varid{a}\;\Varid{b}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Varid{\Conid{Data}.\Conid{Set}.union}\;(\Varid{vars}\;\Varid{a})\;(\Varid{vars}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\;(\Conid{RNot}\;\Varid{a}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Varid{vars}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\;(\Conid{RSubst}\;\Varid{a}\;\Varid{x}\;\Varid{r}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Varid{\Conid{Data}.\Conid{Set}.delete}\;\Varid{x}\;(\Varid{\Conid{Data}.\Conid{Set}.union}\;(\Varid{vars}\;\Varid{a})\;(\Varid{vars}\;\Varid{r})){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\;(\Conid{REq}\;\Varid{a}\;\Varid{b}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Varid{\Conid{Data}.\Conid{Set}.union}\;(\Varid{vars}\;\Varid{a})\;(\Varid{vars}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{vars}\;(\Conid{RIn}\;\Varid{a}\;\Varid{b}){}\<[24]%
+\>[24]{}\mathrel{=}{}\<[24E]%
+\>[27]{}\Varid{\Conid{Data}.\Conid{Set}.union}\;(\Varid{vars}\;\Varid{a})\;(\Varid{vars}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Fresh Variables}
+Given a set of variables $V$, and some variable we'd like to use $x$,
+we will check if $x\in V$ and if so try some variant of $x$ to see if it
+occurs in $V$. This is done by adding a subscript $x_{n}$ where $n$ is
+an integer we increment upon trying again.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{18}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{18E}{@{}l@{}}%
+\column{21}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{freshVar}\mathbin{::}\Conid{Letter}\to \Conid{Int}\to \Conid{Set}\;\Conid{Letter}\to \Conid{Letter}{}\<[E]%
+\\
+\>[B]{}\Varid{freshVar}\;\Varid{x}\;\Varid{m}\;\Varid{vs}{}\<[18]%
+\>[18]{}\mathrel{=}{}\<[18E]%
+\>[21]{}\mathbf{if}\;(\Varid{x}\plus (\Varid{show}\;\Varid{m}))\mathbin{`\Varid{\Conid{Data}.\Conid{Set}.member}`}\Varid{vs}{}\<[E]%
+\\
+\>[21]{}\mathbf{then}\;\Varid{freshVar}\;\Varid{x}\;(\Varid{m}\mathbin{+}\mathrm{1})\;\Varid{vs}{}\<[E]%
+\\
+\>[21]{}\mathbf{else}\;\Varid{x}\plus (\Varid{show}\;\Varid{m}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Now, for any Haskell expression which is an instance of the \ensuremath{\Conid{Vars}}
+typeclass, we can find a fresh variable for it. This checks if the
+variable $x$ appears in the set of variables; if not, then just use
+it. Otherwise, we need to find a ``fresher'' version of the variable (by
+appending a numeric value ``subscript'' to it).
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{13E}{@{}l@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{fresh}\mathbin{::}\Conid{Vars}\;\Varid{a}\Rightarrow \Conid{Letter}\to \Varid{a}\to \Conid{Letter}{}\<[E]%
+\\
+\>[B]{}\Varid{fresh}\;\Varid{x}\;\Varid{fm}{}\<[13]%
+\>[13]{}\mathrel{=}{}\<[13E]%
+\>[16]{}\mathbf{let}\;\Varid{vs}\mathrel{=}\Varid{vars}\;\Varid{fm}{}\<[E]%
+\\
+\>[16]{}\mathbf{in}\;{}\<[20]%
+\>[20]{}\mathbf{if}\;\Varid{x}\in \Varid{vs}{}\<[E]%
+\\
+\>[20]{}\mathbf{then}\;\Varid{freshVar}\;\Varid{x}\;\mathrm{0}\;\Varid{vs}{}\<[E]%
+\\
+\>[20]{}\mathbf{else}\;\Varid{x}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\section{Length of terms}
+
+\subsection{Counting the occurrences of a variable}
+How many times does a variable occur in an expression? We can count
+this, using a typeclass.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{class}\;\Conid{Occur}\;\Varid{a}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\mathbin{::}\Conid{Letter}\to \Varid{a}\to \Conid{Integer}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Now, $x$ doesn't appear in $\tau_{x}R$, so its occurrences should
+short-circuit to zero. But if somehow it gets through, we should count
+$x$ appearing zero times in $\Box$ bound variables.
+
+For substitutions, there is some subtlety here, which is a source of
+bugs in naive implementations. Observe, if $x=y$, then $(B\mid x)A$
+will replace all $n$ instances of $x$ in $A$ by $B$. But if $B$ has $m$
+instances of $x$, then we get $m\cdot n$ instances of $x$ in the
+substitution $(B\mid x)A$.
+
+However, when $x\neq y$, then $(B\mid y)A$ will replace all $n_{y}$
+instances of $y$ in $A$ by $B$. When there are $m$ instances of $x$ in
+$B$, this results in an additional $n_{y}m$ instances of $x$ in $(B\mid y)A$.
+When there are $n_{x}$ instances of $x$ in $A$ \emph{before substitution},
+then we have a total of $n_{y}m+n_{x}$ occurrences of $x$ in $(B\mid y)A$.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{27}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{27E}{@{}l@{}}%
+\column{30}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Occur}\;\Conid{Term}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\;\Varid{x}\;(\Conid{TTau}\;\anonymous \;\Varid{y}\;\Varid{r}){}\<[27]%
+\>[27]{}\mathrel{=}{}\<[27E]%
+\>[30]{}\mathbf{if}\;\Varid{x}\equiv \Varid{y}\;\mathbf{then}\;\mathrm{0}\;\mathbf{else}\;(\Varid{occur}\;\Varid{x}\;\Varid{r}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\;\Varid{x}\;(\Conid{TBox}\;\anonymous \;\anonymous ){}\<[27]%
+\>[27]{}\mathrel{=}{}\<[27E]%
+\>[30]{}\mathrm{0}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\;\Varid{x}\;(\Conid{TVar}\;\Varid{y}){}\<[27]%
+\>[27]{}\mathrel{=}{}\<[27E]%
+\>[30]{}\mathbf{if}\;\Varid{x}\equiv \Varid{y}\;\mathbf{then}\;\mathrm{1}\;\mathbf{else}\;\mathrm{0}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\;\Varid{x}\;(\Conid{TSubst}\;\Varid{b}\;\Varid{y}\;\Varid{a}){}\<[27]%
+\>[27]{}\mathrel{=}{}\<[27E]%
+\>[30]{}\mathbf{if}\;\Varid{x}\equiv \Varid{y}{}\<[E]%
+\\
+\>[30]{}\mathbf{then}\;(\Varid{occur}\;\Varid{x}\;\Varid{b})\mathbin{*}(\Varid{occur}\;\Varid{x}\;\Varid{a}){}\<[E]%
+\\
+\>[30]{}\mathbf{else}\;(\Varid{occur}\;\Varid{x}\;\Varid{b})\mathbin{*}(\Varid{occur}\;\Varid{y}\;\Varid{a})\mathbin{+}(\Varid{occur}\;\Varid{x}\;\Varid{a}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\;\Varid{x}\;(\Conid{TPair}\;\Varid{a}\;\Varid{b}){}\<[27]%
+\>[27]{}\mathrel{=}{}\<[27E]%
+\>[30]{}(\Varid{occur}\;\Varid{x}\;\Varid{a})\mathbin{+}(\Varid{occur}\;\Varid{x}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+For relations, the same subtlety surrounding occurrences of a variable
+in a substitution (but the same reasoning holds for relations as for terms).
+In all other cases, it boils down to counting the occurrences in the
+subtrees, and adding them all together in the end.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{27}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{27E}{@{}l@{}}%
+\column{30}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Occur}\;\Conid{Relation}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\;\Varid{x}\;(\Conid{ROr}\;\Varid{a}\;\Varid{b}){}\<[27]%
+\>[27]{}\mathrel{=}{}\<[27E]%
+\>[30]{}(\Varid{occur}\;\Varid{x}\;\Varid{a})\mathbin{+}(\Varid{occur}\;\Varid{x}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\;\Varid{x}\;(\Conid{RNot}\;\Varid{a}){}\<[27]%
+\>[27]{}\mathrel{=}{}\<[27E]%
+\>[30]{}\Varid{occur}\;\Varid{x}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\;\Varid{x}\;(\Conid{RSubst}\;\Varid{a}\;\Varid{y}\;\Varid{r}){}\<[27]%
+\>[27]{}\mathrel{=}{}\<[27E]%
+\>[30]{}\mathbf{if}\;\Varid{x}\equiv \Varid{y}{}\<[E]%
+\\
+\>[30]{}\mathbf{then}\;(\Varid{occur}\;\Varid{x}\;\Varid{a})\mathbin{*}(\Varid{occur}\;\Varid{x}\;\Varid{r}){}\<[E]%
+\\
+\>[30]{}\mathbf{else}\;(\Varid{occur}\;\Varid{x}\;\Varid{a})\mathbin{*}(\Varid{occur}\;\Varid{y}\;\Varid{r})\mathbin{+}(\Varid{occur}\;\Varid{x}\;\Varid{r}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\;\Varid{x}\;(\Conid{REq}\;\Varid{a}\;\Varid{b}){}\<[27]%
+\>[27]{}\mathrel{=}{}\<[27E]%
+\>[30]{}(\Varid{occur}\;\Varid{x}\;\Varid{a})\mathbin{+}(\Varid{occur}\;\Varid{x}\;\Varid{b}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{occur}\;\Varid{x}\;(\Conid{RIn}\;\Varid{a}\;\Varid{b}){}\<[27]%
+\>[27]{}\mathrel{=}{}\<[27E]%
+\>[30]{}(\Varid{occur}\;\Varid{x}\;\Varid{a})\mathbin{+}(\Varid{occur}\;\Varid{x}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Length of assemblies}
+Now we come to the main part of the original motivation for this
+program, what is the length of an assembly? For any assembly $A$, we
+will write $\abs{A}$ for the length of the assembly $A$. We have a typeclass
+abstracting this notion:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{class}\;\Conid{Len}\;\Varid{a}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\mathbin{::}\Varid{a}\to \Conid{Integer}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+For terms, we have the inductive definition:
+\begin{enumerate}
+\item $\abs{\tau_{x}R}=1+\abs{R}$
+\item $\abs{\Box}=1$
+\item $\abs{x}=1$
+\item $\abs{(B\mid x)A}=(\abs{B}-1)\cdot o(x,A)+\abs{A}$ where $o(x,A)$
+  is the number of occurrences of $x$ in $A$; if one is suspicious of
+  this claim, it's because $\abs{(B\mid x)A}=\abs{B}\cdot o(x,A) + (\abs{A}-o(x,A))$,
+  and then simple algebra gives us the result.
+\item $\abs{\langle A,B\rangle}=1+\abs{A}+\abs{B}$ since we are using
+  the ``original'' convention that $\bullet t_{1}\ t_{2}$ is an ordered
+  pair, which just prepends the concatenation of strings with one symbol.
+\end{enumerate}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{23E}{@{}l@{}}%
+\column{26}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Len}\;\Conid{Term}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\;(\Conid{TTau}\;\anonymous \;\anonymous \;\Varid{r}){}\<[23]%
+\>[23]{}\mathrel{=}{}\<[23E]%
+\>[26]{}\mathrm{1}\mathbin{+}\Varid{len}\;\Varid{r}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\;(\Conid{TBox}\;\anonymous \;\anonymous ){}\<[23]%
+\>[23]{}\mathrel{=}{}\<[23E]%
+\>[26]{}\mathrm{1}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\;(\Conid{TVar}\;\anonymous ){}\<[23]%
+\>[23]{}\mathrel{=}{}\<[23E]%
+\>[26]{}\mathrm{1}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\;(\Conid{TSubst}\;\Varid{b}\;\Varid{x}\;\Varid{a}){}\<[23]%
+\>[23]{}\mathrel{=}{}\<[23E]%
+\>[26]{}((\Varid{len}\;\Varid{b})\mathbin{-}\mathrm{1})\mathbin{*}(\Varid{occur}\;\Varid{x}\;\Varid{a})\mathbin{+}(\Varid{len}\;\Varid{a}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\;(\Conid{TPair}\;\Varid{a}\;\Varid{b}){}\<[23]%
+\>[23]{}\mathrel{=}{}\<[23E]%
+\>[26]{}\mathrm{1}\mathbin{+}(\Varid{len}\;\Varid{a})\mathbin{+}(\Varid{len}\;\Varid{b}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+For relations, we have
+\begin{enumerate}
+\item $\abs{A\lor B}=1+\abs{A}+\abs{B}$
+\item $\abs{\neg A}=1+\abs{A}$
+\item $\abs{(B\mid x)R}=(\abs{B}-1)o(x,R)+\abs{R}$ where $o(x,R)$ is the
+  number of occurrences of the variable $x$ in the relation $R$
+\item $\abs{A=B}=1+\abs{A}+\abs{B}$
+\item $\abs{A\in B}=1+\abs{A}+\abs{B}$
+\end{enumerate}
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{23}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{23E}{@{}l@{}}%
+\column{26}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mathbf{instance}\;\Conid{Len}\;\Conid{Relation}\;\mathbf{where}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\;(\Conid{ROr}\;\Varid{a}\;\Varid{b}){}\<[23]%
+\>[23]{}\mathrel{=}{}\<[23E]%
+\>[26]{}\mathrm{1}\mathbin{+}\Varid{len}\;\Varid{a}\mathbin{+}\Varid{len}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\;(\Conid{RNot}\;\Varid{a}){}\<[23]%
+\>[23]{}\mathrel{=}{}\<[23E]%
+\>[26]{}\mathrm{1}\mathbin{+}\Varid{len}\;\Varid{a}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\;(\Conid{RSubst}\;\Varid{a}\;\Varid{y}\;\Varid{r}){}\<[23]%
+\>[23]{}\mathrel{=}{}\<[23E]%
+\>[26]{}((\Varid{len}\;\Varid{a})\mathbin{-}\mathrm{1})\mathbin{*}(\Varid{occur}\;\Varid{y}\;\Varid{r})\mathbin{+}(\Varid{len}\;\Varid{r}){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\;(\Conid{REq}\;\Varid{a}\;\Varid{b}){}\<[23]%
+\>[23]{}\mathrel{=}{}\<[23E]%
+\>[26]{}\mathrm{1}\mathbin{+}\Varid{len}\;\Varid{a}\mathbin{+}\Varid{len}\;\Varid{b}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{len}\;(\Conid{RIn}\;\Varid{a}\;\Varid{b}){}\<[23]%
+\>[23]{}\mathrel{=}{}\<[23E]%
+\>[26]{}\mathrm{1}\mathbin{+}\Varid{len}\;\Varid{a}\mathbin{+}\Varid{len}\;\Varid{b}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\section{Set Theory}
+
+After C49 in II\S1.4, Bourbaki introduces the notation
+$\mathcal{E}_{x}(R)$ for
+\begin{quote}
+To represent the term $\tau_{y}(\forall x)((x\in y)\iff R)$ which does
+not depend on the choice of $y$ (distinct from $x$ and not appearing in
+$R$), we shall introduce a functional symbol $\mathcal{E}_{x}(R)$; the
+corresponding term does not contain $x$. This term is denoted by `the
+set of all $x$ such that $R$'.
+\end{quote}
+We denote this by \ensuremath{\Varid{ens}\;\Varid{x}\;\Conid{R}}.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{6}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{6E}{@{}l@{}}%
+\column{10}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{13}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{ens}{}\<[6]%
+\>[6]{}\mathbin{::}{}\<[6E]%
+\>[10]{}\Conid{Letter}\to \Conid{Relation}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{ens}\;\Varid{x}\;\Varid{r}{}\<[10]%
+\>[10]{}\mathrel{=}{}\<[13]%
+\>[13]{}\mathbf{let}\;\Varid{y}\mathrel{=}\Varid{fresh}\;\text{\ttfamily \char34 y\char34}\;\Varid{r}{}\<[E]%
+\\
+\>[13]{}\mathbf{in}\;\Varid{tau}\;\mathrm{0}\;\Varid{y}\;(\Varid{forall}\;\Varid{x}\;(\Varid{iff}\;(\Conid{RIn}\;(\Conid{TVar}\;\Varid{x})\;(\Conid{TVar}\;\Varid{y}))\;\Varid{r})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+The unordered pair is introduced in II\S1.5, defined as
+$\mathcal{E}_{z}(x=z\lor y=z)$ which is then abbreviated as $\{x,y\}$.
+This exists and is unique by the second axiom of Bourbaki's set theory,
+which means it really is a well-defined notion.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{11}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{11E}{@{}l@{}}%
+\column{15}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mbox{\onelinecomment  The set with two elements, a.k.a., the unordered pair.}{}\<[E]%
+\\
+\>[B]{}\Varid{pair}{}\<[11]%
+\>[11]{}\mathbin{::}{}\<[11E]%
+\>[15]{}\Conid{Term}\to \Conid{Term}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{pair}\;\Varid{x}\;\Varid{y}{}\<[11]%
+\>[11]{}\mathrel{=}{}\<[11E]%
+\>[15]{}\mathbf{let}\;\Varid{z}\mathrel{=}\Varid{fresh}\;\text{\ttfamily \char34 z\char34}\;(\Conid{REq}\;\Varid{x}\;\Varid{y}){}\<[E]%
+\\
+\>[15]{}\mathbf{in}\;\Varid{ens}\;\Varid{z}\;(\Conid{ROr}\;(\Conid{REq}\;\Varid{x}\;(\Conid{TVar}\;\Varid{z}))\;(\Conid{REq}\;\Varid{y}\;(\Conid{TVar}\;\Varid{z}))){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Ordered Pairs} This is formalized in II\S2 of Bourbaki's
+\textit{Theory of Sets}. Bourbaki defines $\pair T\ U$ for the
+ordered pair of $T$ and $U$ as a primitive notion. But we can use the
+usual set-theoretic construction of ordered pairs. Purists can modify
+code in the way following explicit instructions.
+
+Now, before we can define the ordered pair using the familiar
+set-theoretic definition $(x,y)=\{\{x\},\{x,y\}\}$, we need to define an
+unordered singleton.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{15}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{15E}{@{}l@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{ssingleton}{}\<[15]%
+\>[15]{}\mathbin{::}{}\<[15E]%
+\>[19]{}\Conid{Term}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{ssingleton}\;\Varid{x}{}\<[15]%
+\>[15]{}\mathrel{=}{}\<[15E]%
+\>[19]{}\mathbf{let}\;\Varid{z}\mathrel{=}\Varid{fresh}\;\text{\ttfamily \char34 z\char34}\;\Varid{x}{}\<[E]%
+\\
+\>[19]{}\mathbf{in}\;\Varid{ens}\;\Varid{z}\;(\Conid{REq}\;\Varid{x}\;(\Conid{TVar}\;\Varid{z})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Now, for ordered pairs, we use the set-theoretic definition for
+debugging purposes (if you wanted to use the original Bourbaki
+formulation, you can replace this line of code with the primitive
+\ensuremath{\Conid{TPair}} data constructor)
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{16}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{19}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{20}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{22}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{25E}{@{}l@{}}%
+\column{28}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\mbox{\onelinecomment  use orderedPair = TPair for debugging purposes}{}\<[E]%
+\\
+\>[B]{}\Varid{orderedPair}{}\<[16]%
+\>[16]{}\mathbin{::}{}\<[20]%
+\>[20]{}\Conid{Term}\to \Conid{Term}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{orderedPair}\;{}\<[16]%
+\>[16]{}\Varid{x}\;{}\<[19]%
+\>[19]{}\Varid{y}{}\<[25]%
+\>[25]{}\mathrel{=}{}\<[25E]%
+\>[28]{}\Varid{pair}\;(\Varid{ssingleton}\;\Varid{x})\;(\Varid{pair}\;\Varid{x}\;\Varid{y}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{orderedTriple}{}\<[16]%
+\>[16]{}\mathbin{::}{}\<[20]%
+\>[20]{}\Conid{Term}\to \Conid{Term}\to \Conid{Term}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{orderedTriple}\;{}\<[16]%
+\>[16]{}\Varid{x}\;{}\<[19]%
+\>[19]{}\Varid{y}\;{}\<[22]%
+\>[22]{}\Varid{z}{}\<[25]%
+\>[25]{}\mathrel{=}{}\<[25E]%
+\>[28]{}\Varid{orderedPair}\;(\Varid{orderedPair}\;\Varid{x}\;\Varid{y})\;\Varid{z}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Cartesian Product of Sets}
+The Cartesian product of sets is defined in II\S2.2 Definition 1 as
+\begin{equation}
+X\times Y := \mathcal{E}_{z}\bigl((\exists x)(\exists y)(z=(x,y)\land x\in X\land y\in Y)\bigr).
+\end{equation}
+The implementation follows this definition:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{33}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{35}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{37}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{43}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{49}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{cartesianProduct}\mathbin{::}\Conid{Term}\to \Conid{Term}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{cartesianProduct}\;\Varid{x}\;\Varid{y}\mathrel{=}\Varid{ens}\;\text{\ttfamily \char34 z\char34}\;{}\<[33]%
+\>[33]{}(\Varid{exists}\;\text{\ttfamily \char34 x'\char34}\;{}\<[E]%
+\\
+\>[33]{}\hsindent{2}{}\<[35]%
+\>[35]{}(\Varid{exists}\;\text{\ttfamily \char34 y'\char34}\;{}\<[E]%
+\\
+\>[35]{}\hsindent{2}{}\<[37]%
+\>[37]{}(\Varid{and}\;{}\<[43]%
+\>[43]{}(\Conid{REq}\;{}\<[49]%
+\>[49]{}(\Conid{TVar}\;\text{\ttfamily \char34 z\char34})\;(\Varid{orderedPair}\;(\Conid{TVar}\;\text{\ttfamily \char34 x'\char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 y'\char34})))\;{}\<[E]%
+\\
+\>[43]{}(\Varid{and}\;{}\<[49]%
+\>[49]{}(\Conid{RIn}\;(\Conid{TVar}\;\text{\ttfamily \char34 x'\char34})\;\Varid{x})\;{}\<[E]%
+\\
+\>[49]{}(\Conid{RIn}\;(\Conid{TVar}\;\text{\ttfamily \char34 y'\char34})\;\Varid{y}))))){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Subsets}
+In II\S1.2, Definition 1, Bourbaki defines the predicate for a subset
+$X\subset Y$ as:
+\begin{equation}
+X\subset Y\quad :=\quad \forall z(z\in X\implies z\in Y).
+\end{equation}
+We use this definition in the construction:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{subset}\mathbin{::}\Conid{Term}\to \Conid{Term}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{subset}\;\Varid{u}\;\Varid{v}\mathrel{=}\Varid{forall}\;\text{\ttfamily \char34 s\char34}\;(\Varid{implies}\;(\Conid{RIn}\;(\Conid{TVar}\;\text{\ttfamily \char34 s\char34})\;\Varid{u})\;(\Conid{RIn}\;(\Conid{TVar}\;\text{\ttfamily \char34 s\char34})\;\Varid{v})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Empty set}
+The empty set is defined as $\tau_{X}((\forall y)(y\notin X))$ in
+comments towards the end of II\S1.7, and we use this as the definition
+for it:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{emptySet}\mathbin{::}\Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{emptySet}\mathrel{=}\Varid{tau}\;\mathrm{0}\;\text{\ttfamily \char34 X\char34}\;(\Varid{forall}\;\text{\ttfamily \char34 y\char34}\;(\Conid{RNot}\;(\Conid{RIn}\;(\Conid{TVar}\;\text{\ttfamily \char34 y\char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 X\char34})))){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Cardinality of sets}
+In III\S3.1, Bourbaki defines the notion of ``the cardinal of a set''
+using equipotential sets.
+Two sets $A$ and $B$ are called equipotent, denoted by Bourbaki as
+$\Eq(A,B)$, if there exists a bijection between sets $A$ and $B$.
+Then the cardinality of a set $A$ is defined as $\card(A):=\tau_{Z}(\Eq(A,Z))$.
+But in a footnote, Bourbaki tells us the explicit definition for 
+$1:=\card(\{\emptyset\})$. It's tedious:
+\begin{multline}
+  \tau_{Z}\biggl(
+(\exists u)(\exists U)\Bigl(u=(U,\{\emptyset\},Z)\mbox{ and }U\subset\{\emptyset\}\times Z\\
+\mbox{and }(\forall x)\bigl((x\in\{\emptyset\})\implies(\exists y)((x,y)\in U)\bigr)\\
+\mbox{and }(\forall x)(\forall y)(\forall y')\bigl(((x,y)\in U\mbox{ and }(x,y')\in U)\implies(y=y')\bigr)\\
+\mbox{and }(\forall y)((y\in Z)\implies(\exists x)((x,y)\in U))\Bigr)
+\biggr)
+\end{multline}
+This allows us to find the primitive definition of $\card(A)$:
+\begin{multline}
+\card(A):=\tau_{Z}\biggl(
+(\exists u)(\exists U)\Bigl(u=(U,A,Z)\mbox{ and }U\subset A\times Z\\
+\mbox{and }(\forall x)\bigl((x\in A)\implies(\exists y)((x,y)\in U)\bigr)\\
+\mbox{and }(\forall x)(\forall y)(\forall y')\bigl(((x,y)\in U\mbox{ and }(x,y')\in U)\implies(y=y')\bigr)\\
+\mbox{and }(\forall y)((y\in Z)\implies(\exists x)((x,y)\in U))\Bigr)
+\biggr)
+\end{multline}
+Here is where all the low-hanging fruit for optimization occurs, we
+could use different definitions of cardinality. There are five terms in
+this definition contained in the scope of the outer two universal
+quantifiers $\forall u\forall U(\dots)$ which we define as \ensuremath{\Varid{termA}},
+\ensuremath{\Varid{termB}}, \ensuremath{\Varid{termC}}, \ensuremath{\Varid{termD}}, and \ensuremath{\Varid{termE}}. We faithfully write the
+code for this convoluted definition:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{17}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{27}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{31}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{33}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{39}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{49}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{50}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{56}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{57}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{62}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{68}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{termA}\mathbin{::}\Conid{Term}\to \Conid{Letter}\to \Conid{Letter}\to \Conid{Letter}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{termA}\;\Varid{x}\;\Varid{u}\;\Varid{upperU}\;\Varid{z}\mathrel{=}\Conid{REq}\;(\Conid{TVar}\;\Varid{u})\;(\Varid{orderedTriple}\;(\Conid{TVar}\;\Varid{upperU})\;\Varid{x}\;(\Conid{TVar}\;\Varid{z})){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{termB}\mathbin{::}\Conid{Term}\to \Conid{Letter}\to \Conid{Letter}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{termB}\;\Varid{x}\;\Varid{upperU}\;\Varid{z}\mathrel{=}\Varid{subset}\;(\Conid{TVar}\;\Varid{upperU})\;(\Varid{cartesianProduct}\;\Varid{x}\;(\Conid{TVar}\;\Varid{z})){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{termC}\mathbin{::}\Conid{Term}\to \Conid{Letter}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{termC}\;\Varid{x}\;\Varid{upperU}\mathrel{=}\Varid{forall}\;\text{\ttfamily \char34 x\char34}\;(\Varid{implies}\;{}\<[39]%
+\>[39]{}(\Conid{RIn}\;(\Conid{TVar}\;\text{\ttfamily \char34 x\char34})\;\Varid{x})\;{}\<[E]%
+\\
+\>[39]{}(\Varid{exists}\;\text{\ttfamily \char34 y\char34}\;(\Conid{RIn}\;{}\<[57]%
+\>[57]{}(\Varid{orderedPair}\;(\Conid{TVar}\;\text{\ttfamily \char34 x\char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 y\char34}))\;{}\<[E]%
+\\
+\>[57]{}(\Conid{TVar}\;\Varid{upperU})))){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{termD}\mathbin{::}\Conid{Letter}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{termD}\;\Varid{upperU}\mathrel{=}\Varid{forall}\;\text{\ttfamily \char34 x\char34}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}(\Varid{forall}\;\text{\ttfamily \char34 y\char34}\;(\Varid{forall}\;\text{\ttfamily \char34 z\char34}\;{}\<[E]%
+\\
+\>[3]{}\hsindent{14}{}\<[17]%
+\>[17]{}(\Varid{implies}\;{}\<[27]%
+\>[27]{}(\Varid{and}\;{}\<[33]%
+\>[33]{}(\Conid{RIn}\;(\Varid{orderedPair}\;(\Conid{TVar}\;\text{\ttfamily \char34 x\char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 y\char34}))\;(\Conid{TVar}\;\Varid{upperU}))\;{}\<[E]%
+\\
+\>[33]{}(\Conid{RIn}\;(\Varid{orderedPair}\;(\Conid{TVar}\;\text{\ttfamily \char34 x\char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 z\char34}))\;(\Conid{TVar}\;\Varid{upperU})))\;{}\<[E]%
+\\
+\>[27]{}(\Conid{REq}\;(\Conid{TVar}\;\text{\ttfamily \char34 y\char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 z\char34}))))){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{termE}\mathbin{::}\Conid{Letter}\to \Conid{Letter}\to \Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{termE}\;\Varid{upperU}\;\Varid{z}\mathrel{=}\Varid{forall}\;\text{\ttfamily \char34 y\char34}\;(\Varid{implies}\;{}\<[E]%
+\\
+\>[B]{}\hsindent{31}{}\<[31]%
+\>[31]{}(\Conid{RIn}\;(\Conid{TVar}\;\text{\ttfamily \char34 y\char34})\;(\Conid{TVar}\;\Varid{z}))\;{}\<[E]%
+\\
+\>[B]{}\hsindent{31}{}\<[31]%
+\>[31]{}(\Varid{exists}\;\text{\ttfamily \char34 x\char34}\;(\Conid{RIn}\;{}\<[49]%
+\>[49]{}(\Varid{orderedPair}\;(\Conid{TVar}\;\text{\ttfamily \char34 x\char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 y\char34}))\;{}\<[E]%
+\\
+\>[49]{}(\Conid{TVar}\;\Varid{upperU})))){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{card}\mathbin{::}\Conid{Term}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{card}\;\Varid{x}\mathrel{=}\Varid{tau}\;\mathrm{0}\;\text{\ttfamily \char34 Z\char34}\;(\Varid{exists}\;\text{\ttfamily \char34 u\char34}\;(\Varid{exists}\;\text{\ttfamily \char34 U\char34}\;(\Varid{and}\;{}\<[50]%
+\>[50]{}(\Varid{termA}\;\Varid{x}\;\text{\ttfamily \char34 u\char34}\;\text{\ttfamily \char34 U\char34}\;\text{\ttfamily \char34 Z\char34})\;{}\<[E]%
+\\
+\>[50]{}(\Varid{and}\;{}\<[56]%
+\>[56]{}(\Varid{termB}\;\Varid{x}\;\text{\ttfamily \char34 U\char34}\;\text{\ttfamily \char34 Z\char34})\;{}\<[E]%
+\\
+\>[56]{}(\Varid{and}\;{}\<[62]%
+\>[62]{}(\Varid{termC}\;\Varid{x}\;\text{\ttfamily \char34 U\char34})\;{}\<[E]%
+\\
+\>[62]{}(\Varid{and}\;{}\<[68]%
+\>[68]{}(\Varid{termD}\;\text{\ttfamily \char34 U\char34})\;{}\<[E]%
+\\
+\>[68]{}(\Varid{termE}\;\text{\ttfamily \char34 U\char34}\;\text{\ttfamily \char34 Z\char34}))))))){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+As examples of this definition, Bourbaki defines 1 and 2 as
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{one}\mathbin{::}\Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{one}\mathrel{=}\Varid{card}\;(\Varid{ssingleton}\;\Varid{emptySet}){}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{two}\mathbin{::}\Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{two}\mathrel{=}\Varid{card}\;(\Varid{pair}\;\Varid{emptySet}\;(\Varid{ssingleton}\;\Varid{emptySet})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Sums}
+The value $f(x)$ corresponding to $x$ of a function $f$, when $G$ is the
+graph of $f$, is (slightly optimized) the $y$ such that $(x,y)$ is in $G$.
+Bourbaki defines (ch.II \S3.1, definition 3, remark 1) the image of a
+set X according to a graph $G$ as
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{25}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{ens}\;\Varid{y}\;(\Varid{exists}\;\text{\ttfamily \char34 x\char34}\;(\Varid{and}\;{}\<[25]%
+\>[25]{}(\Conid{RIn}\;(\Conid{TVar}\;\text{\ttfamily \char34 x\char34})\;\Conid{X})\;{}\<[E]%
+\\
+\>[25]{}(\Conid{RIn}\;(\Varid{orderedPair}\;(\Conid{TVar}\;\text{\ttfamily \char34 x\char34})\;\Varid{y})\;\Conid{G}))){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+But since $X$ is a singleton for our case, we don't need to check $x\in\{x\}$.
+I further simplify things and just say the value of $x$ in $G$ is that
+$y$ such that $(x,y)\in G$.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{val}\mathbin{::}\Conid{Term}\to \Conid{Term}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{val}\;\Varid{x}\;\Varid{graph}\mathrel{=}\Varid{tau}\;\text{\ttfamily \char34 y\char34}\;(\Conid{RIn}\;(\Varid{orderedPair}\;\Varid{x}\;(\Conid{TVar}\;\text{\ttfamily \char34 y\char34}))\;\Varid{graph}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+In a remark after Proposition 5 (ch III \S3.3), Bourbaki notes
+if $a$ and $b$ are two cardinals, and $I$ a set with two elements (e.g.,
+the cardinal 2), then there exists a mapping $f$ of $I$ onto $\{a, b\}$
+for which the sum of this family is denoted $a+b$.
+
+The sum of a family of sets is discussed in Ch II \S4.8, definition 8 gives it as:
+\begin{quote}
+Let $(X_{i})_{i\in I}$ be a family of sets.
+The sum of this family is the union of the family of sets $(X_{i}\times \{i\})_{i\in I}$.
+\end{quote}
+The notion of a family of sets is defined in II \S3.4. It is basically the graph of a function $I\to \{X_{i}\}$.
+
+The union of a family of sets $(X_{i})_{i\in I}$ is (ch II \S4.1 definition 1)
+$\mathcal{E}_{x}(\exists i)((i\in I)\mbox{ and }(x\in X))$
+% ens x (exists "i" (and (RIn (TVar "i") I) (RIn (TVar x) X)))
+The family $\{X_{0}, X_{1}\}$ when $X_{0}=X_{1}=1$ is then \ensuremath{\Varid{cartesianProduct}\;\Varid{two}\;\Varid{one}}.
+Combining this together, we get the sum as:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{30}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{32}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{38}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{setSum}\mathbin{::}\Conid{Term}\to \Conid{Term}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{setSum}\;\Varid{idx}\;\Varid{family}\mathrel{=}\Varid{ens}\;\text{\ttfamily \char34 x\char34}\;{}\<[30]%
+\>[30]{}(\Varid{exists}\;\text{\ttfamily \char34 i\char34}\;{}\<[E]%
+\\
+\>[30]{}\hsindent{2}{}\<[32]%
+\>[32]{}(\Varid{and}\;{}\<[38]%
+\>[38]{}(\Conid{RIn}\;(\Conid{TVar}\;\text{\ttfamily \char34 i\char34})\;\Varid{idx})\;{}\<[E]%
+\\
+\>[38]{}(\Conid{RIn}\;(\Conid{TVar}\;\text{\ttfamily \char34 x\char34})\;(\Varid{val}\;(\Conid{TVar}\;\text{\ttfamily \char34 i\char34})\;\Varid{family})))){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+When $a$ and $b$ are cardinal numbers, Bourbaki uses the indexed family
+$\{f_{1}, f_{2}\}$ where $f_{1}=a$ and $f_{2}=b$.  This indexed family
+coincides with the cartesian product of the cardinality 2 with the
+unordered pair $\{a, b\}$. Then the sum of this family is the sum of
+cardinals.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{cardSum}\mathbin{::}\Conid{Term}\to \Conid{Term}\to \Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{cardSum}\;\Varid{a}\;\Varid{b}\mathrel{=}\Varid{setSum}\;\Varid{two}\;(\Varid{cartesianProduct}\;\Varid{two}\;(\Varid{pair}\;\Varid{a}\;\Varid{b})){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+Now, the big moment, the equation asserting $1+1=2$.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{onePlusOneIsTwo}\mathbin{::}\Conid{Relation}{}\<[E]%
+\\
+\>[B]{}\Varid{onePlusOneIsTwo}\mathrel{=}\Conid{REq}\;\Varid{two}\;(\Varid{cardSum}\;\Varid{one}\;\Varid{one}){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\subsection{Curiousities}
+I was curious about the length of various terms, so I defined them.
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{pairOfOnes}\mathbin{::}\Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{pairOfOnes}\mathrel{=}\Varid{pair}\;\Varid{one}\;\Varid{one}{}\<[E]%
+\\[\blanklineskip]%
+\>[B]{}\Varid{productTwoOnes}\mathbin{::}\Conid{Term}{}\<[E]%
+\\
+\>[B]{}\Varid{productTwoOnes}\mathrel{=}\Varid{cartesianProduct}\;\Varid{two}\;\Varid{pairOfOnes}{}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\section{Main Method}
+OK, ready? Your pulse is relaxed, you don't need a wet towel on your
+forehead or anything? Good, now we have the main method which will print
+out the statistics regarding the lengths of the various things:
+\begin{hscode}\SaveRestoreHook
+\column{B}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{3}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{E}{@{}>{\hspre}l<{\hspost}@{}}%
+\>[B]{}\Varid{main}\mathrel{=}\mathbf{do}{}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 The~size~of~\char123 x,~y\char125 ~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;(\Varid{pair}\;(\Conid{TVar}\;\text{\ttfamily \char34 x\char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 y\char34}))))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~(x,~y)~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;(\Varid{orderedPair}\;(\Conid{TVar}\;\text{\ttfamily \char34 x\char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 y\char34}))))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~the~Empty~Set~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;\Varid{emptySet}))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~\$X\char92 \char92 times~Y\$~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;(\Varid{cartesianProduct}\;(\Conid{TVar}\;\text{\ttfamily \char34 X\char34})\;(\Conid{TVar}\;\text{\ttfamily \char34 Y\char34}))))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~~~~~~~1~~~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;\Varid{one}))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~`\char123 1,1\char125 `~~~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;\Varid{pairOfOnes}))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~`2*\char123 1,1\char125 `~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;\Varid{productTwoOnes}))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~'1+1=2'~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;\Varid{onePlusOneIsTwo}))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~1*~~~~~~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;(\Varid{simp}\;\Varid{one})))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~A~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;(\Varid{termA}\;(\Varid{ssingleton}\;\Varid{emptySet})\;\text{\ttfamily \char34 u\char34}\;\text{\ttfamily \char34 U\char34}\;\text{\ttfamily \char34 Z\char34})))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~B~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;(\Varid{termB}\;(\Varid{ssingleton}\;\Varid{emptySet})\;\text{\ttfamily \char34 U\char34}\;\text{\ttfamily \char34 Z\char34})))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~C~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;(\Varid{termC}\;(\Varid{ssingleton}\;\Varid{emptySet})\;\text{\ttfamily \char34 U\char34})))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~D~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;(\Varid{termD}\;\text{\ttfamily \char34 U\char34})))){}\<[E]%
+\\
+\>[B]{}\hsindent{3}{}\<[3]%
+\>[3]{}\Varid{putStrLn}\;(\text{\ttfamily \char34 Size~of~E~=~\char34}\plus (\Varid{show}\;(\Varid{len}\;(\Varid{termE}\;\text{\ttfamily \char34 U\char34}\;\text{\ttfamily \char34 Z\char34})))){}\<[E]%
+\ColumnHook
+\end{hscode}\resethooks
+
+\end{document}
