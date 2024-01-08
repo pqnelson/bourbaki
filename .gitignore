@@ -3,3 +3,9 @@
 *.log
 *.ptb
 *.pdf
+*.toc
+
+*.o
+*.hi
+*.out
+bourbaki

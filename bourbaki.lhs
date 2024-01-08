@@ -2,7 +2,21 @@
 \documentclass{amsart}
 %include polycode.fmt
 \usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathrsfs}
 \usepackage{graphicx}
+
+\usepackage{xcolor}
+\usepackage{hyperref}
+% eTeX uses this color for links, it's better than BrickRed imho
+\definecolor{linkRed}{cmyk}{0.28, 1, 1, 0.35}
+\hypersetup{colorlinks=true,
+    linkcolor=linkRed,
+    citecolor=linkRed,
+    filecolor=linkRed,
+    urlcolor=linkRed
+}
+
+
 \def\abs#1{\lvert#1\rvert}
 \DeclareMathOperator{\card}{card}
 \DeclareMathOperator{\Eq}{Eq}
@@ -13,6 +27,17 @@
 \begin{document}
 \maketitle
 
+\begin{abstract}
+We implement the abstract syntax tree and rudimentary syntactic support
+for the formal language found in Bourbaki's \textit{Theory of Sets}~\cite{bourbaki1968sets}.
+Although we do not implement any of the deductive apparatus, it should
+be simple enough for a motivated reader.
+\textbf{Caution:} If you are trying to run this on a computer with less
+than 16 TB of RAM, then you should expect to wait a long time for it to finish.
+\end{abstract}
+
+\tableofcontents
+
 \section{Formal Language of Bourbaki}
 
 Bourbaki's formal system is rather difficult to understand, since it's
@@ -21,6 +46,7 @@ idiosyncratic terms. My reference will be the English translation
 published by Springer, the softcover reprint.\footnote{Apparently this
 is the English translation dated 1968 of the French 1970 edition. How
 this time-traveling is possible, well, that's beyond my understanding.}
+Aitkens's commentary~\cite{aitkens2022commentary} is also worth consulting.
 The basic ``Rosetta stone'' of terminology appears to be:
 \begin{center}
 \begin{tabular}{rcl}
@@ -30,6 +56,7 @@ Assembly & $\approx$ & String (over the ambient alphabet)\\
 Letter   & $\approx$ & Variable\\
 Specific Sign & $\approx$ & Primitive notion (of a theory)\\
 Relation & $\approx$ & Logical formula\\
+Formative Criteria & $\approx$ & Formal grammar for well-formed formulas\\
 \end{tabular}
 \end{center}
 Some terms have no modern translation, like ``logical sign'' appears to
@@ -38,7 +65,7 @@ refer to ``primitive notions in their underlying logic''.
 We will hide |and| from Prelude, since it is more natural to introduce a
 function which is Bourbaki's conjunction operator.
 \begin{code}
-import Data.Set
+import Data.Set hiding (cartesianProduct)
 import Prelude hiding (and)
 \end{code}
 
@@ -94,14 +121,18 @@ is perhaps an unfortunate choice of words.
 
 Bourbaki works with an adequate set of connectives, namely disjunction
 $A\lor B$ and negation $\neg A$. 
-The other connectives are just abbreviations for expression
+The other connectives are just abbreviations for expression; in
+(I~\S1.1) example 1, Bourbaki quickly mentions in as obscure a manner as
+possible that:
 \begin{subequations}
 \begin{equation}
-A\implies B \quad:=\quad (\neg A)\lor B
+A\implies B \quad:=\quad (\neg A)\lor B.
 \end{equation}
+In (I~\S3.4), Bourbaki defines conjunction as:
 \begin{equation}
-A\land B\quad :=\quad \neg((\neg A)\lor(\neg B))
+A\land B\quad :=\quad \neg((\neg A)\lor(\neg B)).
 \end{equation}
+In (I~\S3.5), Bourbaki defines ``equivalence'' (bi-conditional) as:
 \begin{equation}
 A\iff B\quad :=\quad (A\implies B)\land(B\implies A).
 \end{equation}
@@ -138,7 +169,7 @@ iff      a  b  =  and (implies a b) (implies b a)
 
 Now we can introduce a type class which abstracts the notion of
 \emph{performing substitutions}. This is justified by formative criteria
-CF8 from I\S1.4 which states that the assembly $(T\mid x)A$ is a term
+CF8 from (I~\S1.4) which states that the assembly $(T\mid x)A$ is a term
 when $A$ is a term, and it's a relation when $A$ is a relation.
 
 \begin{code}
@@ -156,7 +187,7 @@ When we work with terms, we can consider the following cases:
 \end{enumerate}
 As far as $(T\mid x)\bigl((T'\mid y)T''\bigr)$ for terms $T'$, $T''$ and
 variable $y$, this requires a bit of care. If $x=y$, then nothing is
-done. On the other hand, if $x\neq y$, criteria CS2 (I\S1.2) tells us
+done. On the other hand, if $x\neq y$, criteria CS2 (I~\S1.2) tells us
 how to ``commute'' substitutions:
 \begin{equation}
 (B\mid x)(C\mid y)A=((B\mid x)C\mid y)(B\mid x)A.
@@ -174,7 +205,7 @@ instance Subst Term where
     _  ->  t'
 \end{code}
 
-When we work with relations, criteria of substitution CS5 from I\S1.2
+When we work with relations, criteria of substitution CS5 from (I~\S1.2)
 gives us the explicit definition for almost all relations:
 \begin{enumerate}
 \item $(T\mid x)(A\lor B)=((T\mid x)A)\lor((T\mid x)B)$
@@ -213,11 +244,17 @@ instance Simplifier Relation where
                           b'  =  simp b
                      in  if (simp (RNot a')) == b'
                          then (REq (TVar "_") (TVar "_"))
+                         else if a' == b'
+                         then a'
                          else ROr a' b'
   simp (RNot (RNot a))  =  simp a
   simp (RNot a)   =  RNot (simp a)
-  simp (RSubst t x r)   =  subst x t r
-  simp (REq a b)  =  REq (simp a) (simp b)
+  simp (RSubst t x r)   =  simp $ subst x t r
+  simp (REq a b)  =  let  a'  =  simp a
+                          b'  =  simp b
+                     in  if a' == b'
+                         then REq (TVar "_") (TVar "_")
+                         else REq (simp a) (simp b)
   simp (RIn a b)  =  RIn (simp a) (simp b)
 \end{code}
 
@@ -228,17 +265,78 @@ instance Simplifier Term where
   simp (TTau m x r)    =  TTau m x (simp r)
   simp (TBox m x)      =  TBox m x
   simp (TVar x)        =  TVar x
-  simp (TSubst t x b)  =  subst x t b
+  simp (TSubst t x b)  =  simp $ subst x t b
   simp (TPair a b)     =  TPair (simp a) (simp b)
 \end{code}
+
+\subsection{*Deductive System}
+Just a few remarks about the ``deductive system'' Bourbaki
+uses. Specifically, Bourbaki uses a Hilbert proof calculus, but not for
+first-order logic. Instead Bourbaki uses Hilbert's
+$\varepsilon$-calculus. Consequently, there are only two inference rules
+given (I~\S2.2):
+\begin{itemize}
+\item[($a_{1}$)] Any instance of an axiom may be used at any time in a proof;
+\item[($a_{2}$)] Any instance of a ``scheme'' may be used at any time in a proof;
+\item[($b$)] \textit{Modus Ponens}: if in previous proof steps $A$ and
+  $A\implies B$ have been established, then we may write down $B$ in a
+  proof step.
+\end{itemize}
+Axioms (I~\S2.1) are either ``explicit axioms'' (which is what we
+normally think of when defining a new gadget) or ``implicit axioms'',
+which are obtained by applying a scheme. Schemes are ``rules'' which
+constructs a formula---Bourbaki is vague about its meaning. Derived
+inference rules are given in items labeled $C1$, $C2$, $C3$, \dots.
+
+The axioms Bourbaki gives may be found summarized in the very last page
+of the book. The first four are the so-called ``Russell--Bernays
+axioms''\footnote{This appears to be the axioms found in the
+\textit{Principia Mathematica}, specifically corresponding to axioms
+$*1.2$, $*1.3$, $*1.4$, and $*1.6$ in \textit{Principia}. Bernays proved
+its logical completeness in ``Axiomatische Untersuchungen des
+Aussagen-Kalkuls der \textit{Principia Mathematica}.''
+\textit{Mathematische Zeitschrift} \textbf{25} (1926) 305--320;
+translated into English in Richard Zach's \textit{Universal Logic: An
+  Anthology} (2012) pp.43--58. Russell and Whitehead call these axioms
+``principle of tautology'', ``principle of addition'',
+``principle of permutation'', ``principle of
+summation''. Coincidentally, this is also the axioms found in Hilbert
+and Ackermann's \textit{Grundz\"{u}ge der theoretischen Logik} (1928).} (I~\S3.1) where $A\implies B$ is
+understood as an abbreviation for $(\neg A)\lor B$:
+\begin{itemize}
+\item[(S1)] $(A\lor A)\implies A$
+\item[(S2)] $A\implies(A\lor B)$
+\item[(S3)] $(A\lor B)\implies(B\lor A)$
+\item[(S4)] $(A\implies B)\implies((C\lor A)\implies(C\lor B))$.
+\end{itemize}
+Then axioms are given for quantified theories (I~\S4.2) as:
+\begin{itemize}
+\item[(S5)] If $R$ is a relation of theory $\mathscr{T}$, if $T$ is a
+  term in $\mathscr{T}$, and if $x$ is a letter, then the relation
+  $(T\mid x)R\implies(\exists x)R$ is an axiom.
+\end{itemize}
+The last two logical axioms concern equality (I~\S5.1):
+\begin{itemize}
+\item[(S6)] Let $x$ be a letter, let $T$ and $U$ be terms in theory $\mathscr{T}$,
+  and let $R[x]$ be a relation in $\mathscr{T}$. Then the relation
+  $(T=U)\implies(R[T]\iff R[U])$ is an axiom.
+\item[(S7)] If $R$ and $S$ are relations in a theory $\mathscr{T}$,
+  and if $x$ is a letter, then the relation $((\forall x)(R\iff S))\implies(\tau_{x}(R)=\tau_{x}(S))$
+  is an axiom.
+\end{itemize}
+The usual quantifier introduction and elimination rules are given as
+derived inference rules: S5 is $\exists$-introduction,
+C27 is $\forall$-introduction, and
+C30 is $\forall$-elimination. Existential-elimination can be given
+automatically using the $\tau$-operator to obtain the witness term.
 
 \section{Epsilon Calculus Implementation}
 
 \subsection{De Bruijn levels}
 We don't actually need to keep track of which object a $\tau_{x}A$
 refers to. We encode the $\Box$ using de Bruijn levels. As a consistency
-check, we keep track of the depth of the $\tau$ (which will match the de
-Bruijn level).
+check, we keep track of the variable being bound as well as the depth of
+the $\tau$ (which will match the de Bruijn level).
 
 \begin{code}
 class Shift a where
@@ -295,13 +393,37 @@ I'm just going to use $\neg(\exists x.\neg A[x])$ as the definition for
 the universal quantifier.
 This gives us the code:
 \begin{code}
-exists        ::  Letter -> Relation -> Relation
-exists  x  r  =   simp $ subst (tau x r) x r
+exists         ::  Letter -> Relation -> Relation
+exists  x  r   =   simp $ subst x (tau x r) r
 
-forall        ::  Letter -> Relation -> Relation
-forall  x  r  =   simp $ RNot (exists x (RNot r))
+for_all        ::  Letter -> Relation -> Relation
+for_all  x  r  =   simp $ RNot (exists x (RNot r))
 \end{code}
-
+Note: the $\varepsilon$-calculus is responsible for the ridiculously
+large sizes of the assemblies, specifically because we are using these
+definitions of quantifiers. One bit of low-hanging fruit would be to
+introduce one of these quantifiers as a primitive, and define the other
+in terms of the identity $\neg(\exists x.\neg P[x])\iff\forall x.P[x]$
+or $\neg(\forall x.\neg P[x])\iff\exists x.P[x]$. We would also need to
+add rules to the simplifier to rewrite
+\[P[\tau_{x}P[x]]\mapsto\exists x.P[x]\]
+and
+\[P[\tau_{x}\neg P[x]]\mapsto\forall x.P[x].\]
+If we were to add axioms to support this, I suppose (since the first
+four axioms describing propositional logic appear to be from Hilbert and
+Ackermann, we can continue this path) we would follow
+Hilbert and Ackermann's \textit{Grundz\"{u}ge der theoretischen Logik} (1928):
+\begin{enumerate}
+\item $(\forall x.P[x])\implies P[x]$
+\item $P[x]\implies(\exists x.P[x])$.
+\end{enumerate}
+We would add the inference rules:
+\begin{enumerate}
+\item If $x$ is not free in $\varphi$ and we have proven $\varphi\implies\psi[x]$,
+  then we can infer $\varphi\implies\forall x.\psi[x]$;
+\item If we have proven $\psi[x]\implies\varphi$, then we can infer
+  $(\exists x.\psi[x])\implies\varphi$.
+\end{enumerate}
 
 \section{Fresh Variables for Assemblies}
 
@@ -428,7 +550,7 @@ For terms, we have the inductive definition:
   this claim, it's because $\abs{(B\mid x)A}=\abs{B}\cdot o(x,A) + (\abs{A}-o(x,A))$,
   and then simple algebra gives us the result.
 \item $\abs{\langle A,B\rangle}=1+\abs{A}+\abs{B}$ since we are using
-  the ``original'' convention that $\bullet t_{1}\ t_{2}$ is an ordered
+  the ``original'' convention that $\pair t_{1}\ t_{2}$ is an ordered
   pair, which just prepends the concatenation of strings with one symbol.
 \end{enumerate}
 \begin{code}
@@ -459,7 +581,13 @@ instance Len Relation where
 
 \section{Set Theory}
 
-After C49 in II\S1.4, Bourbaki introduces the notation
+\textbf{Caution:} the code we implement assumes we are working with
+sentences, i.e., formulas with no free variables. This is fine for our
+purposes, but we should include code to make sure the variables we're
+quantifying over are fresh. This adds needless overhead to our
+implementation, and adds no benefit.
+
+After C49 in (II~\S1.4), Bourbaki introduces the notation
 $\mathcal{E}_{x}(R)$ for
 \begin{quote}
 To represent the term $\tau_{y}(\forall x)((x\in y)\iff R)$ which does
@@ -472,9 +600,9 @@ We denote this by |ens x R|.
 \begin{code}
 ens  ::  Letter -> Relation -> Term
 ens x r  =  let y = fresh "y" r
-            in tau 0 y (forall x (iff (RIn (TVar x) (TVar y)) r))
+            in tau y (for_all x (iff (RIn (TVar x) (TVar y)) r))
 \end{code}
-The unordered pair is introduced in II\S1.5, defined as
+The unordered pair is introduced in (II~\S1.5), defined as
 $\mathcal{E}_{z}(x=z\lor y=z)$ which is then abbreviated as $\{x,y\}$.
 This exists and is unique by the second axiom of Bourbaki's set theory,
 which means it really is a well-defined notion.
@@ -486,7 +614,7 @@ pair x y  =   let z = fresh "z" (REq x y)
               in ens z (ROr (REq x (TVar z)) (REq y (TVar z)))
 \end{code}
 
-\subsection{Ordered Pairs} This is formalized in II\S2 of Bourbaki's
+\subsection{Ordered Pairs} This is formalized in (II~\S2) of Bourbaki's
 \textit{Theory of Sets}. Bourbaki defines $\pair T\ U$ for the
 ordered pair of $T$ and $U$ as a primitive notion. But we can use the
 usual set-theoretic construction of ordered pairs. Purists can modify
@@ -507,14 +635,15 @@ formulation, you can replace this line of code with the primitive
 \begin{code}
 --- use orderedPair = TPair for debugging purposes
 orderedPair    ::  Term -> Term -> Term
-orderedPair    x  y     =  pair (ssingleton x) (pair x y)
+orderedPair    =   TPair
+-- orderedPair    x  y     =  pair (ssingleton x) (pair x y)
 
 orderedTriple  ::  Term -> Term -> Term -> Term
 orderedTriple  x  y  z  =  orderedPair (orderedPair x y) z
 \end{code}
 
 \subsection{Cartesian Product of Sets}
-The Cartesian product of sets is defined in II\S2.2 Definition 1 as
+The Cartesian product of sets is defined in (II~\S2.2) Definition~1 as
 \begin{equation}
 X\times Y := \mathcal{E}_{z}\bigl((\exists x)(\exists y)(z=(x,y)\land x\in X\land y\in Y)\bigr).
 \end{equation}
@@ -523,13 +652,14 @@ The implementation follows this definition:
 cartesianProduct :: Term -> Term -> Term
 cartesianProduct x y = ens "z"  (exists "x'"
                                   (exists "y'"
-                                    (and  (REq  (TVar "z") (orderedPair (TVar "x'") (TVar "y'")))
+                                    (and  (REq  (TVar "z") 
+                                                (orderedPair (TVar "x'") (TVar "y'")))
                                           (and  (RIn (TVar "x'") x)
                                                 (RIn (TVar "y'") y)))))
 \end{code}
 
 \subsection{Subsets}
-In II\S1.2, Definition 1, Bourbaki defines the predicate for a subset
+In (II~\S1.2), Definition~1, Bourbaki defines the predicate for a subset
 $X\subset Y$ as:
 \begin{equation}
 X\subset Y\quad :=\quad \forall z(z\in X\implies z\in Y).
@@ -537,20 +667,20 @@ X\subset Y\quad :=\quad \forall z(z\in X\implies z\in Y).
 We use this definition in the construction:
 \begin{code}
 subset :: Term -> Term -> Relation
-subset u v = forall "s" (implies (RIn (TVar "s") u) (RIn (TVar "s") v))
+subset u v = for_all "s" (implies (RIn (TVar "s") u) (RIn (TVar "s") v))
 \end{code}
 
 \subsection{Empty set}
 The empty set is defined as $\tau_{X}((\forall y)(y\notin X))$ in
-comments towards the end of II\S1.7, and we use this as the definition
+comments towards the end of (II~\S1.7), and we use this as the definition
 for it:
 \begin{code}
 emptySet :: Term
-emptySet = tau 0 "X" (forall "y" (RNot (RIn (TVar "y") (TVar "X"))))
+emptySet = tau "X" (for_all "y" (RNot (RIn (TVar "y") (TVar "X"))))
 \end{code}
 
 \subsection{Cardinality of sets}
-In III\S3.1, Bourbaki defines the notion of ``the cardinal of a set''
+In (III~\S3.1), Bourbaki defines the notion of ``the cardinal of a set''
 using equipotential sets.
 Two sets $A$ and $B$ are called equipotent, denoted by Bourbaki as
 $\Eq(A,B)$, if there exists a bijection between sets $A$ and $B$.
@@ -588,29 +718,29 @@ termB :: Term -> Letter -> Letter -> Relation
 termB x upperU z = subset (TVar upperU) (cartesianProduct x (TVar z))
 
 termC :: Term -> Letter -> Relation
-termC x upperU = forall "x" (implies  (RIn (TVar "x") x)
-                                      (exists "y" (RIn  (orderedPair (TVar "x") (TVar "y"))
-                                                        (TVar upperU))))
+termC x upperU = for_all "x" (implies  (RIn (TVar "x") x)
+                                       (exists "y" (RIn  (orderedPair (TVar "x") (TVar "y"))
+                                                         (TVar upperU))))
 
 termD :: Letter -> Relation
-termD upperU = forall "x"
-  (forall "y" (forall "z"
-                (implies  (and  (RIn (orderedPair (TVar "x") (TVar "y")) (TVar upperU))
-                                (RIn (orderedPair (TVar "x") (TVar "z")) (TVar upperU)))
-                          (REq (TVar "y") (TVar "z")))))
+termD upperU = for_all "x"
+  (for_all "y" (for_all "z"
+                 (implies  (and  (RIn (orderedPair (TVar "x") (TVar "y")) (TVar upperU))
+                                 (RIn (orderedPair (TVar "x") (TVar "z")) (TVar upperU)))
+                           (REq (TVar "y") (TVar "z")))))
 
 termE :: Letter -> Letter -> Relation
-termE upperU z = forall "y" (implies
-                              (RIn (TVar "y") (TVar z))
-                              (exists "x" (RIn  (orderedPair (TVar "x") (TVar "y"))
-                                                (TVar upperU))))
+termE upperU z = for_all "y" (implies
+                               (RIn (TVar "y") (TVar z))
+                               (exists "x" (RIn  (orderedPair (TVar "x") (TVar "y"))
+                                                 (TVar upperU))))
 
 card :: Term -> Term
-card x = tau 0 "Z" (exists "u" (exists "U" (and  (termA x "u" "U" "Z")
-                                                 (and  (termB x "U" "Z")
-                                                       (and  (termC x "U")
-                                                             (and  (termD "U")
-                                                                   (termE "U" "Z")))))))
+card x = tau "Z" (exists "u" (exists "U" (and  (termA x "u" "U" "Z")
+                                               (and  (termB x "U" "Z")
+                                                     (and  (termC x "U")
+                                                           (and  (termD "U")
+                                                                 (termE "U" "Z")))))))
 \end{code}
 As examples of this definition, Bourbaki defines 1 and 2 as
 \begin{code}
@@ -624,7 +754,7 @@ two = card (pair emptySet (ssingleton emptySet))
 \subsection{Sums}
 The value $f(x)$ corresponding to $x$ of a function $f$, when $G$ is the
 graph of $f$, is (slightly optimized) the $y$ such that $(x,y)$ is in $G$.
-Bourbaki defines (ch.II \S3.1, definition 3, remark 1) the image of a
+Bourbaki defines (II~\S3.1, definition 3, remark 1) the image of a
 set X according to a graph $G$ as
 \begin{spec}
 ens y (exists "x" (and  (RIn (TVar "x") X)
@@ -638,19 +768,19 @@ val :: Term -> Term -> Term
 val x graph = tau "y" (RIn (orderedPair x (TVar "y")) graph)
 \end{code}
 
-In a remark after Proposition 5 (ch III \S3.3), Bourbaki notes
+In a remark after Proposition 5 (III~\S3.3), Bourbaki notes
 if $a$ and $b$ are two cardinals, and $I$ a set with two elements (e.g.,
 the cardinal 2), then there exists a mapping $f$ of $I$ onto $\{a, b\}$
 for which the sum of this family is denoted $a+b$.
 
-The sum of a family of sets is discussed in Ch II \S4.8, definition 8 gives it as:
+The sum of a family of sets is discussed in (II~\S4.8) Definition~8 gives it as:
 \begin{quote}
 Let $(X_{i})_{i\in I}$ be a family of sets.
 The sum of this family is the union of the family of sets $(X_{i}\times \{i\})_{i\in I}$.
 \end{quote}
-The notion of a family of sets is defined in II \S3.4. It is basically the graph of a function $I\to \{X_{i}\}$.
+The notion of a family of sets is defined in (II~\S3.4). It is basically the graph of a function $I\to \{X_{i}\}$.
 
-The union of a family of sets $(X_{i})_{i\in I}$ is (ch II \S4.1 definition 1)
+The union of a family of sets $(X_{i})_{i\in I}$ is (II~\S4.1 Definition~1)
 $\mathcal{E}_{x}(\exists i)((i\in I)\mbox{ and }(x\in X))$
 % ens x (exists "i" (and (RIn (TVar "i") I) (RIn (TVar x) X)))
 The family $\{X_{0}, X_{1}\}$ when $X_{0}=X_{1}=1$ is then |cartesianProduct two one|.
@@ -710,4 +840,12 @@ main = do
   putStrLn ("Size of E = " ++ (show (len (termE "U" "Z"))))
 \end{code}
 
+
+\begin{thebibliography}{99}
+\bibitem{bourbaki1968sets} Nicolas Bourbaki, \textit{The Theory of Sets}.
+  Springer, 2000 softcover reprint of 1968 English translation.
+\bibitem{aitkens2022commentary} Wayne Aitken,
+  ``Bourbaki, Theory of Sets, Chapter I, Description of Formal Mathematics: Summary and Commentary''.
+  Commentary dated 2022, \url{https://public.csusm.edu/aitken_html/Essays/Bourbaki/BourbakiSetTheory1.pdf}
+\end{thebibliography}
 \end{document}
