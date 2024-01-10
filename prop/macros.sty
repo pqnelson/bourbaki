@@ -1,0 +1,71 @@
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+
+\usepackage{xcolor}
+\usepackage{hyperref}
+% eTeX uses this color for links, it's better than BrickRed imho
+\definecolor{linkRed}{cmyk}{0.28, 1, 1, 0.35}
+\hypersetup{colorlinks=true,
+    linkcolor=linkRed,
+    citecolor=linkRed,
+    filecolor=linkRed,
+    urlcolor=linkRed
+}
+
+%\setlist[enumerate]{itemsep=0pt,parsep=0pt}
+\newlist{pf}{enumerate}{1}
+\setlist[pf]{label=(.\arabic*),ref=.\arabic*}%,itemsep=0pt,parsep=0pt}
+
+
+% Bourbaki's style, as found in, e.g., their Lie Groups book.
+\def\th@plain{%
+%%  \let\thm@indent\noindent % no indent
+%%  \thm@headfont{\bfseries}% heading font is bold
+%%  \thm@notefont{}% same as heading font
+%%  \thm@headpunct{.}% add period after heading
+%%  \let\thm@swap\@gobble
+%%  \thm@preskip\topsep
+%%  \thm@postskip\theorempreskipamount
+  \thm@headfont{\scshape}%
+  \itshape % body font
+}
+\def\th@definition{%
+  \thm@headfont{\scshape}%
+  \normalfont % body font
+}
+\def\th@remark{%
+  \thm@headfont{\small\itshape}%
+  \addtolength{\@totalleftmargin}{2\parindent}
+   \addtolength{\linewidth}{-2\parindent}
+   \parshape 1 2\parindent \linewidth\small  \normalfont % body font
+  \thm@preskip\topsep \divide\thm@preskip\tw@
+  \thm@postskip\thm@preskip
+}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{dc}{\ignorespaces}
+\newtheorem{syn}{\ignorespaces}
+\renewcommand\thedc{C\arabic{dc}}
+\renewcommand\thesyn{Syn\arabic{syn}}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[theorem]
+\newtheorem*{remark*}{Remark}
+\newtheorem{remarks}{Remarks}[theorem]
+
+
+
+\let\og@implies\implies
+\let\implies\Longrightarrow
+
+
+\endinput

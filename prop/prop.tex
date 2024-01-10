@@ -1,0 +1,687 @@
+\documentclass{amsart}%{article}
+\usepackage{macros}
+\newcommand\metavariable[1]{\boldsymbol{#1}}
+\title{Propositional logic in Bourbaki's system}
+\author{Alex Nelson}
+\date{January 9, 2024}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+We work through the propositional logic underpinning Bourbaki's formal
+system as found in their \textit{Theory of Sets}~\cite{bourbaki1970sets}.
+It's a Hilbert proof calculus with disjunction and negation as its
+primitive connectives. But many proofs are inadequate or handwavy. All
+its gory details will be spelled out.
+\end{abstract}
+
+\section{Introduction}
+
+\subsection{Motivation}
+I'm curious about Bourbaki's formal system, because it is so baroque and
+exotic by today's standards. But I'm also curious about the possibility
+of writing a ``high level proof language'' (like Mizar) which would
+compile down to a ``low level proof language'' (like a Hilbert proof system).
+I figure I could investigate both simultaneously.
+
+\subsection{Scope}
+We will formalize I~\S\S3.2--3.5 from Bourbaki~\cite{bourbaki1970sets}
+in a Hilbert proof system amenable to formalization in a proof assistant.
+Bourbaki doesn't give proofs\footnote{Fun fact: throughout Bourbaki's
+\textit{Elements of Mathematics}, no proof explicitly appears.}, and
+occasionally gives hints before skipping ahead to more interesting labours.
+We will follow their numbering conventions for their metatheorems, but
+after a half dozen metatheorems Bourbaki quickly runs out of steam. This
+requires us to introduce lemmas to supplement Bourbaki's work.
+
+\subsection{Literature review} This is rather incomplete, but just
+listing the relevant articles I found invaluable while doing this.
+It's worth mentioning Wayne Aitken wrote an invaluable
+commentary~\cite{aitken2023} on the first chapter of
+Bourbaki~\cite{bourbaki1970sets}. Mathias has written quite a few
+critical articles~\cite{mathias1992ignorance,mathias2002term,mathias2014hilbert}
+worth reading.
+
+
+\section{Bourbaki's system}
+
+\subsection{Primitive connectives}
+As far as Bourbaki cares, the primitive logical connectives are negation
+and disjunction. So $A\implies B$ is an abbreviation for $\neg A\lor B$,
+for example.
+
+\begin{remark}
+The first four axioms are the so-called ``Russell--Bernays axioms''.
+This appears to be the axioms found in the
+\textit{Principia Mathematica}, specifically corresponding to axioms
+$*1.2$, $*1.3$, $*1.4$, and $*1.6$ in \textit{Principia}. Bernays proved
+its logical completeness in ``Axiomatische Untersuchungen des
+Aussagen-Kalkuls der \textit{Principia Mathematica}.''
+\textit{Mathematische Zeitschrift} \textbf{25} (1926) 305--320;
+translated into English in Richard Zach's \textit{Universal Logic: An
+  Anthology} (2012) pp.43--58. Russell and Whitehead call these axioms
+``principle of tautology'', ``principle of addition'',
+``principle of permutation'', ``principle of
+summation''. Coincidentally, this is also the axioms found in Hilbert
+and Ackermann's \textit{Grundz\"{u}ge der theoretischen Logik} (1928).
+\end{remark}
+
+\subsection{Axioms}
+Bourbaki works with a Hilbert proof calculus. The axioms for
+propositional logic are (letting $\metavariable{A}$, $\metavariable{B}$, $\metavariable{C}$ be metavariables):
+\begin{enumerate}[label=(S\arabic*),ref={S\arabic*}]
+\item\label{axiom:s1} $(\metavariable{A}\lor\metavariable{A})\implies\metavariable{A}$
+\item\label{axiom:s2} $\metavariable{A}\implies(\metavariable{A}\lor\metavariable{B})$
+\item\label{axiom:s3} $(\metavariable{A}\lor\metavariable{B})\implies(\metavariable{B}\lor\metavariable{A})$
+\item\label{axiom:s4} $(\metavariable{A}\implies\metavariable{B})\implies((\metavariable{C}\lor\metavariable{A})\implies(\metavariable{C}\lor\metavariable{B}))$
+\end{enumerate}
+
+\subsection{Proofs and theorems}
+Proofs are then a finite ordered sequence of steps. Each step is either
+an instance of an axiom, or is justified by applying \textit{modus ponens}
+to previous steps. We treat S$1(A)$, S$2(A,B)$, S$3(A,B)$, S$4(A,B,C)$
+as functions of propositions, so justifying a proof step as an instance
+of an axiom (or previous theorem) will simply be ``by S$n(P_{1},\dots,P_{k})$''
+where $P_{j}$ are propositions. Bourbaki gives a number of metatheorems
+called ``deductive criteria'' which can be thought of as a function in
+the metalanguage of theorems, proof step numbers, and formulas,
+which are then treated in the same manner as justifications.
+
+Theorems are propositions with a proof. For a proposition
+$\metavariable{A}$, we will write $\vdash\metavariable{A}$ to establish
+that $\metavariable{A}$ is a theorem. Although we can prefix each step
+of a proof with the turnstile $\vdash$, it will clutter things up.
+The use of a turnstile is our modern convention, Bourbaki does not use
+it.
+
+More generally, if $\Gamma$ is a set of propositions, we can write
+$\Gamma\vdash\metavariable{A}$ if either $\metavariable{A}\in\Gamma$ or
+$\vdash\metavariable{A}$. We use the notation
+$\metavariable{A}_{1},\dots,\metavariable{A}_{n}\vdash\metavariable{A}$
+instead of writing $\{\metavariable{A}_{1},\dots,\metavariable{A}_{n}\}\vdash\metavariable{A}$.
+
+\begin{theorem}\label{thm:existence-of-proofs}
+If $\vdash\metavariable{A}$ is a theorem,
+then there exists a finite sequence $(P_{1},J_{1})$, \dots, $(P_{n},J_{n})$ of
+propositions and their justifications which form a proof of
+$\vdash\metavariable{A}$.
+\end{theorem}
+
+\begin{theorem}[Weakening]
+Let $\Gamma\subset\Gamma'$.
+If $\Gamma\vdash\metavariable{A}$, then $\Gamma'\vdash\metavariable{A}$.
+\end{theorem}
+
+\begin{proof}
+Assume $\Gamma\vdash\metavariable{A}$.
+Then by Theorem~\ref{thm:existence-of-proofs}, we have a proof
+$(P_{1},J_{1})$, \dots, $(P_{n},J_{n})$ where each for each
+$i=1,\dots,n$ either $P_{i}\in\Gamma$ (and therefore $P_{i}\in\Gamma'$)
+or $P_{i}$ is an axiom or $P_{i}$ is justified by steps $1,\dots,i-1$.
+But this means that the sequence of proof steps
+$(P_{1},J_{1})$, \dots, $(P_{n},J_{n})$ justifies the claim
+$\Gamma'\vdash\metavariable{A}$.
+\end{proof}
+
+For an example of a deductive criterion, Bourbaki offers their first one:
+
+\begin{dc}[Syllogism]
+If $\vdash\metavariable{A}$ and $\vdash\metavariable{A}\implies\metavariable{B}$,
+then $\vdash\metavariable{B}$.
+\end{dc}
+
+We will generically write MP($\vdash\metavariable{A}\implies\metavariable{B}$,$\vdash\metavariable{A}$)
+to justify a proof step using modus ponens. The intuition of the order
+of arguments is that MP acts like ``apply $\langle$\textit{function}$\rangle$
+$\langle$\textit{argument}$\rangle$''.
+
+\setcounter{dc}{5}
+
+\section{Metatheorems}
+
+\subsection{Syntactic sugar} We will provide two ``obvious'' theorems to
+unfold the definition of implies, and to ``fold'' the definition of implies.
+
+\begin{syn}\label{unfold-implies}
+If $\vdash\metavariable{A}\implies\metavariable{B}$
+then $\vdash\neg\metavariable{A}\lor\metavariable{B}$.
+\end{syn}
+
+\begin{syn}\label{fold-implies}
+If $\vdash\neg\metavariable{A}\lor\metavariable{B}$,
+then $\vdash\metavariable{A}\implies\metavariable{B}$.
+\end{syn}
+
+\begin{syn}\label{syn:tautology:implies-to-lor}
+$\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\metavariable{A}\lor\metavariable{B})$
+\end{syn}
+
+\begin{syn}\label{syn:tautology:lor-to-implies}
+$\vdash(\neg\metavariable{A}\lor\metavariable{B})\implies(\metavariable{A}\implies\metavariable{B})$
+\end{syn}
+
+\subsection{Bourbaki's results}
+
+\begin{dc}\label{dc:6}
+If $\vdash\metavariable{A}\implies\metavariable{B}$
+and $\vdash\metavariable{B}\implies\metavariable{C}$,
+then $\vdash\metavariable{A}\implies\metavariable{C}$.
+\end{dc}
+
+\begin{pf}
+\item\label{dc6:1} $\vdash(\metavariable{A}\implies\metavariable{B})$
+  by hypothesis
+\item\label{dc6:2} $\vdash(\metavariable{B}\implies\metavariable{C})$
+  by hypothesis
+\item\label{dc6:3} $\vdash(\metavariable{B}\implies\metavariable{C})\implies((\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\metavariable{A}\lor\metavariable{C}))$
+  by \ref{axiom:s4}$(\metavariable{B},\metavariable{C},\neg\metavariable{A})$.
+\item\label{dc6:4} $\vdash((\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\metavariable{A}\lor\metavariable{C}))$
+  by MP(\ref{dc6:3},\ref{dc6:2})
+\item\label{dc6:5} $\vdash(\neg\metavariable{A}\lor\metavariable{B})$
+  by \ref{unfold-implies}(\ref{dc6:1})
+\item\label{dc6:6} $\vdash(\neg\metavariable{A}\lor\metavariable{C})$ by MP(\ref{dc6:4},\ref{dc6:5}).
+\item\label{dc6:7} $\vdash(\metavariable{A}\implies\metavariable{C})$ by \ref{fold-implies}(\ref{dc6:6})
+\end{pf}
+
+\begin{dc}\label{dc:7}
+$\vdash\metavariable{B}\implies(\metavariable{A}\lor\metavariable{B})$.
+\end{dc}
+
+\begin{pf}
+\item\label{dc7:1} $\vdash\metavariable{B}\implies(\metavariable{B}\lor\metavariable{A})$
+  by $\ref{axiom:s2}(\metavariable{B},\metavariable{A})$
+\item\label{dc7:2} $\vdash(\metavariable{B}\lor\metavariable{A})\implies(\metavariable{A}\lor\metavariable{B})$
+  by $\ref{axiom:s3}(\metavariable{B},\metavariable{A})$
+\item $\vdash\metavariable{B}\implies(\metavariable{A}\lor\metavariable{B})$
+  by \ref{dc:6}(\ref{dc7:1}, \ref{dc7:2})
+\end{pf}
+
+\begin{dc}\label{dc:8}
+$\vdash\metavariable{A}\implies\metavariable{A}$
+\end{dc}
+
+\begin{pf}
+\item\label{dc8:1} $\vdash\metavariable{A}\implies(\metavariable{A}\lor\metavariable{A})$
+  by \ref{axiom:s2}($\metavariable{A}$, $\metavariable{A}$)
+\item\label{dc8:2} $\vdash(\metavariable{A}\lor\metavariable{A})\implies\metavariable{A}$
+  by \ref{axiom:s1}($\metavariable{A}$)
+\item $\vdash\metavariable{A}\implies\metavariable{A}$ by
+  \ref{dc:6}(\ref{dc8:1}, \ref{dc8:2})
+\end{pf}
+
+\begin{dc}\label{dc:9}
+If $\vdash\metavariable{B}$, then for any proposition $\metavariable{A}$
+we have $\vdash\metavariable{A}\implies\metavariable{B}$.
+\end{dc}
+
+\begin{pf}
+\item\label{dc9:1} $\vdash\metavariable{B}$ by hypothesis
+\item\label{dc9:2} $\vdash\metavariable{B}\implies(\neg\metavariable{A}\lor\metavariable{B})$
+  by \ref{dc:7}($\neg{\metavariable{A}}$, $\metavariable{B}$)
+\item\label{dc9:3} $\vdash\neg\metavariable{A}\lor\metavariable{B}$ by
+  MP(\ref{dc9:1}, \ref{dc9:2})
+\item $\vdash\metavariable{A}\implies\metavariable{B}$ by \ref{fold-implies}(\ref{dc9:3})
+\end{pf}
+
+\begin{dc}\label{dc:10}
+$\vdash\metavariable{A}\lor\neg\metavariable{A}$
+\end{dc}
+\begin{pf}
+\item\label{dc10:1} $\vdash\metavariable{A}\implies\metavariable{A}$
+  by \ref{dc:8}($\metavariable{A}$)
+\item\label{dc10:2} $\vdash\neg\metavariable{A}\lor\metavariable{A}$
+  by \ref{unfold-implies}(\ref{dc10:1})
+\item\label{dc10:3} $\vdash((\neg\metavariable{A})\lor\metavariable{A})\implies(\metavariable{A}\lor\neg\metavariable{A})$
+  by \ref{axiom:s3}($\neg\metavariable{A}$, $\metavariable{A}$)
+\item $\vdash\metavariable{A}\lor\neg\metavariable{A}$ by
+  MP(\ref{dc10:3}, \ref{dc10:2})
+\end{pf}
+
+\begin{dc}\label{dc:11}
+$\vdash\metavariable{A}\implies(\neg\neg\metavariable{A})$
+\end{dc}
+\begin{pf}
+\item\label{dc11:1} $\vdash(\neg\metavariable{A})\lor(\neg\neg\metavariable{A})$
+  by \ref{dc:10}($\metavariable{A}$)
+\item $\vdash\metavariable{A}\implies\neg\neg\metavariable{A}$
+  by \ref{fold-implies}(\ref{dc11:1})
+\end{pf}
+
+\begin{dc}\label{dc:12}
+$\vdash(\metavariable{A}\implies\metavariable{B})\implies((\neg\metavariable{B})\implies(\neg\metavariable{A}))$
+\end{dc}
+\begin{pf}
+\item\label{dc12:1} $\vdash\metavariable{B}\implies\neg\neg\metavariable{B}$
+  by \ref{dc:11}($\metavariable{B}$)
+\item\label{dc12:2} $\vdash(\metavariable{B}\implies\neg\neg\metavariable{B})\implies((\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\metavariable{A}\lor\neg\neg\metavariable{B}))$
+  by \ref{axiom:s4}($\metavariable{B}$, $\neg\neg\metavariable{B}$, $\neg\metavariable{A}$)
+\item\label{dc12:3} $\vdash(\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\metavariable{A}\lor\neg\neg\metavariable{B})$
+  by MP(\ref{dc12:2}, \ref{dc12:1})
+\item\label{dc12:4} $\vdash(\neg\metavariable{A}\lor\neg\neg\metavariable{B})\implies(\neg\neg\metavariable{B}\lor\neg\metavariable{A})$
+  by \ref{axiom:s3}($\neg\metavariable{A}$, $\neg\neg\metavariable{B}$)
+\item\label{dc12:5} $\vdash(\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\neg\metavariable{B}\lor\neg\metavariable{A})$
+  by \ref{dc:6}(\ref{dc12:3}, \ref{dc12:4})
+\item\label{dc12:6} $\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\metavariable{A}\lor\metavariable{B})$
+  by \ref{syn:tautology:implies-to-lor}($\metavariable{A}$, $\metavariable{B}$)
+\item\label{dc12:7} $\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\neg\metavariable{B}\lor\neg\metavariable{A})$
+  by \ref{dc:6}(\ref{dc12:6}, \ref{dc12:5})
+\item\label{dc12:8} $\vdash(\neg\neg\metavariable{B}\lor\neg\metavariable{A})\implies(\neg\metavariable{B}\implies\neg\metavariable{A})$
+  by \ref{syn:tautology:implies-to-lor}($\neg\metavariable{B}$, $\neg\metavariable{A}$)
+\item $\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\metavariable{B}\implies\neg\metavariable{A})$
+  by \ref{dc:6}(\ref{dc12:7}, \ref{dc12:8})
+\end{pf}
+
+\begin{dc}\label{dc:13}
+If $\vdash\metavariable{A}\implies\metavariable{B}$,
+then $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{A}\implies\metavariable{C})$
+\end{dc}
+
+\begin{pf}
+\item\label{dc13:1} $\vdash\metavariable{A}\implies\metavariable{B}$ by hypothesis
+\item\label{dc13:2} $\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\metavariable{B}\implies\neg\metavariable{A})$
+  by \ref{dc:12}($\metavariable{A}$, $\metavariable{B}$)
+\item\label{dc13:3} $\vdash\neg\metavariable{B}\implies\neg\metavariable{A}$
+  by MP(\ref{dc13:2}, \ref{dc13:1})
+\item\label{dc13:4} $\vdash(\neg\metavariable{B}\implies\neg\metavariable{A})\implies((\metavariable{C}\lor\neg\metavariable{B})\implies(\metavariable{C}\lor\neg\metavariable{A}))$
+  by \ref{axiom:s4}($\neg\metavariable{B}$, $\neg\metavariable{A}$, $\metavariable{C}$)
+\item\label{dc13:5} $\vdash(\metavariable{C}\lor\neg\metavariable{B})\implies(\metavariable{C}\lor\neg\metavariable{A})$
+  by MP(\ref{dc13:4}, \ref{dc13:3})
+\item\label{dc13:6} $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{C}\lor\neg\metavariable{B})$
+  by \ref{dc:6}(\ref{axiom:s3}($\metavariable{C}$, $\neg\metavariable{B}$),
+  \ref{syn:tautology:lor-to-implies}($\metavariable{B}$, $\metavariable{C}$))
+\item\label{dc13:7} $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{C}\lor\neg\metavariable{A})$
+  by \ref{dc:6}(\ref{dc13:6}, \ref{dc13:5})
+\item\label{dc13:8} $\vdash(\metavariable{C}\lor\neg\metavariable{A})\implies(\metavariable{A}\implies\metavariable{C})$
+  by \ref{dc:6}(\ref{axiom:s3}($\metavariable{C}$, $\neg\metavariable{A}$),
+  \ref{syn:tautology:lor-to-implies}($\metavariable{A}$, $\metavariable{C}$))
+\item $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{A}\implies\metavariable{C})$
+  by \ref{dc:6}(\ref{dc13:7}, \ref{dc13:8})
+\end{pf}
+
+\begin{lemma}\label{lem:prop:weakening-l}
+If $\vdash\metavariable{A}\implies\metavariable{B}$, then
+$\vdash\metavariable{A}\implies(\metavariable{C}\lor\metavariable{B})$.
+\end{lemma}
+
+\begin{pf}
+\item\label{lm3:1} $\vdash\metavariable{A}\implies\metavariable{B}$ by hypothesis
+\item\label{lm3:2} $\vdash\metavariable{B}\implies\metavariable{C}\lor\metavariable{B}$ 
+\item $\vdash\metavariable{A}\implies(\metavariable{C}\lor\metavariable{B})$
+  by \ref{dc:6}(\ref{lm3:1}, \ref{lm3:2})
+\end{pf}
+
+\begin{lemma}\label{lem:prop:weakening-r}
+If $\vdash\metavariable{A}\implies\metavariable{B}$, then $\vdash\metavariable{A}\implies(\metavariable{B}\lor\metavariable{C})$.
+\end{lemma}
+
+\begin{pf}
+\item\label{lm3r:1} $\vdash\metavariable{A}\implies\metavariable{B}$ by hypothesis
+\item\label{lm3r:4} $\vdash\metavariable{B}\implies\metavariable{B}\lor\metavariable{C}$
+\item $\vdash\metavariable{A}\implies(\metavariable{B}\lor\metavariable{C})$
+  by \ref{dc:6}(\ref{lm3r:1}, \ref{lm3r:4}).
+\end{pf}
+
+\begin{lemma}\label{lm:prop:weaken-premises}
+If $\vdash\metavariable{A}\implies\metavariable{C}$
+and $\vdash\metavariable{B}\implies\metavariable{C}$,
+then $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{C}$.
+\end{lemma}
+
+\begin{pf}
+\item\label{lm:prop:weaken-premises:1} $\vdash\metavariable{A}\implies\metavariable{C}$
+  by hypothesis
+\item\label{lm:prop:weaken-premises:2} $\vdash\metavariable{B}\implies\metavariable{C}$
+  by hypothesis
+\item\label{lm:prop:weaken-premises:3} $\vdash(\metavariable{A}\implies\metavariable{C})\implies((\metavariable{C}\lor\metavariable{A})\implies(\metavariable{C}\lor\metavariable{C}))$
+  by \ref{axiom:s4}($\metavariable{A}$, $\metavariable{C}$, $\metavariable{C}$)
+\item\label{lm:prop:weaken-premises:4}
+  $\vdash\metavariable{C}\lor\metavariable{A}\implies\metavariable{C}\lor\metavariable{C}$
+  by MP(\ref{lm:prop:weaken-premises:3}, \ref{lm:prop:weaken-premises:1})
+\item\label{lm:prop:weaken-premises:5}
+  $\vdash\metavariable{C}\lor\metavariable{C}\implies\metavariable{C}$
+  by \ref{axiom:s1}($\metavariable{C}$)
+\item\label{lm:prop:weaken-premises:6}
+  $\vdash\metavariable{C}\lor\metavariable{A}\implies\metavariable{C}$
+  by \ref{dc:6}(\ref{lm:prop:weaken-premises:4}, \ref{lm:prop:weaken-premises:5})
+\item\label{lm:prop:weaken-premises:7}
+  $\vdash(\metavariable{B}\implies\metavariable{C})\implies((\metavariable{A}\lor\metavariable{B})\implies(\metavariable{A}\lor\metavariable{C}))$
+  by \ref{axiom:s4}($\metavariable{B}$, $\metavariable{C}$, $\metavariable{A}$)
+\item\label{lm:prop:weaken-premises:8}
+  $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{A}\lor\metavariable{C}$
+  by MP(\ref{lm:prop:weaken-premises:7}, \ref{lm:prop:weaken-premises:2})
+\item\label{lm:prop:weaken-premises:9}
+  $\vdash\metavariable{A}\lor\metavariable{C}\implies\metavariable{C}\lor\metavariable{A}$
+  by \ref{axiom:s3}($\metavariable{A}$, $\metavariable{C}$)
+\item\label{lm:prop:weaken-premises:10}
+  $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{C}\lor\metavariable{A}$
+  by \ref{dc:6}(\ref{lm:prop:weaken-premises:8}, \ref{lm:prop:weaken-premises:9})
+\item\label{lm:prop:weaken-premises:11}
+  $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{C}$
+  by \ref{dc:6}(\ref{lm:prop:weaken-premises:10}, \ref{lm:prop:weaken-premises:6})
+\end{pf}
+
+\begin{lemma}[Associativity of disjunction 1]
+$\vdash\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})\implies(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}$
+\end{lemma}
+
+\begin{pf}
+\item\label{lm:prop:assoc1:1} $\vdash\metavariable{A}\implies(\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C}))$
+  by \ref{axiom:s2}($\metavariable{A}$, $\metavariable{B}\lor\metavariable{C}$)
+\item\label{assoc:distrb2:2} $\vdash\metavariable{B}\implies\metavariable{B}\lor\metavariable{C}$
+  by \ref{axiom:s2}($\metavariable{B}$, $\metavariable{C}$)
+\item\label{lm:prop:assoc1:3} $\vdash\metavariable{B}\implies\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})$
+  by Lm\ref{lem:prop:weakening-l}(\ref{assoc:distrb2:2})
+\item\label{lm:prop:assoc1:4} $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})$
+  by Lm\ref{lm:prop:weaken-premises}(\ref{lm:prop:assoc1:1}, \ref{lm:prop:assoc1:3})
+\item\label{lm:prop:assoc1:5} $\vdash\metavariable{C}\implies\metavariable{B}\lor\metavariable{C}$
+  by \ref{dc:7}($\metavariable{B}$, $\metavariable{C}$)
+\item\label{lm:prop:assoc1:6} $\vdash\metavariable{C}\implies\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})$
+  by Lm\ref{lem:prop:weakening-l}(\ref{lm:prop:assoc1:5})
+\item $\vdash(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}\implies\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})$
+  from Lm\ref{lm:prop:weaken-premises}(\ref{lm:prop:assoc1:4}, \ref{lm:prop:assoc1:6})
+\end{pf}
+
+\begin{lemma}[Associativity of disjunction 2]\label{lemma:prop:disj-assoc2}
+$\vdash(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}\implies\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})$
+\end{lemma}
+
+\begin{lemma}\label{lem3:prop}
+If $\vdash\metavariable{A}\implies\metavariable{B}$
+and $\vdash\metavariable{A}\lor\metavariable{C}$,
+then $\vdash\metavariable{B}\lor\metavariable{C}$.
+\end{lemma}
+\begin{pf}
+\item\label{lem3:prop:1} $\vdash\metavariable{A}\implies\metavariable{B}$ by hypothesis
+\item\label{lem3:prop:2} $\vdash\metavariable{A}\lor\metavariable{C}$ by hypothesis
+\item\label{lem3:prop:3} $\vdash(\metavariable{A}\implies\metavariable{B})\implies((\metavariable{C}\lor\metavariable{A})\implies(\metavariable{C}\lor\metavariable{B}))$
+  by \ref{axiom:s4}($\metavariable{A}$, $\metavariable{B}$, $\metavariable{C}$)
+\item\label{lem3:prop:4} $\vdash(\metavariable{C}\lor\metavariable{A})\implies(\metavariable{C}\lor\metavariable{B})$
+  by MP(\ref{lem3:prop:3}, \ref{lem3:prop:1})
+\item\label{lem3:prop:5} $\vdash\metavariable{C}\lor\metavariable{A}$ by MP(\ref{axiom:s3}($\metavariable{A}$, $\metavariable{C}$), \ref{lem3:prop:2})
+\item\label{lem3:prop:6} $\vdash\metavariable{C}\lor\metavariable{B}$
+  by MP(\ref{lem3:prop:4}, \ref{lem3:prop:5})
+\item\label{lem3:prop:7} $\vdash\metavariable{B}\lor\metavariable{C}$
+  by MP(\ref{axiom:s3}($\metavariable{C}$, $\metavariable{B}$), \ref{lem3:prop:6})
+\end{pf}
+
+\begin{dc}[Deduction theorem]\label{dc:14}
+If $\metavariable{A}\vdash\metavariable{B}$, then $\vdash\metavariable{A}\implies\metavariable{B}$.
+\end{dc}
+
+I will not give Bourbaki's version of the theorem, instead here's a
+slicker version I like better (and it's cleaner, in my opinion).
+
+\begin{proof}
+By induction on the derivation of
+$\metavariable{A}\vdash\metavariable{B}$. There are three cases:
+\begin{enumerate}
+\item $\metavariable{A}=\metavariable{B}$, in which case we just need to
+  prove $\vdash\metavariable{A}\implies\metavariable{A}$ which has been
+  done in \ref{dc:8}.
+\item $\metavariable{B}$ is an axiom or an instance of a
+  metatheorem. Then $\vdash\metavariable{B}$ holds, and we get the
+  result by \ref{dc:9}.
+\item $\metavariable{A}\vdash\metavariable{B}$ is obtained by
+  \textit{modus ponens} by $\metavariable{A}\vdash\metavariable{C}\implies\metavariable{B}$
+  and $\metavariable{A}\vdash\metavariable{C}$. The inductive hypotheses
+  assert
+  \begin{itemize}
+  \item[(IH1)] $\vdash\metavariable{A}\implies(\metavariable{C}\implies\metavariable{B})$
+  \item[(IH2)] $\vdash\metavariable{A}\implies\metavariable{C}$
+  \end{itemize}
+  These are given premises in the following proof:
+  \begin{pf}
+\item $\vdash\neg\metavariable{A}\lor(\neg\metavariable{C}\lor\metavariable{B})$
+  by IH1, unfolding the implications
+\item $\vdash(\neg\metavariable{C}\lor\metavariable{B})\lor\neg\metavariable{A}$
+  by MP(\ref{axiom:s3}, previous step)
+\item $\vdash\neg\metavariable{C}\lor(\metavariable{B}\lor\neg\metavariable{A})$
+  by MP(\ref{lemma:prop:disj-assoc2}($\neg\metavariable{C}$, $\metavariable{B}$, $\neg\metavariable{A}$), previous step)
+\item $\vdash\metavariable{C}\implies(\metavariable{B}\lor\neg\metavariable{A})$
+  from previous step, folding the definition of implication
+\item $\vdash\metavariable{A}\implies(\metavariable{B}\lor\neg\metavariable{A})$
+  by \ref{dc:6}(IH2,previous step)
+\item $\vdash\neg\metavariable{A}\lor(\metavariable{B}\lor\neg\metavariable{A})$
+  from previous step, unfolding definition of implies
+\item $\vdash(\metavariable{B}\lor\neg\metavariable{A})\lor\neg\metavariable{A}$
+  by MP(\ref{axiom:s3}, previous step)
+\item $\vdash\metavariable{B}\lor(\neg\metavariable{A}\lor\neg\metavariable{A})$
+  by MP(Lm\ref{lemma:prop:disj-assoc2}($\metavariable{B}$, $\neg\metavariable{A}$, $\neg\metavariable{A}$), previous step)
+\item $\vdash(\neg\metavariable{A}\lor\neg\metavariable{A})\lor\metavariable{B}$
+  by MP(\ref{axiom:s3}, previous step)
+\item $\vdash\neg\metavariable{A}\lor\metavariable{B}$ from Lm\ref{lem3:prop}(\ref{axiom:s1}($\neg\metavariable{A}$),previous step)
+\item $\vdash\metavariable{A}\implies\metavariable{B}$ from previous step
+  \end{pf}
+\end{enumerate}
+\end{proof}
+
+\begin{lemma}\label{lemma:prop:explode-helper}
+$\vdash\neg\metavariable{A}\implies(\metavariable{A}\implies\metavariable{B})$
+\end{lemma}
+
+\begin{pf}
+\item $\vdash\neg\metavariable{A}\implies(\neg\metavariable{A}\lor\metavariable{B})$
+  by \ref{axiom:s2}($\neg\metavariable{A}$, $\metavariable{B}$)
+\item $\vdash(\neg\metavariable{A}\lor\metavariable{B})\implies(\metavariable{A}\implies\metavariable{B})$
+\item $\vdash\neg\metavariable{A}\implies(\metavariable{A}\implies\metavariable{B})$
+  by \ref{dc:6} applied to the previous two steps.
+\end{pf}
+
+\begin{lemma}[Explosion principle]\label{lemma:prop:explosion}
+If $\vdash\metavariable{A}$ and $\vdash\neg\metavariable{A}$, then
+$\vdash\metavariable{B}$ for any $\metavariable{B}$.
+\end{lemma}
+
+\begin{pf}
+\item $\vdash\metavariable{A}$ by hypothesis
+\item $\vdash\neg\metavariable{A}$ by hypothesis
+\item $\vdash\neg\metavariable{A}\implies(\metavariable{A}\implies\metavariable{B})$
+  by the previous lemma
+\item $\vdash\metavariable{A}\implies\metavariable{B}$ by MP(.3,.2)
+\item $\vdash\metavariable{B}$ by MP(.4,.1)
+\end{pf}
+  
+\begin{dc}\label{dc:15}
+If $\neg\metavariable{A}\vdash\metavariable{A}$, then $\vdash\metavariable{A}$.
+(Informally, if adjoining $\neg\metavariable{A}$ results in a
+contradictory theory, then $\vdash\metavariable{A}$.)
+\end{dc}
+
+\begin{pf}
+\item $\neg\metavariable{A}\vdash\metavariable{A}$ by hypothesis
+\item $\vdash\neg\metavariable{A}\implies\metavariable{A}$ by deduction theorem
+\item $\vdash(\neg\metavariable{A}\implies\metavariable{A})\implies((\metavariable{A}\lor\neg\metavariable{A})\implies(\metavariable{A}\lor\metavariable{A}))$
+  by \ref{axiom:s4}($\neg\metavariable{A}$, $\metavariable{A}$, $\metavariable{A}$)
+\item $\vdash(\metavariable{A}\lor\neg\metavariable{A})\implies(\metavariable{A}\lor\metavariable{A})$
+  by MP(.3,.2)
+\item $\vdash\metavariable{A}\lor\neg\metavariable{A}$ by \ref{dc:10}($\metavariable{A}$)
+\item $\vdash\metavariable{A}\lor\metavariable{A}$ by MP(.4,.5)
+\item $\vdash\metavariable{A}$ by MP(\ref{axiom:s1}($\metavariable{A}$),.6)
+\end{pf}
+
+\begin{corollary}\label{cor:prop:explode}
+If $\neg\metavariable{A}\vdash\metavariable{B}$ and
+$\neg\metavariable{A}\vdash\neg\metavariable{B}$, then
+$\vdash\metavariable{A}$.
+\end{corollary}
+
+\begin{pf} 
+\item\label{cor:prop:explode:1} $\neg\metavariable{A}\vdash\metavariable{B}$
+  by hypothesis
+\item\label{cor:prop:explode:2} $\neg\metavariable{A}\vdash\neg\metavariable{B}$
+  by hypothesis
+\item\label{cor:prop:explode:3} $\neg\metavariable{A}\vdash\neg\metavariable{B}\implies(\metavariable{B}\implies\metavariable{A})$
+  by Lm\ref{lemma:prop:explode-helper}($\metavariable{B}$, $\metavariable{A}$)
+\item\label{cor:prop:explode:4} $\neg\metavariable{A}\vdash\metavariable{B}\implies\metavariable{A}$
+  by MP(\ref{cor:prop:explode:3}, \ref{cor:prop:explode:2})
+\item\label{cor:prop:explode:5} $\neg\metavariable{A}\vdash\metavariable{A}$
+  by MP(\ref{cor:prop:explode:4}, \ref{cor:prop:explode:1})
+\item\label{cor:prop:explode:6} $\vdash\metavariable{A}$ by \ref{dc:15}(\ref{cor:prop:explode:5})
+\end{pf}
+
+\begin{dc}\label{dc:16}
+$\vdash(\neg\neg\metavariable{A})\implies\metavariable{A}$.
+\end{dc}
+
+\begin{pf}
+\item $\neg\metavariable{A},\neg\neg\metavariable{A}\vdash\metavariable{A}$
+  by \textbf{??}
+\item $\neg\neg\metavariable{A}\vdash\metavariable{A}$ by \ref{dc:15}(.1)
+\item $\vdash\neg\neg\metavariable{A}\implies\metavariable{A}$ by \ref{dc:14}(.2)
+\end{pf}
+
+\begin{dc}\label{dc:17}
+$\vdash((\neg\metavariable{B})\implies(\neg\metavariable{A}))\implies(\metavariable{A}\implies\metavariable{B})$.
+\end{dc}
+
+\begin{pf}
+\item\label{dc17:1} $\neg\metavariable{B},\neg\metavariable{B}\implies\neg\metavariable{A},\metavariable{A}\vdash\neg\metavariable{B}$
+by assumption
+\item\label{dc17:2} $\neg\metavariable{B},\neg\metavariable{B}\implies\neg\metavariable{A},\metavariable{A}\vdash\neg\metavariable{B}\implies\neg\metavariable{A}$
+by assumption
+\item\label{dc17:3} $\neg\metavariable{B},\neg\metavariable{B}\implies\neg\metavariable{A},\metavariable{A}\vdash\metavariable{A}$
+by assumption
+\item\label{dc17:4} $\neg\metavariable{B},\neg\metavariable{B}\implies\neg\metavariable{A},\metavariable{A}\vdash\neg\metavariable{A}$ by MP(\ref{dc17:2}, \ref{dc17:1})
+\item\label{dc17:5} $\neg\metavariable{B}\implies\neg\metavariable{A},\metavariable{A}\vdash\metavariable{B}$ by \ref{dc:15}(\ref{dc17:4})
+\item\label{dc17:6} $\neg\metavariable{B}\implies\neg\metavariable{A}\vdash\metavariable{A}\implies\metavariable{B}$ by \ref{dc:14}(\ref{dc17:5})
+\item\label{dc17:7} $\vdash(\neg\metavariable{B}\implies\neg\metavariable{A})\implies(\metavariable{A}\implies\metavariable{B})$ by \ref{dc:14}(\ref{dc17:6})
+\end{pf}
+
+\begin{dc}\label{dc:18}
+If $\vdash\metavariable{A}\lor\metavariable{B}$
+and $\vdash\metavariable{A}\implies\metavariable{C}$
+and $\vdash\metavariable{B}\implies\metavariable{C}$,
+then $\vdash\metavariable{C}$.
+\end{dc}
+
+\begin{pf}
+\item\label{dc18:1} $\vdash\metavariable{A}\lor\metavariable{B}$ by hypothesis
+\item\label{dc18:2} $\vdash\metavariable{A}\implies\metavariable{C}$ by hypothesis
+\item\label{dc18:3} $\vdash\metavariable{B}\implies\metavariable{C}$ by hypothesis
+\item\label{dc18:4} $\vdash(\metavariable{B}\implies\metavariable{C})\implies((\metavariable{A}\lor\metavariable{B})\implies(\metavariable{A}\lor\metavariable{C}))$
+  by \ref{axiom:s4}($\metavariable{B}$, $\metavariable{C}$, $\metavariable{A}$)
+\item\label{dc18:5} $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{C}\lor\metavariable{C}$
+  by \ref{dc:6}(\ref{dc18:4}, \ref{dc18:3})
+\item\label{dc18:6} $\vdash(\metavariable{A}\implies\metavariable{C})\implies((\metavariable{C}\lor\metavariable{A})\implies(\metavariable{C}\lor\metavariable{C}))$
+  by \ref{axiom:s4}($\metavariable{A}$, $\metavariable{C}$, $\metavariable{C}$)
+\item\label{dc18:7} $\vdash(\metavariable{C}\lor\metavariable{A})\implies(\metavariable{C}\lor\metavariable{C})$
+  by MP(\ref{dc18:6}, \ref{dc18:2})
+\item\label{dc18:8} $\vdash\metavariable{A}\lor\metavariable{C}\implies\metavariable{C}\lor\metavariable{A}$
+  by \ref{axiom:s3}($\metavariable{A}$, $\metavariable{C}$)
+\item\label{dc18:9} $\vdash\metavariable{A}\lor\metavariable{C}\implies\metavariable{C}\lor\metavariable{C}$
+  by \ref{dc:6}(\ref{dc18:8}, \ref{dc18:7})
+\item\label{dc18:10} $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{C}\lor\metavariable{C}$
+  by \ref{dc:6}(\ref{dc18:5}, \ref{dc18:9})
+\item\label{dc18:11} $\vdash\metavariable{C}\lor\metavariable{C}\implies\metavariable{C}$
+  by \ref{axiom:s1}($\metavariable{C}$)
+\item\label{dc18:12} $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{C}$
+  by \ref{dc:6}(\ref{dc18:10}, \ref{dc18:11})
+\end{pf}
+
+\begin{corollary}
+If $\vdash\metavariable{A}\implies\metavariable{B}$ and $\vdash\neg\metavariable{A}\implies\metavariable{B}$,
+then $\vdash\metavariable{B}$.
+\end{corollary}
+
+\begin{pf}
+\item $\vdash\metavariable{A}\implies\metavariable{B}$ by hypothesis
+\item $\vdash\neg\metavariable{A}\implies\metavariable{B}$ by hypothesis
+\item $\vdash\metavariable{A}\lor\neg\metavariable{A}$ by \ref{dc:10}($\metavariable{A}$)
+\item $\vdash\metavariable{B}$ by \ref{dc:18}(.3, .1, .2)
+\end{pf}
+
+\stepcounter{dc}
+
+\begin{dc}\label{dc:20}
+If $\vdash\metavariable{A}$ and $\vdash\metavariable{B}$,
+then $\vdash\metavariable{A}\land\metavariable{B}$.
+\end{dc}
+
+\begin{pf}
+\item\label{dc20:1} $\vdash\metavariable{A}$ by hypothesis
+\item\label{dc20:2} $\vdash\metavariable{B}$ by hypothesis
+\item\label{dc20:3} $\neg(\metavariable{A}\land\metavariable{B})\vdash\neg\neg(\neg\metavariable{A}\lor\neg\metavariable{B})$
+  by assumption
+\item\label{dc20:4} $\neg(\metavariable{A}\land\metavariable{B})\vdash\neg\metavariable{A}\lor\neg\metavariable{B}$
+  by MP(\ref{dc:16}($\neg\metavariable{A}\lor\neg\metavariable{B}$), \ref{dc20:3})
+\item\label{dc20:5} $\neg(\metavariable{A}\land\metavariable{B})\vdash\metavariable{A}\implies\neg\metavariable{B}$
+\item\label{dc20:6} $\neg(\metavariable{A}\land\metavariable{B})\vdash\metavariable{A}$
+  by weakening(\ref{dc20:1})
+\item\label{dc20:7} $\neg(\metavariable{A}\land\metavariable{B})\vdash\neg\metavariable{B}$
+  by MP(\ref{dc20:5}, \ref{dc20:6})
+\item\label{dc20:8} $\neg(\metavariable{A}\land\metavariable{B})\vdash\metavariable{B}$
+  by weakening(\ref{dc20:2})
+\item\label{dc20:9} $\vdash\metavariable{A}\land\metavariable{B}$
+  by Cor\ref{cor:prop:explode}(\ref{dc20:8}, \ref{dc20:7})
+\end{pf}
+
+\begin{dc}\label{dc:21}
+We have $\vdash(\metavariable{A}\land\metavariable{B})\implies\metavariable{A}$
+and $\vdash(\metavariable{A}\land\metavariable{B})\implies\metavariable{B}$.
+\end{dc}
+
+\begin{enumerate}
+\item 
+\begin{pf}
+\item\label{dc21:1:1} $\vdash\metavariable{A}\land\metavariable{B}$ by hypothesis.
+\item\label{dc21:1:2} $\neg\metavariable{A}\vdash\neg\metavariable{A}$
+  by assumption
+\item\label{dc21:1:3} $\neg\metavariable{A}\vdash\neg\metavariable{A}\implies\neg\metavariable{A}\lor\neg\metavariable{B}$
+  by \ref{axiom:s2}($\neg\metavariable{A}$, $\neg\metavariable{B}$)
+\item\label{dc21:1:4} $\neg\metavariable{A}\vdash\neg\metavariable{A}\lor\neg\metavariable{B}$
+  by MP(\ref{dc21:1:3}, \ref{dc21:1:2})
+\item\label{dc21:1:5} $\vdash\metavariable{A}$ by Cor\ref{cor:prop:explode}(\ref{dc21:1:1}, \ref{dc21:1:4})
+\end{pf}
+\item 
+\begin{pf}
+\item\label{dc21:2:1} $\vdash\metavariable{A}\land\metavariable{B}$ by hypothesis
+\item\label{dc21:2:2} $\neg\metavariable{B}\vdash\neg\metavariable{B}$
+  by assumption
+\item\label{dc21:2:3} $\neg\metavariable{B}\vdash\neg\metavariable{B}\implies\neg\metavariable{A}\lor\neg\metavariable{B}$
+  by \ref{dc:7}($\neg\metavariable{A}$, $\neg\metavariable{B}$)
+\item\label{dc21:2:4} $\neg\metavariable{B}\vdash\neg\metavariable{A}\lor\neg\metavariable{B}$
+  by MP(\ref{dc21:2:3}, \ref{dc21:2:2})
+\item\label{dc21:2:5} $\vdash\metavariable{B}$ by Cor\ref{cor:prop:explode}(\ref{dc21:2:1}, \ref{dc21:2:4})
+\end{pf}
+\end{enumerate}
+
+
+\begin{dc}\label{dc:22}
+\begin{enumerate}
+\item If $\vdash\metavariable{A}\iff\metavariable{B}$, then $\vdash\metavariable{B}\iff\metavariable{A}$;
+\item If $\vdash\metavariable{A}\iff\metavariable{B}$ and $\vdash\metavariable{B}\iff\metavariable{C}$,
+  then $\vdash\metavariable{A}\iff\metavariable{C}$.
+\end{enumerate}
+\end{dc}
+
+
+\begin{thebibliography}{99}
+\bibitem{aitken2023} Wayne Aitken,
+  ``Bourbaki, Theory of Sets, Chapter I, \textit{Description of Formal Mathematics}: Summary and Commentary''.
+  Manuscript dated June 2022,
+  \url{https://public.csusm.edu/aitken_html/Essays/Bourbaki/BourbakiSetTheory1.pdf}
+\bibitem{bernays1926} Paul Bernays, ``Axiomatische Untersuchungen des
+Aussagen-Kalkuls der \textit{Principia Mathematica}.''
+\textit{Mathematische Zeitschrift} \textbf{25} (1926) 305--320;
+translated into English in Richard Zach's \textit{Universal Logic: An
+  Anthology} (2012) pp.43--58.
+\bibitem{bourbaki1970sets} Nicolas Bourbaki,
+  \textit{Theory of Sets}.
+  Springer, softcover reprint, 1968 English translation.
+\bibitem{mathias1992ignorance}
+  Adrian RD Mathias,
+  ``The ignorance of Bourbaki''.
+  \textit{Mathematical Intelligencer} \textbf{14} no.3 (1992) 4--13
+\bibitem{mathias2002term}
+  Adrian RD Mathias,
+  ``A term of length 4,523,659,424,929''.
+  \textit{Synthese} \textbf{133} (2002) 75--86
+\bibitem{mathias2014hilbert}
+  Adrian RD Mathias,
+  ``Hilbert, Bourbaki and the scorning of logic''.
+  In \textit{Infinity and truth} (World Scientific, 2014) pp.47--156.
+  \url{https://www.dpmms.cam.ac.uk/~ardm/lbmkemily5.pdf}
+
+\end{thebibliography}
+
+\end{document}
