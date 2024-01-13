@@ -1,5 +1,6 @@
 \documentclass{amsart}%{article}
 \usepackage{macros}
+\setcounter{tocdepth}{4}
 \newcommand\metavariable[1]{\boldsymbol{#1}}
 \title{Propositional logic in Bourbaki's system}
 \author{Alex Nelson}
@@ -14,6 +15,8 @@ It's a Hilbert proof calculus with disjunction and negation as its
 primitive connectives. But many proofs are inadequate or handwavy. All
 its gory details will be spelled out.
 \end{abstract}
+
+\tableofcontents\vfill\eject
 
 \section{Introduction}
 
@@ -33,6 +36,18 @@ occasionally gives hints before skipping ahead to more interesting labours.
 We will follow their numbering conventions for their metatheorems, but
 after a half dozen metatheorems Bourbaki quickly runs out of steam. This
 requires us to introduce lemmas to supplement Bourbaki's work.
+
+\textsc{Caution:} Bourbaki believes that a mathematical theory is like a
+``stock ticker'' of theorems which are either (a) instances of axioms,
+or (b) follows from applying \textit{modus ponens} to previously printed
+theorems. For this reason, Bourbaki doesn't really think in terms of
+explicit proofs, because elucidating the theory is a stream of theorems
+which is one long discourse, and previous parts of the discourse can
+``prove'' a theorem later on.
+
+\textbf{We are departing from Bourbaki here} and using what we would
+nowadays call a ``Hilbert proof system''. We try to \textbf{translate}
+Bourbaki's system into a Hilbert proof system.
 
 \subsection{Literature review} This is rather incomplete, but just
 listing the relevant articles I found invaluable while doing this.
@@ -404,6 +419,10 @@ then $\vdash\metavariable{B}\lor\metavariable{C}$.
   by MP(\ref{axiom:s3}($\metavariable{C}$, $\metavariable{B}$), \ref{lem3:prop:6})
 \end{pf}
 
+
+
+\subsubsection{Methods of Proof}
+
 \begin{dc}[Deduction theorem]\label{dc:14}
 If $\metavariable{A}\vdash\metavariable{B}$, then $\vdash\metavariable{A}\implies\metavariable{B}$.
 \end{dc}
@@ -480,12 +499,12 @@ $\vdash\metavariable{B}$ for any $\metavariable{B}$.
 \item $\vdash\metavariable{A}\implies\metavariable{B}$ by MP(.3,.2)
 \item $\vdash\metavariable{B}$ by MP(.4,.1)
 \end{pf}
-  
-\begin{dc}\label{dc:15}
+
+\begin{lemma}\label{lm:prop:explode}
 If $\neg\metavariable{A}\vdash\metavariable{A}$, then $\vdash\metavariable{A}$.
 (Informally, if adjoining $\neg\metavariable{A}$ results in a
 contradictory theory, then $\vdash\metavariable{A}$.)
-\end{dc}
+\end{lemma}
 
 \begin{pf}
 \item $\neg\metavariable{A}\vdash\metavariable{A}$ by hypothesis
@@ -499,11 +518,11 @@ contradictory theory, then $\vdash\metavariable{A}$.)
 \item $\vdash\metavariable{A}$ by MP(\ref{axiom:s1}($\metavariable{A}$),.6)
 \end{pf}
 
-\begin{corollary}\label{cor:prop:explode}
+\begin{dc}\label{dc:15}
 If $\neg\metavariable{A}\vdash\metavariable{B}$ and
 $\neg\metavariable{A}\vdash\neg\metavariable{B}$, then
 $\vdash\metavariable{A}$.
-\end{corollary}
+\end{dc}
 
 \begin{pf} 
 \item\label{cor:prop:explode:1} $\neg\metavariable{A}\vdash\metavariable{B}$
@@ -516,7 +535,7 @@ $\vdash\metavariable{A}$.
   by MP(\ref{cor:prop:explode:3}, \ref{cor:prop:explode:2})
 \item\label{cor:prop:explode:5} $\neg\metavariable{A}\vdash\metavariable{A}$
   by MP(\ref{cor:prop:explode:4}, \ref{cor:prop:explode:1})
-\item\label{cor:prop:explode:6} $\vdash\metavariable{A}$ by \ref{dc:15}(\ref{cor:prop:explode:5})
+\item\label{cor:prop:explode:6} $\vdash\metavariable{A}$ by Lm\ref{lm:prop:explode}(\ref{cor:prop:explode:5})
 \end{pf}
 
 \begin{dc}\label{dc:16}
@@ -526,7 +545,7 @@ $\vdash(\neg\neg\metavariable{A})\implies\metavariable{A}$.
 \begin{pf}
 \item $\neg\metavariable{A},\neg\neg\metavariable{A}\vdash\metavariable{A}$
   by \textbf{??}
-\item $\neg\neg\metavariable{A}\vdash\metavariable{A}$ by \ref{dc:15}(.1)
+\item $\neg\neg\metavariable{A}\vdash\metavariable{A}$ by Lm\ref{lm:prop:explode}(.1)
 \item $\vdash\neg\neg\metavariable{A}\implies\metavariable{A}$ by \ref{dc:14}(.2)
 \end{pf}
 
@@ -542,7 +561,7 @@ by assumption
 \item\label{dc17:3} $\neg\metavariable{B},\neg\metavariable{B}\implies\neg\metavariable{A},\metavariable{A}\vdash\metavariable{A}$
 by assumption
 \item\label{dc17:4} $\neg\metavariable{B},\neg\metavariable{B}\implies\neg\metavariable{A},\metavariable{A}\vdash\neg\metavariable{A}$ by MP(\ref{dc17:2}, \ref{dc17:1})
-\item\label{dc17:5} $\neg\metavariable{B}\implies\neg\metavariable{A},\metavariable{A}\vdash\metavariable{B}$ by \ref{dc:15}(\ref{dc17:4})
+\item\label{dc17:5} $\neg\metavariable{B}\implies\neg\metavariable{A},\metavariable{A}\vdash\metavariable{B}$ by Lm\ref{lm:prop:explode}(\ref{dc17:4})
 \item\label{dc17:6} $\neg\metavariable{B}\implies\neg\metavariable{A}\vdash\metavariable{A}\implies\metavariable{B}$ by \ref{dc:14}(\ref{dc17:5})
 \item\label{dc17:7} $\vdash(\neg\metavariable{B}\implies\neg\metavariable{A})\implies(\metavariable{A}\implies\metavariable{B})$ by \ref{dc:14}(\ref{dc17:6})
 \end{pf}
@@ -592,6 +611,12 @@ then $\vdash\metavariable{B}$.
 
 \stepcounter{dc}
 
+\subsubsection{Conjunction}
+
+\begin{definition}
+Bourbaki defines conjunction as an abbreviation for $\metavariable{A}\land\metavariable{B}:=\neg(\neg\metavariable{A}\lor\neg\metavariable{B})$.
+\end{definition}
+
 \begin{dc}\label{dc:20}
 If $\vdash\metavariable{A}$ and $\vdash\metavariable{B}$,
 then $\vdash\metavariable{A}\land\metavariable{B}$.
@@ -612,7 +637,7 @@ then $\vdash\metavariable{A}\land\metavariable{B}$.
 \item\label{dc20:8} $\neg(\metavariable{A}\land\metavariable{B})\vdash\metavariable{B}$
   by weakening(\ref{dc20:2})
 \item\label{dc20:9} $\vdash\metavariable{A}\land\metavariable{B}$
-  by Cor\ref{cor:prop:explode}(\ref{dc20:8}, \ref{dc20:7})
+  by \ref{dc:15}(\ref{dc20:8}, \ref{dc20:7})
 \end{pf}
 
 \begin{dc}\label{dc:21}
@@ -630,7 +655,7 @@ and $\vdash(\metavariable{A}\land\metavariable{B})\implies\metavariable{B}$.
   by \ref{axiom:s2}($\neg\metavariable{A}$, $\neg\metavariable{B}$)
 \item\label{dc21:1:4} $\neg\metavariable{A}\vdash\neg\metavariable{A}\lor\neg\metavariable{B}$
   by MP(\ref{dc21:1:3}, \ref{dc21:1:2})
-\item\label{dc21:1:5} $\vdash\metavariable{A}$ by Cor\ref{cor:prop:explode}(\ref{dc21:1:1}, \ref{dc21:1:4})
+\item\label{dc21:1:5} $\vdash\metavariable{A}$ by Lm\ref{lm:prop:explode}(\ref{dc21:1:1}, \ref{dc21:1:4})
 \end{pf}
 \item 
 \begin{pf}
@@ -641,18 +666,30 @@ and $\vdash(\metavariable{A}\land\metavariable{B})\implies\metavariable{B}$.
   by \ref{dc:7}($\neg\metavariable{A}$, $\neg\metavariable{B}$)
 \item\label{dc21:2:4} $\neg\metavariable{B}\vdash\neg\metavariable{A}\lor\neg\metavariable{B}$
   by MP(\ref{dc21:2:3}, \ref{dc21:2:2})
-\item\label{dc21:2:5} $\vdash\metavariable{B}$ by Cor\ref{cor:prop:explode}(\ref{dc21:2:1}, \ref{dc21:2:4})
+\item\label{dc21:2:5} $\vdash\metavariable{B}$ by Lm\ref{lm:prop:explode}(\ref{dc21:2:1}, \ref{dc21:2:4})
 \end{pf}
 \end{enumerate}
 
+\subsubsection{Logical equivalence}
 
-\begin{dc}\label{dc:22}
+\begin{definition}
+Bourbaki defines the biconditional as
+$\metavariable{A}\iff\metavariable{B}:=(\metavariable{A}\implies\metavariable{B})\land(\metavariable{B}\implies\metavariable{A})$.
+\end{definition}
+
+
+\begin{dc}\phantomsection\label{dc:22}
 \begin{enumerate}
 \item If $\vdash\metavariable{A}\iff\metavariable{B}$, then $\vdash\metavariable{B}\iff\metavariable{A}$;
 \item If $\vdash\metavariable{A}\iff\metavariable{B}$ and $\vdash\metavariable{B}\iff\metavariable{C}$,
   then $\vdash\metavariable{A}\iff\metavariable{C}$.
 \end{enumerate}
 \end{dc}
+
+\begin{lemma}
+Logical equivalence is indeed an equivalence relation; i.e., in addition
+to \ref{dc:22}, we have $\vdash\metavariable{A}\iff\metavariable{A}$.
+\end{lemma}
 
 
 \begin{thebibliography}{99}
