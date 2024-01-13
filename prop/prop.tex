@@ -450,10 +450,15 @@ then $\vdash\metavariable{A}\implies\metavariable{C}$.
   by \ref{dc:6}(\ref{lm:hs:4}, \ref{lm:hs:7})
 [NB: this is equivalent to $(\neg\metavariable{A})\lor\bigl(\metavariable{C}\lor(\metavariable{A}\implies\metavariable{C})\bigr)$
 and \emph{not}, as Bourbaki erroneously believes, $(\neg\metavariable{A}\lor\metavariable{C})\lor(\neg\metavariable{A}\lor\metavariable{C})$]
-\item\label{lm:hs:9} $\vdash(\neg\metavariable{A}\lor\metavariable{C})\lor(\neg\metavariable{A}\lor\metavariable{C})$
+\item\label{lm:hs:9} $\vdash\phantom{(}(\neg\metavariable{A})\lor(\metavariable{C}\lor(\metavariable{A}\implies\metavariable{C})))$
   by MP(Lm\ref{lm:prop:assoc1}($\neg\metavariable{A}$, $\metavariable{C}$, $\metavariable{A}\implies\metavariable{C}$), \ref{lm:hs:8})
-\item\label{lm:hs:10} $\vdash\metavariable{A}\implies\metavariable{C}$
-  by MP(\ref{axiom:s1}($\metavariable{A}\implies\metavariable{C}$), \ref{lm:hs:9})
+\item\label{lm:hs:10} $\vdash((\neg\metavariable{A})\lor(\metavariable{C}\lor(\metavariable{A}\implies\metavariable{C})))\implies\bigl((\neg\metavariable{A}\lor\metavariable{C})\lor(\metavariable{A}\implies\metavariable{C})\bigr)$
+\item\label{lm:hs:11} $\vdash(\neg\metavariable{A}\lor\metavariable{C})\lor(\metavariable{A}\implies\metavariable{C})$
+  by MP(\ref{lm:hs:10}, \ref{lm:hs:9})
+\item\label{lm:hs:12} $\vdash(\metavariable{A}\implies\metavariable{C})\lor(\metavariable{A}\implies\metavariable{C})$
+  by Lm\ref{lem3:prop}(\ref{syn:tautology:lor-to-implies}($\metavariable{A}$, $\metavariable{C}$), \ref{lm:hs:11})
+\item $\vdash\metavariable{A}\implies\metavariable{C}$
+  by MP(\ref{axiom:s1}($\metavariable{A}\implies\metavariable{C}$), \ref{lm:hs:12})
 \end{pf}
 
 \begin{dc}[Deduction theorem]\label{dc:14}
