@@ -302,8 +302,8 @@ then $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{A}\
 \item\label{dc13:5} $\vdash(\metavariable{C}\lor\neg\metavariable{B})\implies(\metavariable{C}\lor\neg\metavariable{A})$
   by MP(\ref{dc13:4}, \ref{dc13:3})
 \item\label{dc13:6} $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{C}\lor\neg\metavariable{B})$
-  by \ref{dc:6}(\ref{axiom:s3}($\metavariable{C}$, $\neg\metavariable{B}$),
-  \ref{syn:tautology:lor-to-implies}($\metavariable{B}$, $\metavariable{C}$))
+  by \ref{dc:6}(\ref{syn:tautology:implies-to-lor}($\metavariable{B}$, $\metavariable{C}$),
+  \ref{axiom:s3}($\metavariable{C}$, $\neg\metavariable{B}$))
 \item\label{dc13:7} $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{C}\lor\neg\metavariable{A})$
   by \ref{dc:6}(\ref{dc13:6}, \ref{dc13:5})
 \item\label{dc13:8} $\vdash(\metavariable{C}\lor\neg\metavariable{A})\implies(\metavariable{A}\implies\metavariable{C})$
