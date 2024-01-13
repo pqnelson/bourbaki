@@ -313,6 +313,11 @@ then $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{A}\
   by \ref{dc:6}(\ref{dc13:7}, \ref{dc13:8})
 \end{pf}
 
+Bourbaki implicitly uses the following results, which are obvious, but
+doesn't prove them. Although human readers are foregiving, computers are
+ruthless and uncompromising. The following six lemmas are needed for the
+deduction theorem.
+
 \begin{lemma}\label{lem:prop:weakening-l}
 If $\vdash\metavariable{A}\implies\metavariable{B}$, then
 $\vdash\metavariable{A}\implies(\metavariable{C}\lor\metavariable{B})$.
@@ -378,9 +383,8 @@ then $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{C}$.
 \end{pf}
 
 \begin{lemma}[Associativity of disjunction 1]\label{lm:prop:assoc1}
-$\vdash\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})\implies(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}$
+$\vdash(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}\implies\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})$
 \end{lemma}
-
 \begin{pf}
 \item\label{lm:prop:assoc1:1} $\vdash\metavariable{A}\implies(\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C}))$
   by \ref{axiom:s2}($\metavariable{A}$, $\metavariable{B}\lor\metavariable{C}$)
@@ -399,8 +403,24 @@ $\vdash\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})\implies(\metav
 \end{pf}
 
 \begin{lemma}[Associativity of disjunction 2]\label{lemma:prop:disj-assoc2}
-$\vdash(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}\implies\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})$
+$\vdash\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})\implies(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}$
 \end{lemma}
+
+\begin{pf}
+\item\label{prop:assoc1:1} $\vdash\metavariable{A}\lor\metavariable{B}\implies(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}$
+  by \ref{axiom:s2}($\metavariable{A}\lor\metavariable{B}$, $\metavariable{C}$)
+\item\label{prop:assoc1:2} $\vdash\metavariable{B}\implies\metavariable{A}\lor\metavariable{B}$
+  by \ref{dc:7}($\metavariable{A}$, $\metavariable{B}$)
+\item\label{prop:assoc1:3} $\vdash\metavariable{B}\implies(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}$
+  by Lm2(\ref{prop:assoc1:2}, $\metavariable{C}$)
+\item\label{prop:assoc1:4} $\vdash\metavariable{C}\implies(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}$
+  by \ref{dc:7}($\metavariable{A}\lor\metavariable{B}$, $\metavariable{C}$)
+\item\label{prop:assoc1:5} $\vdash\metavariable{B}\lor\metavariable{C}\implies(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}$
+  by Lm3(\ref{prop:assoc1:3}, \ref{prop:assoc1:4})
+\item\label{prop:assoc1:6} $\vdash\metavariable{A}\implies(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}$
+  by \ref{dc:6}(\ref{axiom:s2}($\metavariable{A}$, $\metavariable{B}$), \ref{prop:assoc1:1})
+\item\label{prop:assoc1:7} $\vdash\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})\implies(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}$
+\end{pf}
 
 \begin{lemma}\label{lem3:prop}
 If $\vdash\metavariable{A}\implies\metavariable{B}$
@@ -426,33 +446,37 @@ then $\vdash\metavariable{B}\lor\metavariable{C}$.
 \subsubsection{Methods of Proof}
 
 \begin{lemma}[Hypothetical syllogism]\label{lm:prop:hs}
-If $\vdash\metavariable{A}\implies\metavariable{B}$
-and $\vdash\metavariable{A}\implies(\metavariable{B}\implies\metavariable{C})$,
+If $\vdash\metavariable{A}\implies(\metavariable{B}\implies\metavariable{C})$
+and $\vdash\metavariable{A}\implies\metavariable{B}$,
 then $\vdash\metavariable{A}\implies\metavariable{C}$.
 \end{lemma}
 
 \begin{pf}
-\item\label{lm:hs:1} $\vdash\metavariable{A}\implies\metavariable{B}$
+\item\label{lm:hs:1} $\vdash\metavariable{A}\implies(\metavariable{B}\implies\metavariable{C})$
   by hypothesis
-\item\label{lm:hs:2} $\vdash\metavariable{A}\implies(\metavariable{B}\implies\metavariable{C})$
+\item\label{lm:hs:2} $\vdash\metavariable{A}\implies\metavariable{B}$
   by hypothesis
 \item\label{lm:hs:3} $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{A}\implies\metavariable{C})$
-  by \ref{dc:13}(\ref{lm:hs:2})
+  by \ref{dc:13}(\ref{lm:hs:2}, $\metavariable{C}$)
 \item\label{lm:hs:4} $\vdash\metavariable{A}\implies(\metavariable{A}\implies\metavariable{C})$
   by \ref{dc:6}(\ref{lm:hs:1}, \ref{lm:hs:3})
 \item\label{lm:hs:5} $\vdash\neg\metavariable{A}\implies(\metavariable{A}\implies\metavariable{C})$
-  by \ref{axiom:s2}($\neg\metavariable{A}$, $\metavariable{C}$)
+  by \ref{dc:6}(\ref{axiom:s2}($\neg\metavariable{A}$, $\metavariable{C}$),
+  \ref{syn:tautology:implies-to-lor}($\metavariable{A}$, $\metavariable{C}$))
 \item\label{lm:hs:6} $\vdash\bigl((\neg\metavariable{A})\implies(\metavariable{A}\implies\metavariable{C}\bigr)\implies\bigl((\metavariable{C}\lor\neg\metavariable{A})\implies(\metavariable{C}\lor(\metavariable{A}\implies\metavariable{C}))\bigr)$
   by \ref{axiom:s4}($\neg\metavariable{A}$, $\metavariable{A}\implies\metavariable{C}$, $\metavariable{C}$)
 \item\label{lm:hs:7} $\vdash(\metavariable{A}\implies\metavariable{C})\implies(\metavariable{C}\lor(\metavariable{A}\implies\metavariable{C}))$
-  by \ref{dc:6}(\ref{lm:hs:5}, \ref{lm:hs:6})
+  by \ref{dc:6}(\ref{dc:6}(\ref{axiom:s2}($\neg\metavariable{A}$, $\metavariable{C}$),
+  \ref{syn:tautology:lor-to-implies}($\metavariable{A}$, $\metavariable{C}$)),
+  MP(\ref{lm:hs:6}, \ref{lm:hs:5})
 \item\label{lm:hs:8} $\vdash\metavariable{A}\implies(\metavariable{C}\lor(\metavariable{A}\implies\metavariable{C}))$
   by \ref{dc:6}(\ref{lm:hs:4}, \ref{lm:hs:7})
 [NB: this is equivalent to $(\neg\metavariable{A})\lor\bigl(\metavariable{C}\lor(\metavariable{A}\implies\metavariable{C})\bigr)$
 and \emph{not}, as Bourbaki erroneously believes, $(\neg\metavariable{A}\lor\metavariable{C})\lor(\neg\metavariable{A}\lor\metavariable{C})$]
 \item\label{lm:hs:9} $\vdash\phantom{(}(\neg\metavariable{A})\lor(\metavariable{C}\lor(\metavariable{A}\implies\metavariable{C})))$
-  by MP(Lm\ref{lm:prop:assoc1}($\neg\metavariable{A}$, $\metavariable{C}$, $\metavariable{A}\implies\metavariable{C}$), \ref{lm:hs:8})
+  by MP(\ref{syn:tautology:lor-to-implies}($\metavariable{A}$, $\metavariable{C}\lor(\metavariable{A}\implies\metavariable{C})$), \ref{lm:hs:8})
 \item\label{lm:hs:10} $\vdash((\neg\metavariable{A})\lor(\metavariable{C}\lor(\metavariable{A}\implies\metavariable{C})))\implies\bigl((\neg\metavariable{A}\lor\metavariable{C})\lor(\metavariable{A}\implies\metavariable{C})\bigr)$
+  by Lm\ref{lemma:prop:disj-assoc2}($\neg\metavariable{A}$, $\metavariable{C}$, $\metavariable{A}\implies\metavariable{C}$)
 \item\label{lm:hs:11} $\vdash(\neg\metavariable{A}\lor\metavariable{C})\lor(\metavariable{A}\implies\metavariable{C})$
   by MP(\ref{lm:hs:10}, \ref{lm:hs:9})
 \item\label{lm:hs:12} $\vdash(\metavariable{A}\implies\metavariable{C})\lor(\metavariable{A}\implies\metavariable{C})$
@@ -486,7 +510,7 @@ $\metavariable{A}\vdash\metavariable{B}$. There are three cases:
   \item[(IH1)] $\vdash\metavariable{A}\implies(\metavariable{C}\implies\metavariable{B})$
   \item[(IH2)] $\vdash\metavariable{A}\implies\metavariable{C}$
   \end{itemize}
-  Hence the result by Lm\ref{lm:prop:hs}(IH2, IH1).\qedhere
+  Hence the result by Lm\ref{lm:prop:hs}(IH1, IH2).\qedhere
 %%   These are given premises in the following proof:
 %%   \begin{pf}
 %% \item $\vdash\neg\metavariable{A}\lor(\neg\metavariable{C}\lor\metavariable{B})$
