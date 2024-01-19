@@ -1,0 +1,93 @@
+\subsection{Conjunction}
+
+\begin{definition}
+Let $\metavariable{A}$ and $\metavariable{B}$ be assemblies. Then $\neg((\neg\metavariable{A})\lor(\neg\metavariable{B}))$
+is denoted ``$\metavariable{A}\land\metavariable{B}$'' (or
+``$\metavariable{A}$ and $\metavariable{B}$'').
+\end{definition}
+
+\begin{cs}\label{cs6}
+Let $\metavariable{A}$, $\metavariable{B}$, $\metavariable{T}$ be
+assemblies and let $\metavariable{x}$ be a letter. Then $(\metavariable{T}\mid\metavariable{x})(\metavariable{A}\land\metavariable{B})$
+is identical to $\metavariable{A}'\land\metavariable{B}'$ where
+$\metavariable{A}'$ is identical to $(\metavariable{T}\mid\metavariable{x})\metavariable{A}$
+and $\metavariable{B}'$ is identical to $(\metavariable{T}\mid\metavariable{x})\metavariable{B}$.
+\end{cs}
+
+\begin{proof}
+This is a direct consequence of \ref{cs5}
+\begin{subequations}
+\begin{align}
+(\metavariable{T}\mid\metavariable{x})\metavariable{A}\land\metavariable{B}
+&=(\metavariable{T}\mid\metavariable{x})\neg((\neg\metavariable{A})\lor(\neg\metavariable{B}))\\
+&=\neg[(\metavariable{T}\mid\metavariable{x})((\neg\metavariable{A})\lor(\neg\metavariable{B}))]\\
+&=\neg([(\metavariable{T}\mid\metavariable{x})(\neg\metavariable{A})]\lor[(\metavariable{T}\mid\metavariable{x})(\neg\metavariable{B})])\\
+&=\neg([(\neg(\metavariable{T}\mid\metavariable{x})\metavariable{A})]\lor[(\neg(\metavariable{T}\mid\metavariable{x})\metavariable{B})])\\
+&=\metavariable{A}'\land\metavariable{B}',
+\end{align}
+\end{subequations}
+as desired.
+\end{proof}
+
+\begin{cf}\label{cf9}
+If $\metavariable{A}$ and $\metavariable{B}$ are relations in $\theory{T}$,
+then $\metavariable{A}\land\metavariable{B}$ is a relation in $\theory{T}$
+(called the \define{Conjunction} of $\metavariable{A}$ and $\metavariable{B}$).
+\end{cf}
+
+This follows from \ref{cf1} and \ref{cf2}.
+
+\begin{dc}\label{c20}
+If $\vdash\metavariable{A}$ and $\vdash\metavariable{B}$, then $\vdash\metavariable{A}\land\metavariable{B}$.
+\end{dc}
+I formalize Bourbaki's proof, there is almost certainly a more optimal proof.
+\begin{pf}
+\item\label{step:c20:1} $\vdash\metavariable{A}$ by hypothesis
+\item\label{step:c20:2} $\vdash\metavariable{B}$ by hypothesis
+\item\label{step:c20:3} $\neg(\metavariable{A}\land\metavariable{B})\vdash\neg\neg((\neg\metavariable{A})\lor(\neg\metavariable{B}))$
+by assumption, definition of conjunction
+\item\label{step:c20:4} $\neg(\metavariable{A}\land\metavariable{B})\vdash(\neg\neg((\neg\metavariable{A})\lor(\neg\metavariable{B})))\implies((\neg\metavariable{A})\lor(\neg\metavariable{B}))$
+by \ref{c16}($(\neg\metavariable{A})\lor(\neg\metavariable{B})$)
+\item\label{step:c20:5} $\neg(\metavariable{A}\land\metavariable{B})\vdash(\neg\metavariable{A})\lor(\neg\metavariable{B})$
+by MP(\ref{step:c20:4}, \ref{step:c20:3})
+\item\label{step:c20:6} $\neg(\metavariable{A}\land\metavariable{B})\vdash((\neg\metavariable{A})\lor(\neg\metavariable{B}))\implies(\metavariable{A}\implies\neg\metavariable{B})$
+by \ref{syn:tautology:lor-to-implies}($\metavariable{A}$, $\neg\metavariable{B}$)
+\item\label{step:c20:7} $\neg(\metavariable{A}\land\metavariable{B})\vdash\metavariable{A}\implies\neg\metavariable{B}$
+by MP(\ref{step:c20:6}, \ref{step:c20:5})
+\item\label{step:c20:8} $\neg(\metavariable{A}\land\metavariable{B})\vdash\metavariable{A}$
+by weakening(\ref{step:c20:1})
+\item\label{step:c20:9} $\neg(\metavariable{A}\land\metavariable{B})\vdash\neg\metavariable{B}$
+by MP(\ref{step:c20:7}, \ref{step:c20:8})
+\item\label{step:c20:10} $\neg(\metavariable{A}\land\metavariable{B})\vdash\metavariable{B}$
+by weakening(\ref{step:c20:2})
+\item\label{step:c20:11} $\vdash\metavariable{A}\land\metavariable{B}$
+by \ref{c15}(\ref{step:c20:10}, \ref{step:c20:9}).
+\end{pf}
+
+\begin{dc}\label{c21}
+$\vdash(\metavariable{A}\land\metavariable{B})\implies\metavariable{A}$
+\end{dc}
+
+\begin{pf}
+\item\label{step:c21:1} $\vdash\phantom{(}(\neg\metavariable{A})\implies\neg(\metavariable{A}\land\metavariable{B})$
+by \ref{axiom:s3}($\neg\metavariable{A}$, $\neg\metavariable{B}$),
+definition of conjunction
+\item\label{step:c21:2} $\vdash((\neg\metavariable{A})\implies\neg(\metavariable{A}\land\metavariable{B}))\implies(\metavariable{A}\land\metavariable{B}\implies\metavariable{A})$
+by \ref{c17}($\metavariable{A}\land\metavariable{B}$, $\metavariable{A}$)
+\item\label{step:c21:3} $\vdash\metavariable{A}\land\metavariable{B}\implies\metavariable{A}$
+by MP(\ref{step:c21:2}, \ref{step:c21:1}).
+\end{pf}
+
+\begin{dc}\label{c22}
+$\vdash(\metavariable{A}\land\metavariable{B})\implies\metavariable{B}$
+\end{dc}
+
+\begin{pf}
+\item\label{step:c22:1} $\vdash\phantom{(}\neg\metavariable{B}\implies\neg\metavariable{A}\lor\neg\metavariable{B}$
+by \ref{c7}($\neg\metavariable{A}$, $\neg\metavariable{B}$)
+\item\label{step:c22:2} $\vdash(\neg\metavariable{B}\implies\neg\metavariable{A}\lor\neg\metavariable{B})\implies(\metavariable{A}\land\metavariable{B}\implies\metavariable{B})$
+by \ref{c17}($\metavariable{A}\land\metavariable{B}$, $\metavariable{B}$),
+definition of conjunction
+\item\label{step:c22:3} $\vdash\metavariable{A}\land\metavariable{B}\implies\metavariable{B}$
+by MP(\ref{step:c22:2}, \ref{step:c22:1}).
+\end{pf}

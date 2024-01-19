@@ -1,0 +1,117 @@
+\subsection{Signs and Assemblies}
+
+\begin{definition}
+A \define{sign} refers to a member of an alphabet, specifically
+\begin{enumerate}
+\item logical signs: $\Box$ [corresponding to bound variables], $\tau$ [the Hilbert choice operator], $\lor$, $\neg$;
+\item ``letters'' (variables and parameters);
+\item theory-specific signs, which correspond to primitive notions.
+\end{enumerate}
+Of course, we call it an ``alphabet'', Bourbaki didn't have such a
+notion available to them. We think of ``signs'' as letter in an ambient alphabet.
+\end{definition}
+
+\begin{puzzle}
+Although redundant, it is preferable to include a quantifier as a
+logical sign. This would reduce the size of their definition of the
+number $1$ from $\mathcal{O}(10^{9})$
+signs to a couple dozen signs. But which quantifier should we introduce?
+Logicians appear to prefer $\forall$, but as we will see $\exists$ seems
+more natural for Bourbaki's system.
+\end{puzzle}
+
+\begin{definition}
+An \define{Assembly} is a ``string'' over the ambient alphabet. Bourbaki
+avoids using bound variables by using ``linkages'', which are lines
+connecting $\Box$ to $\tau$. This is a horrible kludge. Nowadays, we
+would use de Bruijn indices.\footnote{Of course, de Bruijn introduced
+these indices in 1972, more than 20 years after Bourbaki drafted this chapter.}
+
+We will abuse language and refer to an assembly as an ``expression''.
+\end{definition}
+
+\subsubsection{Provisional definition}
+Bourbaki provisionally defines a \define{Mathematical Theory} (or just
+``theory'') as consisting of
+\begin{enumerate}
+\item rules which tell us if an assembly is a term or relation of the
+  theory, and
+\item rules which assert certain assemblies are \emph{theorems} of the theory.
+\end{enumerate}
+
+\subsubsection{Metavariables}
+To simplify the discussion, Bourbaki uses the convention that bold
+italicized variables (e.g., $\metavariable{A}$, $\metavariable{B}$,
+$\metavariable{C}$, \dots) are metavariables representing arbitrary
+assemblies.
+
+\begin{example}
+We can concatenate assemblies, just as we can concatenate strings.
+If we let $\metavariable{A}$ and $\metavariable{B}$ be assemblies,
+then we can form a new assembly $\metavariable{A}\metavariable{B}$
+which is formed by just writing down the signs appearing in
+$\metavariable{A}$ followed by the signs appearing in $\metavariable{B}$.
+\end{example}
+
+\subsubsection{Grammar for Hilbert operator}
+Bourbaki gives the rules for forming an assembly using the Hilbert
+choice operator $\tau$. They denote by $\tau_{\metavariable{x}}(\metavariable{A})$
+the assembly formed by the following rules:
+\begin{enumerate}
+\item form $\tau\metavariable{A}$; then
+\item link all occurrences of $\metavariable{x}$ in $\tau\metavariable{A}$
+  to the leading $\tau$ prefix; then
+\item replace all instances of $\metavariable{x}$ by $\Box$.
+\end{enumerate}
+Observe that $\metavariable{x}$ no longer appears in the resulting
+assembly $\tau_{\metavariable{x}}(\metavariable{A})$. (If we use de
+Bruijn indices for bound variables, then we preserve this result:
+$\metavariable{x}$ no longer appears in $\tau_{\metavariable{x}}(\metavariable{A})$.)
+
+\subsubsection{Ambiguities}\label{sec:1-1:ambiguity}
+Bourbaki never defines what an ``occurrence'' of a variable in an
+assembly means, nor what it means for an assembly to ``appear'' in
+another assembly. Presumably, we can safely assume they mean the
+variable (considered as a string) is a substring of the assembly, and
+the assembly $\metavariable{A}$ appears in $\metavariable{B}$ if
+$\metavariable{A}$ is a substring of $\metavariable{B}$.
+
+Furthermore, a second ambiguity, Bourbaki does not define what it means
+for two assemblies to be identical with each other. Presumably this is
+syntactic equality.
+
+\begin{puzzle}
+Should we use de Bruijn indices or de Bruijn levels for bound variables
+in $\tau_{\metavariable{x}}(\metavariable{A})$?
+\end{puzzle}
+
+\subsubsection{Substitution}
+Bourbaki introduces the metalinguistic notation $(\metavariable{B}\mid\metavariable{x})\metavariable{A}$
+for replacing all instances of $\metavariable{x}$ by $\metavariable{B}$
+in $\metavariable{A}$.
+
+\subsubsection{Notation: Parametrized assemblies}
+Bourbaki adopts the notation $\metavariable{A}[\metavariable{x}]$ for
+the assembly $\metavariable{A}$ explicitly parametrized by the variable
+$\metavariable{x}$. Substitution is denoted $\metavariable{A}[\metavariable{B}]$
+which is a synonym for $(\metavariable{B}\mid\metavariable{x})\metavariable{A}$.
+This can be generalized to multiple variables parametrizing an assembly,
+e.g., $\metavariable{A}[\metavariable{x}, \metavariable{y}]$ and
+parallel substitution occurs when writing
+$\metavariable{A}[\metavariable{B},\metavariable{C}]$. If
+$\metavariable{x}'$ and $\metavariable{y}'$ are fresh variables (they do
+not occur in $\metavariable{A}$ or $\metavariable{B}$ or $\metavariable{C}$),
+then $\metavariable{A}[\metavariable{B}, \metavariable{C}]$ is identical
+to $(\metavariable{C}\mid\metavariable{y}')(\metavariable{B}\mid\metavariable{x}')(\metavariable{y}'\mid\metavariable{y})(\metavariable{x}'\mid\metavariable{x})\metavariable{A}$.
+
+\subsubsection{Definitions, Abbreviating Symbols}\label{subsec:1-1:definitions:abbreviating-symbols}
+The notion of an abbreviating symbol is rather vague. Presumably
+Bourbaki is borrowing what was common knowledge at the time, I guess
+tracing back to Russell and Whitehead's \textit{Principia Mathematica}.
+As I understand it, abbreviating symbols amount to something like macros
+in the C programming language. Bourbaki gives the example
+``$\metavariable{A}\implies\metavariable{B}$'' as an abbreviating symbol
+for ``$(\neg\metavariable{A})\lor\metavariable{B}$''.
+
+Abbreviating symbols belong to the metalanguage, not the object
+language.

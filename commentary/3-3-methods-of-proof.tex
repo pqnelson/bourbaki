@@ -1,0 +1,194 @@
+\subsection{Methods of Proof}
+\section*{I. Method of Auxiliary Hypothesis}
+
+\begin{lemma}[Hypothetical syllogism]\label{lemma:hypothetical-syllogism}
+If $\vdash\metavariable{A}\implies(\metavariable{B}\implies\metavariable{C})$
+and $\vdash\metavariable{A}\implies\metavariable{B}$,
+then $\vdash\metavariable{A}\implies\metavariable{C}$.
+\end{lemma}
+
+\begin{pf}
+\item\label{step:3-3-1:1} $\vdash\metavariable{A}\implies(\metavariable{B}\implies\metavariable{C})$
+  by hypothesis
+\item\label{step:3-3-1:2} $\vdash\metavariable{A}\implies\metavariable{B}$
+  by hypothesis
+\item\label{step:3-3-1:3} $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{A}\implies\metavariable{C})$
+  by \ref{c13}(\ref{step:3-3-1:2}, $\metavariable{C}$)
+\item\label{step:3-3-1:4} $\vdash\metavariable{A}\implies(\metavariable{A}\implies\metavariable{C})$
+  by \ref{c6}(\ref{step:3-3-1:1}, \ref{step:3-3-1:3})
+\item\label{step:3-3-1:5} $\vdash\neg\metavariable{A}\implies(\metavariable{A}\implies\metavariable{C})$
+  by Th\ref{thm:explode-explicit}($\metavariable{A}$, $\metavariable{C}$)
+\item\label{step:3-3-1:6} $\vdash(\metavariable{A}\lor\neg\metavariable{A})\implies(\metavariable{A}\implies\metavariable{C})$
+  by Th\ref{thm:3-2-2}(\ref{step:3-3-1:4}, \ref{step:3-3-1:5})
+\item\label{step:3-3-1:7} $\vdash\metavariable{A}\lor\neg\metavariable{A}$
+  by \ref{c10}($\metavariable{A}$)
+\item\label{step:3-3-1:8} $\vdash\metavariable{A}\implies\metavariable{C}$
+  by MP(\ref{step:3-3-1:6}, \ref{step:3-3-1:7})
+\end{pf}
+
+\begin{dc}\label{c14}
+If $\metavariable{A}\vdash\metavariable{B}$, then $\vdash\metavariable{A}\implies\metavariable{B}$.
+\end{dc}
+
+\begin{proof}
+By induction on the derivation of $\metavariable{A}\vdash\metavariable{B}$.
+Recall (\S\ref{subsec:2-2:proofs}) there are three possible cases:
+\begin{description}
+\item[Case 1] $\metavariable{B}$ is an axiom or an instance of a
+  scheme. Then $\vdash\metavariable{B}$ holds, and we can obtain
+  $\vdash\metavariable{A}\implies\metavariable{B}$ by \ref{c4}.
+\item[Case 2] $\metavariable{B}$ is identical to $\metavariable{A}$, in
+  which case $\vdash\metavariable{A}\implies\metavariable{B}$ follows
+  from \ref{c9}.
+\item[Case 3] $\metavariable{A}\vdash\metavariable{B}$ is obtained by a
+  syllogism \ref{c1}, which means we have
+  $\metavariable{A}\vdash\metavariable{C}$ and
+  $\metavariable{A}\vdash\metavariable{C}\implies\metavariable{B}$. We
+  have the inductive hypotheses:
+  \begin{itemize}
+  \item[IH${}_{1}$:] $\vdash\metavariable{A}\implies(\metavariable{C}\implies\metavariable{B})$
+  \item[IH${}_{2}$:] $\vdash\metavariable{A}\implies\metavariable{C}$
+  \end{itemize}
+\noindent Then $\vdash\metavariable{A}\implies\metavariable{B}$ by Lm\ref{lemma:hypothetical-syllogism}(IH${}_{1}$, IH${}_{2}$).
+\end{description}
+\end{proof}
+
+\subsubsection{Proof step}
+Bourbaki tells us that, in practice, we see this occur in the proof step
+``Suppose $\metavariable{A}$ [is true].'' Then we just need to prove
+$\metavariable{B}$, and this constitutes a proof of $\vdash\metavariable{A}\implies\metavariable{B}$.
+
+However, Bourbaki mistakenly believes that ``Let $\metavariable{x}$ be a
+real number'' introduces the auxiliary hypothesis ``$\metavariable{x}$
+is a real number''. This is $\forall$-introduction, not
+$\implies$-introduction, so I'm not sure Bourbaki is correct. But the
+peculiarities of Hilbert's $\varepsilon$-calculus might allow the two to
+coincide. 
+
+\section*{II. Method of Reductio ad Absurdum}
+
+\begin{dc}\label{c15}
+If adjoining to the theory $\theory{T}$ the axiom $\neg\metavariable{A}$
+results in a contradictory theory (\S\S\ref{defn:contradictory-theory}, \ref{thm:explode}),
+then $\vdash_{\theory{T}}\metavariable{A}$.
+\end{dc}
+
+\begin{pf}
+\item\label{step:c15:1} $\neg\metavariable{A}\vdash\metavariable{B}$
+by hypothesis
+\item\label{step:c15:2} $\neg\metavariable{A}\vdash\neg\metavariable{B}$
+by hypothesis
+\item\label{step:c15:3} $\neg\metavariable{A}\vdash\neg\metavariable{B}\implies(\metavariable{B}\implies\metavariable{A})$
+by Th\ref{thm:explode-explicit}($\metavariable{B}$, $\metavariable{A}$)
+\item\label{step:c15:4} $\neg\metavariable{A}\vdash\metavariable{B}\implies\metavariable{A}$
+  by MP(\ref{step:c15:3}, \ref{step:c15:2})
+\item\label{step:c15:5} $\neg\metavariable{A}\vdash\metavariable{A}$
+  by MP(\ref{step:c15:4}, \ref{step:c15:1})
+\item\label{step:c15:6} $\vdash\neg\metavariable{A}\implies\metavariable{A}$
+  by \ref{c14}(\ref{step:c15:5})
+\item\label{step:c15:7} $\vdash(\neg\metavariable{A}\implies\metavariable{A})\implies((\metavariable{A}\lor\neg\metavariable{A})\implies(\metavariable{A}\lor\metavariable{A}))$
+  by \ref{axiom:s4}($\neg\metavariable{A}$, $\metavariable{A}$, $\metavariable{A}$)
+\item\label{step:c15:8} $\vdash(\metavariable{A}\lor\neg\metavariable{A})\implies(\metavariable{A}\lor\metavariable{A})$
+\item\label{step:c15:9} $\vdash\metavariable{A}\lor\neg\metavariable{A}$
+  by \ref{c10}($\metavariable{A}$)
+\item\label{step:c15:10} $\vdash\metavariable{A}\lor\metavariable{A}$ by MP(\ref{step:c15:8}, \ref{step:c15:9})
+\item\label{step:c15:11} $\vdash\metavariable{A}\lor\metavariable{A}\implies\metavariable{A}$
+  by \ref{axiom:s1}($\metavariable{A}$)
+\item\label{step:c15:1} $\vdash\metavariable{A}$ by MP(\ref{step:c15:11}, \ref{step:c15:10})
+\end{pf}
+
+\subsubsection{Proof step}
+Bourbaki says that we usually state ``Suppose for the sake of
+contradiction that $\neg\metavariable{A}$''. Then deduce both
+$\metavariable{B}$ and $\neg\metavariable{B}$. This is the desired
+contradiction. Therefore $\metavariable{A}$.
+
+\begin{dc}\label{c16}
+$\vdash(\neg\neg\metavariable{A})\implies\metavariable{A}$
+\end{dc}
+
+\begin{pf}
+\item\label{step:c16:1} $\neg\metavariable{A},\neg\neg\metavariable{A}\vdash\neg\metavariable{A}$
+by assumption
+\item\label{step:c16:2} $\neg\metavariable{A},\neg\neg\metavariable{A}\vdash\neg(\neg\metavariable{A})$
+by assumption
+\item\label{step:c16:3} $\neg\neg\metavariable{A}\vdash\metavariable{A}$
+  by \ref{c15}(\ref{step:c16:1}, \ref{step:c16:2})
+\item\label{step:c16:4} $\vdash(\neg\neg\metavariable{A})\implies\metavariable{A}$
+  by \ref{c14}(\ref{step:c16:3}).
+\end{pf}
+
+\begin{dc}\label{c17}\textup{(Contrapositive)}
+$\vdash((\neg\metavariable{B})\implies(\neg\metavariable{A}))\implies(\metavariable{A}\implies\metavariable{B})$
+\end{dc}
+
+\begin{pf}
+\item\label{step:c17:1} $\neg\metavariable{B},(\neg\metavariable{B})\implies(\neg\metavariable{A}),\metavariable{A}\vdash\neg\metavariable{B}$
+by assumption
+\item\label{step:c17:2} $\neg\metavariable{B},(\neg\metavariable{B})\implies(\neg\metavariable{A}),\metavariable{A}\vdash(\neg\metavariable{B})\implies(\neg\metavariable{A})$
+by assumption
+\item\label{step:c17:3} $\neg\metavariable{B},(\neg\metavariable{B})\implies(\neg\metavariable{A}),\metavariable{A}\vdash\neg\metavariable{A}$
+by MP(\ref{step:c17:2}, \ref{step:c17:1})
+\item\label{step:c17:4} $\neg\metavariable{B},(\neg\metavariable{B})\implies(\neg\metavariable{A}),\metavariable{A}\vdash\metavariable{A}$
+by assumption
+\item\label{step:c17:5} $(\neg\metavariable{B})\implies(\neg\metavariable{A}),\metavariable{A}\vdash\metavariable{B}$
+by \ref{c15}(\ref{step:c17:4})
+\item\label{step:c17:6} $(\neg\metavariable{B})\implies(\neg\metavariable{A})\vdash\metavariable{A}\implies\metavariable{B}$
+by \ref{c14}(\ref{step:c17:5})
+\item\label{step:c17:7} $\vdash((\neg\metavariable{B})\implies(\neg\metavariable{A}))\implies(\metavariable{A}\implies\metavariable{B})$
+by \ref{c14}(\ref{step:c17:6}).
+\end{pf}
+
+\section*{Method of Disjunction of Cases}
+
+\begin{dc}\label{c18}
+If $\vdash\metavariable{A}\lor\metavariable{B}$ and
+$\vdash\metavariable{A}\implies\metavariable{C}$ and $\vdash\metavariable{B}\implies\metavariable{C}$,
+then $\vdash\metavariable{C}$.
+\end{dc}
+(Bourbaki's proof is thrice as long, here's an optimized proof)
+\begin{pf}
+\item\label{c18:step:1} $\vdash\metavariable{A}\lor\metavariable{B}$ by hypothesis
+\item\label{c18:step:2} $\vdash\metavariable{A}\implies\metavariable{C}$ by hypothesis
+\item\label{c18:step:3} $\vdash\metavariable{B}\implies\metavariable{C}$ by hypothesis
+\item\label{c18:step:4} $\vdash(\metavariable{A}\lor\metavariable{B})\implies\metavariable{C}$
+by Th\ref{thm:3-2-2}(\ref{c18:step:2}, \ref{c18:step:3})
+\item $\vdash\metavariable{C}$ by MP(\ref{c18:step:4}, \ref{c18:step:1}).
+\end{pf}
+
+\subsubsection{Proof step}
+This corresponds to ``Per cases [by
+  $\vdash\metavariable{A}\lor\metavariable{B}$];
+suppose $\metavariable{A}$, [then proof of $\metavariable{C}$]; suppose
+$\metavariable{B}$ [, then proof of $\metavariable{C}$]''.
+
+\section*{IV. Method of the Auxiliary Constant}
+
+\begin{dc}\label{c19}
+Let $\metavariable{x}$ be a letter, let $\metavariable{A}$ and
+$\metavariable{B}$ be relations in $\theory{T}$ such that
+\begin{enumerate}
+\item\label{c19:hypo:1} $\metavariable{x}$ is not a constant of $\theory{T}$ and does not
+  appear in $\metavariable{B}$; and
+\item\label{c19:hypo:2} there is a term $\metavariable{T}$ in $\theory{T}$ such that $(\metavariable{T}\mid\metavariable{x})\metavariable{A}$
+  is a theorem in $\theory{T}$.
+\end{enumerate}
+Let $\theory{T}'$ be the theory obtained by adjoining $\metavariable{A}$
+to the axioms of $\theory{T}$. If $\vdash_{\theory{T}'}\metavariable{B}$
+is a theorem in $\theory{T}'$, then
+$\vdash_{\theory{T}}\metavariable{B}$ is a theorem in $\theory{T}$.
+\end{dc}
+
+\begin{pf}
+\item\label{step:c19:1} $\vdash_{\theory{T}'}\metavariable{B}$ by hypothesis
+\item\label{step:c19:2} $\metavariable{A}\vdash_{\theory{T}}\metavariable{B}$
+\item\label{step:c19:3} $\vdash\metavariable{A}\implies\metavariable{B}$
+by \ref{c14}(\ref{step:c19:2})
+\item\label{step:c19:4} $\vdash(\metavariable{T}\mid\metavariable{x})(\metavariable{A}\implies\metavariable{B})$
+by \ref{c3}(\ref{step:c19:3})
+\item\label{step:c19:5} $\vdash\bigl((\metavariable{T}\mid\metavariable{x})\metavariable{A}\bigr)\implies\metavariable{B}$
+by \ref{cs5}(\ref{step:c19:4}), hypothesis \ref{c19:hypo:1}
+\item\label{step:c19:6} $\vdash(\metavariable{T}\mid\metavariable{x})\metavariable{A}$
+by hypothesis \ref{c19:hypo:2}
+\item\label{step:c19:7} $\vdash\metavariable{B}$ by MP(\ref{step:c19:5}, \ref{step:c19:6}).
+\end{pf}

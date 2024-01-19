@@ -1,0 +1,97 @@
+\usepackage{enumitem}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{soul}
+\usepackage{xcolor}
+\usepackage{hyperref}
+% eTeX uses this color for links, it's better than BrickRed imho
+\definecolor{linkRed}{cmyk}{0.28, 1, 1, 0.35}
+\hypersetup{colorlinks=true,
+    linkcolor=linkRed,
+    citecolor=linkRed,
+    filecolor=linkRed,
+    urlcolor=linkRed
+}
+%\setlist[enumerate]{itemsep=0pt,parsep=0pt}
+\newlist{pf}{enumerate}{1}
+\setlist[pf]{label=(.\arabic*),ref=.\arabic*}%,itemsep=0pt,parsep=0pt}
+
+
+% Bourbaki's style, as found in, e.g., their Lie Groups book.
+\def\th@plain{%
+%%  \let\thm@indent\noindent % no indent
+%%  \thm@headfont{\bfseries}% heading font is bold
+%%  \thm@notefont{}% same as heading font
+%%  \thm@headpunct{.}% add period after heading
+%%  \let\thm@swap\@gobble
+%%  \thm@preskip\topsep
+%%  \thm@postskip\theorempreskipamount
+  \thm@headfont{\scshape}%
+  \itshape % body font
+}
+\def\th@definition{%
+  \thm@headfont{\scshape}%
+  \normalfont % body font
+}
+\def\th@remark{%
+  \thm@headfont{\small\itshape}%
+  \addtolength{\@totalleftmargin}{2\parindent}
+   \addtolength{\linewidth}{-2\parindent}
+   \parshape 1 2\parindent \linewidth\small  \normalfont % body font
+  \thm@preskip\topsep \divide\thm@preskip\tw@
+  \thm@postskip\thm@preskip
+}
+
+\newcounter{dc}
+\newcounter{cs}
+\newcounter{cf}
+\newcounter{syn}
+
+\newenvironment{dc}{\medbreak\refstepcounter{dc}\noindent\thedc.\itshape\enspace\ignorespaces}{\medbreak}
+\newenvironment{cs}{\medbreak\refstepcounter{cs}\noindent\thecs.\enspace\ignorespaces}{\medbreak}
+\newenvironment{cf}{\medbreak\refstepcounter{cf}\noindent\thecf.\enspace\ignorespaces}{\medbreak}
+\newenvironment{syn}{\medbreak\refstepcounter{syn}\noindent\thesyn.\enspace\ignorespaces}{\medbreak}
+\renewcommand\thedc{C\arabic{dc}}
+\renewcommand\thecs{CS\arabic{cs}}
+\renewcommand\thecf{CF\arabic{cf}}
+\renewcommand\thesyn{Syn\arabic{syn}}
+
+\swapnumbers
+\theoremstyle{plain}
+\newtheorem{theorem}[subsubsection]{Theorem}
+\newtheorem{proposition}[subsubsection]{Proposition}
+\newtheorem{corollary}[subsubsection]{Corollary}
+\newtheorem{lemma}[subsubsection]{Lemma}
+%\newtheorem{puzzle}[subsubsection]{Puzzle}
+%% \newtheorem{dc}{\ignorespaces}
+%% \newtheorem{cs}{\ignorespaces}
+%\newtheorem{syn}{\ignorespaces}
+
+\newcounter{puzzle}
+\newenvironment{puzzle}{\medbreak\noindent\refstepcounter{puzzle}\textbf{Puzzle~\thepuzzle.}\itshape\enspace\ignorespaces}{\medbreak}
+
+\theoremstyle{definition}
+\newtheorem{definition}[subsubsection]{Definition}
+\newtheorem{example}[subsubsection]{Example}
+
+\theoremstyle{remark}
+\newtheorem{remark}{Remark}[subsubsection]
+\newtheorem*{remark*}{Remark}
+\newtheorem{remarks}{Remarks}[subsubsection]
+
+
+
+\let\og@implies\implies
+\let\implies\Longrightarrow
+
+\def\define#1{\textbf{``#1''}}
+\newcommand\metavariable[1]{\boldsymbol{#1}}
+
+\newcommand\theory[1]{\mathcal{#1}}
+
+\def\subsubsection{\@startsection{subsubsection}{3}%
+  \z@{.5\linespacing\@plus.7\linespacing}{-.5em}%
+  {\normalfont\scshape}}
+
+\endinput

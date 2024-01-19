@@ -1,0 +1,46 @@
+\subsection{Axioms}
+
+\subsubsection{Constructing theories}\label{subsec:axioms:constructing-theories}
+We have seen that the specific signs (opaque predicates and functions)
+determines the formulas and terms in a theory $\theory{T}$. In general,
+to construct $\theory{T}$, we proceed as follows:
+\begin{enumerate}
+\item We write down a certain number of formulas in $\theory{T}$ which
+  Bourbaki calls the \define{explicit axioms} (I'm told the modern
+  terminology for these are ``simple axioms'') which govern the
+  behaviour of \define{Constants} of the theory --- any letter which
+  appears in them is considered a ``constant'', but a better term would
+  be ``parameter'' (e.g., for a group, its ``constants'' are $G$ [the
+    underlying set] and $\mu$ [the binary operator]);
+\item We write down one or more rules called the \define{Schemes} of
+  $\theory{T}$, which have the following properties:
+  \begin{enumerate}
+  \item the application of such a rule $\theory{R}$ yields a formula in $\theory{T}$;
+  \item if $\metavariable{T}$ is a term in $\theory{T}$, if
+    $\metavariable{x}$ is a letter, and if $\metavariable{R}$ is a
+    relation in $\theory{T}$ obtained by applying the scheme
+    $\theory{R}$, then the relation
+    $(\metavariable{T}\mid\metavariable{x})\metavariable{R}$ can also be
+    cosntructed by applying $\theory{R}$.
+  \end{enumerate}
+  The relations obtained by applying a scheme of $\theory{T}$ is called
+  an \emph{implicit axiom} of $\theory{T}$.
+\end{enumerate}
+
+\subsubsection{Schemes}
+We stress that Bourbaki requires at least one scheme for a mathematical
+theory.
+
+I'm not really satisfied with Bourbaki's definition of a scheme, because
+it's unclear how to think of it. Specifically, Bourbaki's description of
+schemes have their variables range over terms, rather than using
+metavaraibles to range over formulas and terms, or [as Mizar does] using
+second-order variables to parametrize formulas.
+
+\begin{definition}
+  Later on, Bourbaki imagines a theory as a triple
+\[\langle\textit{signs},~\textit{explicit\ axioms},~\textit{schemes\/}\rangle\]
+where ``signs'' are a finite set of specific signs, ``explicit axioms''
+are a finite set of formulas, and ``schemes'' are a finite set of axiom
+schemes.
+\end{definition}

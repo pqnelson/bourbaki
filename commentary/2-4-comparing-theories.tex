@@ -1,0 +1,59 @@
+\subsection{Comparing Theories}
+
+\begin{definition}
+A theory $\theory{T}'$ is said to be \define{Stronger} than a theory
+$\theory{T}$ if
+\begin{enumerate}
+\item all signs of $\theory{T}$ are signs of $\theory{T}'$, and
+\item all schemes of $\theory{T}$ are schemes of $\theory{T}'$, and
+\item all explicit axioms of $\theory{T}$ are theorems in $\theory{T}'$.
+\end{enumerate}
+(This defines a binary predicate.)
+\end{definition}
+
+\begin{dc}\label{c4}
+If a theory $\theory{T}'$ is stronger than a theory $\theory{T}$,
+then all theorems of $\theory{T}$ are theorems of $\theory{T}'$.
+\end{dc}
+
+\begin{definition}
+A theory $\theory{T}'$ is \define{Equivalent} to a theory $\theory{T}$
+if
+\begin{enumerate}
+\item all signs of $\theory{T}$ are signs of $\theory{T}'$ and
+  vice-versa, and
+\item all schemes of $\theory{T}$ are schemes of $\theory{T}'$ and
+  vice-versa, and
+\item all explicit axioms of $\theory{T}$ are theorems of $\theory{T}'$
+  and vice-versa.
+\end{enumerate}
+In other words, $\theory{T}'$ is equivalent to $\theory{T}$ if and only
+if $\theory{T}'$ is stronger than $\theory{T}$ and 
+$\theory{T}$ is stronger than $\theory{T}'$.
+\end{definition}
+
+\begin{corollary}
+Equivalent theories have the same terms, formulas, and theorems.
+\end{corollary}
+(This follows immediately from \ref{c4}.)
+
+\begin{dc}\label{c5}
+Let $\theory{T}$ be a theory. Let $\metavariable{T}_{1}$, \dots,
+$\metavariable{T}_{m}$ be terms of $\theory{T}$. Let
+$\metavariable{a}_{1}$, \dots, $\metavariable{a}_{m}$ be parameters
+[``constants''] of $\theory{T}$. Suppose the theory $\theory{T}'$ is
+such that
+\begin{enumerate}
+\item all signs of $\theory{T}$ are signs of $\theory{T}'$, and
+\item every scheme of $\theory{T}$ are schemes of $\theory{T}'$, and
+\item if $\metavariable{A}$ is an explicit axiom of $\theory{T}$, then $\vdash_{\theory{T}'}(\metavariable{T}_{1}\mid\metavariable{a}_{1})(\cdots)(\metavariable{T}_{m}\mid\metavariable{a}_{m})\metavariable{A}$
+is a theorem in $\theory{T}'$.
+\end{enumerate}
+If $\vdash_{\theory{T}}\metavariable{B}$ is a theorem of $\theory{T}$,
+then 
+$\vdash_{\theory{T}'}(\metavariable{T}_{1}\mid\metavariable{a}_{1})(\cdots)(\metavariable{T}_{m}\mid\metavariable{a}_{m})\metavariable{B}$
+is a theorem in $\theory{T}'$.
+\end{dc}
+(This does not appear to be used anywhere in Bourbaki's \textit{Theory of Sets};
+maybe it is used somewhere much later on, in another volume of the
+Elements of Mathematics.)

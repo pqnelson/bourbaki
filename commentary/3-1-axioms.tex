@@ -1,0 +1,88 @@
+\subsection{The Axioms}
+\setcounter{subsubsection}{-1}
+\subsubsection{Propositional logic} This is the Hilbert system for
+a fragment of Bourbaki's formal system. It is what we would now call
+``propositional logic''.
+
+\begin{definition}
+A \define{Logical Theory} is a theory $\theory{T}$ which includes the
+following four schemes:
+\begin{enumerate}[label=(S\arabic*),ref={S\arabic*}]
+\item\label{axiom:s1} $(\metavariable{A}\lor\metavariable{A})\implies\metavariable{A}$
+\item\label{axiom:s2} $\metavariable{A}\implies(\metavariable{A}\lor\metavariable{B})$
+\item\label{axiom:s3} $(\metavariable{A}\lor\metavariable{B})\implies(\metavariable{B}\lor\metavariable{A})$
+\item\label{axiom:s4} $(\metavariable{A}\implies\metavariable{B})\implies((\metavariable{C}\lor\metavariable{A})\implies(\metavariable{C}\lor\metavariable{B}))$
+\end{enumerate}
+where $\metavariable{A}$, $\metavariable{B}$, $\metavariable{C}$
+are formulas in the theory.
+\end{definition}
+
+\subsubsection{Russell--Bernays axioms}
+These axioms are precisely those used by Russell and Whitehead's
+\textit{Principia Mathematica}, and simplified by Paul
+Bernays~\cite{bernays1926}. Originally Russell and Whitehead had 5
+axioms, but Bernays proved one of them was redundant.
+Recall (\S\ref{subsec:1-1:definitions:abbreviating-symbols})
+Bourbaki defined $\metavariable{A}\implies\metavariable{B}$ as an
+abbreviation for $(\neg\metavariable{A})\lor\metavariable{B}$. This
+choice follows the decision made by Russell and Whitehead, as well as
+Hilbert and Ackermann.
+
+We will be painfully explicit in our proofs, so we introduce axioms for
+this syntactic sugar:
+\begin{syn}\label{unfold-implies}
+If $\vdash\metavariable{A}\implies\metavariable{B}$
+then $\vdash\neg\metavariable{A}\lor\metavariable{B}$.
+\end{syn}
+
+\begin{syn}\label{fold-implies}
+If $\vdash\neg\metavariable{A}\lor\metavariable{B}$,
+then $\vdash\metavariable{A}\implies\metavariable{B}$.
+\end{syn}
+
+\begin{syn}\label{syn:tautology:implies-to-lor}
+$\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\metavariable{A}\lor\metavariable{B})$
+\end{syn}
+
+\begin{syn}\label{syn:tautology:lor-to-implies}
+$\vdash(\neg\metavariable{A}\lor\metavariable{B})\implies(\metavariable{A}\implies\metavariable{B})$
+\end{syn}
+
+\begin{theorem}\label{thm:explode-explicit}
+$\vdash\neg\metavariable{A}\implies(\metavariable{A}\implies\metavariable{B})$
+\end{theorem}
+
+\begin{pf}
+\item\label{thm:3-1-3:step1} $\vdash\neg\metavariable{A}\implies((\neg\metavariable{A})\lor\metavariable{B})$
+by \ref{axiom:s4}($\neg\metavariable{A}$, $\metavariable{B}$)
+\item $\vdash\neg\metavariable{A}\implies(\metavariable{A}\implies\metavariable{B})$
+by definition of implies.
+\end{pf}
+
+\begin{theorem}\label{thm:explode}
+If $\theory{T}$ is contradictory theory~(\S\ref{defn:contradictory-theory})
+[i.e., if $\vdash_{\theory{T}}\metavariable{A}$ and $\vdash_{\theory{T}}\neg\metavariable{A}$],
+then $\vdash_{\theory{T}}\metavariable{B}$ for any formula $\metavariable{B}$
+of $\theory{T}$.
+\end{theorem}
+
+\begin{pf}
+\item\label{step:3-1:explode:step-1} $\vdash\metavariable{A}$ by hypothesis
+\item\label{step:3-1:explode:step-2} $\vdash\neg\metavariable{A}$ by hypothesis
+\item\label{step:3-1:explode:step-3} $\vdash\neg\metavariable{A}\implies(\metavariable{A}\implies\metavariable{B})$
+  by Th\ref{thm:explode-explicit}($\metavariable{A}$, $\metavariable{B}$)
+\item\label{step:3-1:explode:step-4} $\vdash\metavariable{A}\implies\metavariable{B}$ by MP(\ref{step:3-1:explode:step-3}, \ref{step:3-1:explode:step-2})
+\item $\vdash\metavariable{B}$ by MP(\ref{step:3-1:explode:step-4}, \ref{step:3-1:explode:step-1})
+\end{pf}
+
+\subsubsection{Assumptions}
+If $\Gamma=\metavariable{A}_{1},\Gamma'$ is our set of assumptions, we
+can write $\Gamma\vdash\metavariable{A}_{1}$ and justify it ``by assumption''.
+However, theorems must have $\Gamma=\emptyset$.
+
+\begin{theorem}[Weakening]
+If $\Gamma_{1}\subset\Gamma_{2}$ and if $\Gamma_{1}\vdash\metavariable{A}$,
+then we can infer $\Gamma_{2}\vdash\metavariable{A}$.
+\end{theorem}
+This is going to be so common we won't bother citing this explicitly,
+we'll just saying ``by weakening $\langle$\textit{line number\/}$\rangle$''.

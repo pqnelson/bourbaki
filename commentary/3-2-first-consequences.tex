@@ -1,0 +1,180 @@
+\subsection{First consequences} \ 
+
+\begin{dc}\label{c6}
+If $\vdash\metavariable{A}\implies\metavariable{B}$ and $\vdash\metavariable{B}\implies\metavariable{C}$,
+then $\vdash\metavariable{A}\implies\metavariable{C}$.
+\end{dc}
+
+\begin{pf}
+\item\label{dc6:1} $\vdash(\metavariable{A}\implies\metavariable{B})$
+  by hypothesis
+\item\label{dc6:2} $\vdash(\metavariable{B}\implies\metavariable{C})$
+  by hypothesis
+\item\label{dc6:3} $\vdash(\metavariable{B}\implies\metavariable{C})\implies((\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\metavariable{A}\lor\metavariable{C}))$
+  by \ref{axiom:s4}$(\metavariable{B},\metavariable{C},\neg\metavariable{A})$.
+\item\label{dc6:4} $\vdash((\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\metavariable{A}\lor\metavariable{C}))$
+  by MP(\ref{dc6:3},\ref{dc6:2})
+\item\label{dc6:5} $\vdash(\neg\metavariable{A}\lor\metavariable{B})$
+  by \ref{unfold-implies}(\ref{dc6:1})
+\item\label{dc6:6} $\vdash(\neg\metavariable{A}\lor\metavariable{C})$ by MP(\ref{dc6:4},\ref{dc6:5}).
+\item\label{dc6:7} $\vdash(\metavariable{A}\implies\metavariable{C})$ by \ref{fold-implies}(\ref{dc6:6})
+\end{pf}
+
+\begin{dc}\label{c7}
+$\vdash\metavariable{B}\implies(\metavariable{A}\lor\metavariable{B})$.
+\end{dc}
+
+\begin{pf}
+\item\label{dc7:1} $\vdash\metavariable{B}\implies(\metavariable{B}\lor\metavariable{A})$
+  by $\ref{axiom:s2}(\metavariable{B},\metavariable{A})$
+\item\label{dc7:2} $\vdash(\metavariable{B}\lor\metavariable{A})\implies(\metavariable{A}\lor\metavariable{B})$
+  by $\ref{axiom:s3}(\metavariable{B},\metavariable{A})$
+\item $\vdash\metavariable{B}\implies(\metavariable{A}\lor\metavariable{B})$
+  by \ref{c6}(\ref{dc7:1}, \ref{dc7:2})
+\end{pf}
+
+\begin{dc}\label{c8}
+$\vdash\metavariable{A}\implies\metavariable{A}$
+\end{dc}
+
+\begin{pf}
+\item\label{dc8:1} $\vdash\metavariable{A}\implies(\metavariable{A}\lor\metavariable{A})$
+  by \ref{axiom:s2}($\metavariable{A}$, $\metavariable{A}$)
+\item\label{dc8:2} $\vdash(\metavariable{A}\lor\metavariable{A})\implies\metavariable{A}$
+  by \ref{axiom:s1}($\metavariable{A}$)
+\item $\vdash\metavariable{A}\implies\metavariable{A}$ by
+  \ref{c6}(\ref{dc8:1}, \ref{dc8:2})
+\end{pf}
+
+\begin{dc}\label{c9}
+If $\vdash\metavariable{B}$, then for any proposition $\metavariable{A}$
+we have $\vdash\metavariable{A}\implies\metavariable{B}$.
+\end{dc}
+
+\begin{pf}
+\item\label{dc9:1} $\vdash\metavariable{B}$ by hypothesis
+\item\label{dc9:2} $\vdash\metavariable{B}\implies(\neg\metavariable{A}\lor\metavariable{B})$
+  by \ref{c7}($\neg{\metavariable{A}}$, $\metavariable{B}$)
+\item\label{dc9:3} $\vdash\neg\metavariable{A}\lor\metavariable{B}$ by
+  MP(\ref{dc9:1}, \ref{dc9:2})
+\item $\vdash\metavariable{A}\implies\metavariable{B}$ by \ref{fold-implies}(\ref{dc9:3})
+\end{pf}
+
+\begin{dc}\label{c10}
+$\vdash\metavariable{A}\lor\neg\metavariable{A}$
+\end{dc}
+\begin{pf}
+\item\label{dc10:1} $\vdash\metavariable{A}\implies\metavariable{A}$
+  by \ref{c8}($\metavariable{A}$)
+\item\label{dc10:2} $\vdash\neg\metavariable{A}\lor\metavariable{A}$
+  by \ref{unfold-implies}(\ref{dc10:1})
+\item\label{dc10:3} $\vdash((\neg\metavariable{A})\lor\metavariable{A})\implies(\metavariable{A}\lor\neg\metavariable{A})$
+  by \ref{axiom:s3}($\neg\metavariable{A}$, $\metavariable{A}$)
+\item $\vdash\metavariable{A}\lor\neg\metavariable{A}$ by
+  MP(\ref{dc10:3}, \ref{dc10:2})
+\end{pf}
+
+\begin{dc}\label{c11}
+$\vdash\metavariable{A}\implies(\neg\neg\metavariable{A})$
+\end{dc}
+
+\begin{pf}
+\item\label{dc11:1} $\vdash(\neg\metavariable{A})\lor(\neg\neg\metavariable{A})$
+  by \ref{c10}($\metavariable{A}$)
+\item $\vdash\metavariable{A}\implies\neg\neg\metavariable{A}$
+  by \ref{fold-implies}(\ref{dc11:1})
+\end{pf}
+
+\begin{dc}\label{c12}
+$\vdash(\metavariable{A}\implies\metavariable{B})\implies((\neg\metavariable{B})\implies(\neg\metavariable{A}))$
+\end{dc}
+
+\begin{pf}
+\item\label{dc12:1} $\vdash\metavariable{B}\implies\neg\neg\metavariable{B}$
+  by \ref{c11}($\metavariable{B}$)
+\item\label{dc12:2} $\vdash(\metavariable{B}\implies\neg\neg\metavariable{B})\implies((\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\metavariable{A}\lor\neg\neg\metavariable{B}))$
+  by \ref{axiom:s4}($\metavariable{B}$, $\neg\neg\metavariable{B}$, $\neg\metavariable{A}$)
+\item\label{dc12:3} $\vdash(\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\metavariable{A}\lor\neg\neg\metavariable{B})$
+  by MP(\ref{dc12:2}, \ref{dc12:1})
+\item\label{dc12:4} $\vdash(\neg\metavariable{A}\lor\neg\neg\metavariable{B})\implies(\neg\neg\metavariable{B}\lor\neg\metavariable{A})$
+  by \ref{axiom:s3}($\neg\metavariable{A}$, $\neg\neg\metavariable{B}$)
+\item\label{dc12:5} $\vdash(\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\neg\metavariable{B}\lor\neg\metavariable{A})$
+  by \ref{c6}(\ref{dc12:3}, \ref{dc12:4})
+\item\label{dc12:6} $\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\metavariable{A}\lor\metavariable{B})$
+  by \ref{syn:tautology:implies-to-lor}($\metavariable{A}$, $\metavariable{B}$)
+\item\label{dc12:7} $\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\neg\metavariable{B}\lor\neg\metavariable{A})$
+  by \ref{c6}(\ref{dc12:6}, \ref{dc12:5})
+\item\label{dc12:8} $\vdash(\neg\neg\metavariable{B}\lor\neg\metavariable{A})\implies(\neg\metavariable{B}\implies\neg\metavariable{A})$
+  by \ref{syn:tautology:implies-to-lor}($\neg\metavariable{B}$, $\neg\metavariable{A}$)
+\item $\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\metavariable{B}\implies\neg\metavariable{A})$
+  by \ref{c6}(\ref{dc12:7}, \ref{dc12:8})
+\end{pf}
+
+\begin{dc}\label{c13}
+If $\vdash\metavariable{A}\implies\metavariable{B}$,
+then $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{A}\implies\metavariable{C})$
+\end{dc}
+
+\begin{pf}
+\item\label{dc13:1} $\vdash\metavariable{A}\implies\metavariable{B}$ by hypothesis
+\item\label{dc13:2} $\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\metavariable{B}\implies\neg\metavariable{A})$
+  by \ref{c12}($\metavariable{A}$, $\metavariable{B}$)
+\item\label{dc13:3} $\vdash\neg\metavariable{B}\implies\neg\metavariable{A}$
+  by MP(\ref{dc13:2}, \ref{dc13:1})
+\item\label{dc13:4} $\vdash(\neg\metavariable{B}\implies\neg\metavariable{A})\implies((\metavariable{C}\lor\neg\metavariable{B})\implies(\metavariable{C}\lor\neg\metavariable{A}))$
+  by \ref{axiom:s4}($\neg\metavariable{B}$, $\neg\metavariable{A}$, $\metavariable{C}$)
+\item\label{dc13:5} $\vdash(\metavariable{C}\lor\neg\metavariable{B})\implies(\metavariable{C}\lor\neg\metavariable{A})$
+  by MP(\ref{dc13:4}, \ref{dc13:3})
+\item\label{dc13:6} $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{C}\lor\neg\metavariable{B})$
+  by \ref{c6}(\ref{syn:tautology:implies-to-lor}($\metavariable{B}$, $\metavariable{C}$),
+  \ref{axiom:s3}($\metavariable{C}$, $\neg\metavariable{B}$))
+\item\label{dc13:7} $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{C}\lor\neg\metavariable{A})$
+  by \ref{c6}(\ref{dc13:6}, \ref{dc13:5})
+\item\label{dc13:8} $\vdash(\metavariable{C}\lor\neg\metavariable{A})\implies(\metavariable{A}\implies\metavariable{C})$
+  by \ref{c6}(\ref{axiom:s3}($\metavariable{C}$, $\neg\metavariable{A}$),
+  \ref{syn:tautology:lor-to-implies}($\metavariable{A}$, $\metavariable{C}$))
+\item $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{A}\implies\metavariable{C})$
+  by \ref{c6}(\ref{dc13:7}, \ref{dc13:8})
+\end{pf}
+
+\begin{theorem}\label{thm:3-2-1}
+If $\vdash\metavariable{A}\implies\metavariable{B}$, then $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{B}$.
+\end{theorem}
+
+\begin{pf}
+\item\label{step:3-2-1:1} $\vdash\metavariable{A}\implies\metavariable{B}$
+  by hypothesis
+\item\label{step:3-2-1:2} $\vdash(\metavariable{A}\implies\metavariable{B})\implies((\metavariable{B}\lor\metavariable{A})\implies(\metavariable{B}\lor\metavariable{B}))$
+by \ref{axiom:s4}($\metavariable{A}$, $\metavariable{B}$, $\metavariable{B}$)
+\item\label{step:3-2-1:3} $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{B}\lor\metavariable{A}$
+by \ref{axiom:s3}($\metavariable{A}$, $\metavariable{B}$)
+\item\label{step:3-2-1:4} $\vdash\metavariable{B}\lor\metavariable{A}\implies\metavariable{B}\lor\metavariable{B}$
+by MP(\ref{step:3-2-1:2}, \ref{step:3-2-1:1})
+\item\label{step:3-2-1:5} $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{B}\lor\metavariable{B}$
+by \ref{c6}(\ref{step:3-2-1:3}, \ref{step:3-2-1:4})
+\item\label{step:3-2-1:6} $\vdash\metavariable{B}\lor\metavariable{B}\implies\metavariable{B}$
+  by \ref{axiom:s1}($\metavariable{B}$)
+\item\label{step:3-2-1:7} $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{B}$
+  by \ref{c6}(\ref{step:3-2-1:5}, \ref{step:3-2-1:6})
+\end{pf}
+
+\begin{theorem}\label{thm:3-2-2}
+If $\vdash\metavariable{A}\implies\metavariable{C}$
+and $\vdash\metavariable{B}\implies\metavariable{C}$,
+then $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{C}$.
+\end{theorem}
+
+\begin{pf}
+\item\label{step:3-2-2:1} $\vdash\metavariable{A}\implies\metavariable{C}$
+  by hypothesis
+\item\label{step:3-2-2:2} $\vdash\metavariable{B}\implies\metavariable{C}$
+  by hypothesis
+\item\label{step:3-2-2:3} $\vdash(\metavariable{B}\implies\metavariable{C})\implies((\metavariable{A}\lor\metavariable{B})\implies(\metavariable{A}\lor\metavariable{C}))$
+  by \ref{axiom:s4}($\metavariable{B}$, $\metavariable{C}$, $\metavariable{A}$)
+\item\label{step:3-2-2:4} $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{A}\lor\metavariable{C}$
+  by MP(\ref{step:3-2-2:3}, \ref{step:3-2-2:2})
+\item\label{step:3-2-2:5} $\vdash\metavariable{A}\lor\metavariable{C}\implies\metavariable{C}$
+  by Thm\ref{thm:3-2-1}(\ref{step:3-2-2:1})
+\item\label{step:3-2-2:6} $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{C}$
+  by \ref{c6}(\ref{step:3-2-2:4}, \ref{step:3-2-2:5})
+\end{pf}

@@ -1,0 +1,141 @@
+\subsection{Proofs}
+
+\begin{definition}
+Bourbaki defines a \define{Demonstrative Text} (literal translation from
+French) of a theory $\theory{T}$ to consist of:
+\begin{enumerate}
+\item ``auxiliary'' formative constructions for terms and formulas of
+  $\theory{T}$; 
+\item ``Proofs'' in $\theory{T}$.
+\end{enumerate}
+Presumably these capture ``definitions'' and ``theorems + proofs''
+in articles (or other forms of mathematical exposition).
+\end{definition}
+
+\subsubsection{Proofs}\label{subsec:2-2:proofs} A \define{proof in $\theory{T}$} is a sequence of
+relations (formulas) in $\theory{T}$ which appear in the auxiliary
+formative construction, such that for every relation $\metavariable{R}$
+in the sequence at least one of the following is satisfied:
+\begin{itemize}
+\item[($a_{1}$)] $\metavariable{R}$ is an explicit axiom of $\theory{T}$;
+\item[($a_{2}$)] $\metavariable{R}$ results from the application of a
+  scheme of $\theory{T}$ to terms or relations which appear in the
+  auxiliary formative construction;
+\item[($b$)] There are two relations $\metavariable{S}$ and
+  $\metavariable{S}\implies\metavariable{R}$ in the sequence which
+  precede $\metavariable{R}$. 
+\end{itemize}
+The way Bourbaki describes it, a mathematical theory sounds like a kind
+of ``stock ticker'' which just prints theorem after theorem in such a
+manner that every formula printed is either an axiom or follows from
+\textit{modus ponens} applied to previous theorems. (The modern
+terminology we'd use now would be a ``Turing machine''.)
+
+\begin{definition}
+A \define{Theorem} in $\theory{T}$ is a formula which appears in a proof
+in $\theory{T}$.
+\end{definition}
+
+\subsubsection{``Theoremhood''}
+Bourbaki has an intriguing aside where he observes the assertion that ``a
+formula is not a theorem'' cannot be adequately established, since later
+on the formula may be proven. In other words, the ontological status of
+``theoremhood'' is dynamic. This is all very interesting, but equally
+irrelevant.
+
+\subsubsection{True vs Provable}
+Bourbaki blurs the distinction between ``A theorem $\metavariable{A}$ proven in
+$\theory{T}$'' with ``A true formula $\metavariable{A}$''. For Bourbaki,
+there is no difference: all proven theorems are true. But logicians
+(both then and now) insist that ``truth'' is a semantical notion (a
+formula is true \emph{relative to a model or interpretation}) whereas
+``proven'' is a syntactic notion (a theorem is proven relative to a
+syntactic proof calculus).
+
+Most working mathematicians probably adhere to the ``Bourbakian creed'':
+there is no distinction between a proven theorem and a true formula, all
+proven theorems are true. (I know I did.)
+
+\subsubsection{Grammar of Hilbert-style proofs}
+I am going to intentionally deviate from Bourbaki's presentation, and I
+will work with an explicit Hilbert-style proof system. The syntax for
+this system is quite conventional: let $\Gamma$ be a finite set of
+formulas, let $\metavariable{A}$ be a formula, all in theory
+$\theory{T}$. We write $\Gamma\vdash_{\theory{T}}\metavariable{A}$ for
+``Assuming hypothesis $\Gamma$, we can prove $\metavariable{A}$ in
+theory $\theory{T}$''. When $\Gamma=\emptyset$, we just write
+$\vdash_{\theory{T}}\metavariable{A}$. We will also suppress the
+subscript $\theory{T}$ on the turnstile when it is clear from context
+what the theory is.
+
+Now, a \emph{theorem} is a formula $\metavariable{A}$ together with an
+associated proof. A \emph{proof} of $\metavariable{A}$ is a finite
+[ordered] sequence of \emph{proof lines} whose final line is
+$\vdash\metavariable{A}$. A \emph{proof line} is a triple consisting of
+the numerical line number, the assertion, and the justification. Usually
+the justification is a reference to a theorem or derived inference rule,
+and there may be arguments supplied.
+
+The explicit grammar:
+\begin{center}
+\begin{tabular}{rcl}
+$\langle$\textit{proof line\/}$\rangle$ & $::=$ & $\langle$\textit{line number\/}$\rangle$ 
+$\langle$\textit{assertion\/}$\rangle$ $\langle$\textit{justification\/}$\rangle$\\
+$\langle$\textit{line number}$\rangle$ & $::=$ & \texttt{(.} $\langle$\textit{positive integer\/}$\rangle$ \texttt{)}\\
+$\langle$\textit{justification\/}$\rangle$
+& $::=$ & \texttt{by } $\langle$\textit{theorem or axiom}$\rangle$ $\langle$\textit{optional arguments}$\rangle$\\
+& $\mid$ & \texttt{by MP(}$\langle$\textit{line number\/}$\rangle$
+\texttt{, }$\langle$\textit{line number\/}$\rangle$\texttt{)}\\
+$\langle$\textit{assertion\/}$\rangle$ & $::=$ & $\langle$\textit{hypotheses}$\rangle$ $\vdash$ $\langle$\textit{formula}$\rangle$\\[3ex]
+$\langle$\textit{hypotheses}$\rangle$ & $::=$ & $\langle$\textit{blank}$\rangle$\\
+& $\mid$ & $\langle$\textit{comma-separated formulas}$\rangle$\\
+$\langle$\textit{comma-separated formulas}$\rangle$
+& $::=$ & $\langle$\textit{formula}$\rangle$\\
+& $\mid$ & $\langle$\textit{formula}$\rangle$ \texttt{,} $\langle$\textit{comma-separated formulas}$\rangle$\\[3ex]
+$\langle$\textit{arguments}$\rangle$ & $::=$ & $\langle$\textit{blank}$\rangle$\\
+& $\mid$ & \texttt{(}$\langle$\textit{comma-separated arguments}$\rangle$\texttt{)}\\
+$\langle$\textit{argument}$\rangle$ & $::=$ & $\langle$\textit{line number}$\rangle$\\
+& $\mid$ &$\langle$\textit{formula}$\rangle$\\
+& $\mid$ &$\langle$\textit{term}$\rangle$ \\
+$\langle$\textit{comma-separated arguments}$\rangle$ & $::=$ &$\langle$\textit{argument}$\rangle$\\
+& $\mid$ &$\langle$\textit{argument}$\rangle$ \texttt{,} $\langle$\textit{comma-separated arguments}$\rangle$\\
+\end{tabular}
+\end{center}
+
+\begin{definition}
+Let $\metavariable{R}$ be a relation in $\theory{T}$, let
+$\metavariable{x}$ be a variable, let $\metavariable{T}$ be a term in
+$\theory{T}$. If $\vdash(\metavariable{T}\mid\metavariable{x})\metavariable{R}$
+is a theorem in $\theory{T}$, then $\metavariable{T}$ is said to
+\define{satisfy the relation} $\metavariable{R}$ in $\theory{T}$ (or, to
+be a \define{solution} of $\metavariable{R}$) when $\metavariable{R}$ is
+considered as a relation in $\metavariable{x}$.
+\end{definition}
+
+\begin{definition}\label{defn:contradictory-theory}
+Bourbaki calls a theory $\theory{T}$ \define{Contradictory} if there is
+some formula $\metavariable{A}$ such that we can prove both
+$\vdash_{\theory{T}}\metavariable{A}$ and $\vdash_{\theory{T}}\neg\metavariable{A}$.
+\end{definition}
+
+\subsubsection{Deductive criteria}
+Bourbaki introduces metatheorems to help expedite formal proofs. They
+are called ``deductive criteria'', which are usually parametrized by
+metavariables ranging over relations, terms, or
+theorems. Recall~(\S\ref{subsec:on-criteria}) our discussion of criteria
+as inference rules.
+
+\begin{dc}\label{c1}%
+Let $\metavariable{A}$ and $\metavariable{B}$ be relations in a theory
+$\theory{T}$. If $\vdash_{\theory{T}}\metavariable{A}$ and
+$\vdash_{\theory{T}}\metavariable{A}\implies\metavariable{B}$ are
+theorems in $\theory{T}$, then $\vdash_{\theory{T}}\metavariable{B}$ is
+a theorem in $\theory{T}$.
+\end{dc}
+
+\begin{remark*}
+This is precisely what we called \texttt{MP}. Its first argument is a
+reference to the theorem $\vdash\metavariable{A}\implies\metavariable{B}$,
+its second argument is a reference to the theorem $\vdash\metavariable{A}$.
+Bourbaki calls \ref{c1} ``Syllogism''.
+\end{remark*}

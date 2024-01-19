@@ -1,0 +1,29 @@
+\subsection{Substitutions in a Theory}
+
+\subsubsection{Notation}
+Let $\theory{T}$ be a theory, let $\metavariable{A}_{1}$, \dots,
+$\metavariable{A}_{n}$ be its explicit axioms (\S\ref{subsec:axioms:constructing-theories}),
+let $\metavariable{x}$ be a letter, let $\metavariable{T}$ be a term of
+$\theory{T}$. We denote by
+$(\metavariable{T}\mid\metavariable{x})\theory{T}$ the theory whose
+signs and schemes are the same as those of $\theory{T}$, and whose
+explicit axioms are
+$(\metavariable{T}\mid\metavariable{x})\metavariable{A}_{1}$, \dots,
+$(\metavariable{T}\mid\metavariable{x})\metavariable{A}_{n}$.
+
+\begin{dc}\label{c2}
+Let $\vdash\metavariable{A}$ be a theorem of $\theory{T}$,
+let $\metavariable{T}$ be a term in $\theory{T}$,
+and let $\metavariable{x}$ be a letter. Then $\vdash(\metavariable{T}\mid\metavariable{x})\metavariable{A}$
+is a theorem in $(\metavariable{T}\mid\metavariable{x})\theory{T}$.
+\end{dc}
+
+\begin{dc}\label{c3}
+Let $\vdash\metavariable{R}$ be a theorem in $\theory{T}$, let
+$\metavariable{x}$ be a letter which is not a parameter [``constant'']
+in $\theory{T}$, let $\metavariable{T}$ be a term in $\theory{T}$.
+Then $\vdash(\metavariable{T}\mid\metavariable{x})\metavariable{R}$ is a
+theorem in $\theory{T}$.
+\end{dc}
+
+This follows immediately from \ref{c2}.

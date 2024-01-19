@@ -1,0 +1,44 @@
+\subsection{Equivalence}
+
+\begin{definition}
+Let $\metavariable{A}$ and $\metavariable{B}$ be assemblies. The
+assembly
+$(\metavariable{A}\implies\metavariable{B})\land(\metavariable{B}\implies\metavariable{A})$
+will be denoted by ``$\metavariable{A}\iff\metavariable{B}$''.
+\end{definition}
+
+\begin{cs}\label{cs7}
+Let $\metavariable{A}$, $\metavariable{B}$, $\metavariable{T}$ be
+assemblies, let $\metavariable{x}$ be a letter. Then $(\metavariable{T}\mid\metavariable{x})(\metavariable{A}\iff\metavariable{B})$
+is identical to $\metavariable{A}'\iff\metavariable{B}'$ where
+$\metavariable{A}'$ is $(\metavariable{T}\mid\metavariable{x})\metavariable{A}$
+and $\metavariable{B}'$ is $(\metavariable{T}\mid\metavariable{x})\metavariable{B}$.
+\end{cs}
+
+\begin{proof}[Proof sketch]
+This follows from \ref{cs5} and \ref{cs6}.
+\end{proof}
+
+\begin{cf}\label{cf10}
+If $\metavariable{A}$ and $\metavariable{B}$ are relations in $\theory{T}$,
+then $\metavariable{A}\iff\metavariable{B}$ is a relation in $\theory{T}$.
+\end{cf}
+
+\begin{proof}[Proof sketch]
+This follows from \ref{cf5} and \ref{cf9}.
+\end{proof}
+
+\begin{dc}\label{c22}
+The biconditional is an equivalence relation. Bourbaki skips
+reflexivity, which I included as item (0).
+\begin{enumerate}[start=0]
+\item $\vdash\metavariable{A}\iff\metavariable{A}$
+\item If $\vdash\metavariable{A}\iff\metavariable{B}$, then $\vdash\metavariable{B}\iff\metavariable{A}$
+\item If $\vdash\metavariable{A}\iff\metavariable{B}$ and $\vdash\metavariable{B}\iff\metavariable{C}$,
+then $\vdash\metavariable{A}\iff\metavariable{C}$.
+\end{enumerate}
+\end{dc}
+
+At this point, it's painfully clear that Bourbaki is ``running out of steam'',
+because the proofs are increasingly sketch for \ref{c22}, and completely
+omitted afterwards.

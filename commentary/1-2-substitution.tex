@@ -1,0 +1,99 @@
+\subsection{Criteria of Substitution}
+
+\subsubsection{On ``Criteria''}\label{subsec:on-criteria}
+Since abbreviating symbols lead to Brobdingnagian expressions, this
+would force us to endure long chains of reasoning. This is clearly
+unmanageable. Bourbaki states, in my amended translation (my insertions
+in blue, deletions in red),
+\begin{quote}
+For this reason we shall establish {\color{blue}in this book}\footnote{This phrase ``in this book'' appears in the French
+edition, but is missing in the English translation.}
+\emph{criteria} relating to {\color{blue}metavariables
+  [\textit{assemblages indetermin\'e}]} {\color{red}\st{indeterminate assemblies}};
+each of these criteria will
+describe {\color{red}\st{once for all}} {\color{blue}definitively}
+[\textit{une fois pour tout}] the final result of a
+{\color{red}\st{definite}} {\color{blue}determined} [\textit{d\'{e}termin\'{e}e}]
+sequence of manipulations
+on these {\color{blue}metavariables
+  [\textit{assemblages}]} {\color{red}\st{assemblies}}.
+\end{quote}
+The modern way we would do this would be to use judgements for term
+rewriting and grammatical well-formedness, and inductively define them
+using inference rules.
+
+Bourbaki explains, ``These criteria are therefore not {\color{red}\st{indispensable to the theory}} {\color{blue}theoretically essential}; their justification belongs to \emph{metamathematics}.''
+I personally have great difficulty not to read this blue text as saying
+the criteria is essential to the object language.
+This reinforces the suspicion that these are prototypes of inference
+rules.
+
+\subsubsection{Families of criteria}
+There are several families of criteria in Bourbaki's formal
+system. Again, this is because we have several operations in the
+metalanguage (anachronistically we'd call them ``judgements'') and each
+correspond to a family of criteria. The first family of criteria
+Bourbaki introduces concerns the ``\textit{Criteria of Substitution}''.
+
+These are enumerated, prefixed by ``CS''.
+
+\begin{cs}\label{cs1}
+Let $\metavariable{A}$ and $\metavariable{B}$ be assemblies, let
+$\metavariable{x}$ and $\metavariable{x}'$ be variables. If
+$\metavariable{x}'$ does not appear in $\metavariable{A}$, then
+$(\metavariable{B}\mid\metavariable{x})\metavariable{A}$ is identical to $(\metavariable{B}\mid\metavariable{x}')(\metavariable{x}'\mid\metavariable{x})\metavariable{A}$.
+\end{cs}
+
+\begin{cs}\label{cs2}
+Let $\metavariable{A}$, $\metavariable{B}$, $\metavariable{C}$
+be assemblies. Let $\metavariable{x}$ and $\metavariable{y}$ be distinct
+variables. If $\metavariable{y}$ does not appear in $\metavariable{B}$,
+then $(\metavariable{B}\mid\metavariable{x})(\metavariable{C}\mid\metavariable{y})\metavariable{A}$
+is identical with $(\metavariable{C}'\mid\metavariable{y})(\metavariable{B}\mid\metavariable{x})\metavariable{A}$
+where $\metavariable{C}'$ is identical with $(\metavariable{B}\mid\metavariable{x})\metavariable{C}$.
+(This is basically Barendregt's substitution lemma.)
+\end{cs}
+
+\begin{cs}\label{cs3}
+Let $\metavariable{A}$ be an assembly.
+Let $\metavariable{x}$ and $\metavariable{x}'$ be variables. If
+$\metavariable{x}'$ does not appear in $\metavariable{A}$, then
+$\tau_{\metavariable{x}}(\metavariable{A})$ is identical with $\tau_{\metavariable{x}'}(\metavariable{A}')$
+where $\metavariable{A}'$ is $(\metavariable{x}'\mid\metavariable{x})\metavariable{A}$.
+\end{cs}
+
+\begin{cs}\label{cs4}
+Let $\metavariable{A}$ and $\metavariable{B}$ be assemblies, let
+$\metavariable{x}$ and $\metavariable{y}$ be distinct variables.
+If $\metavariable{x}$ does not appear in $\metavariable{B}$,
+then
+$(\metavariable{B}\mid\metavariable{y})\tau_{\metavariable{x}}(\metavariable{A})$
+is identical with $\tau_{\metavariable{x}}(\metavariable{A}')$ where
+$\metavariable{A}'$ is $(\metavariable{B}\mid\metavariable{y})\metavariable{A}$.
+\end{cs}
+
+\begin{cs}\label{cs5}
+Let $\metavariable{A}$, $\metavariable{B}$, $\metavariable{C}$
+be assemblies. Let $\metavariable{x}$ be a letter.
+Let $\metavariable{A}'$ be identical with
+$(\metavariable{C}\mid\metavariable{x})\metavariable{A}$ and let
+$\metavariable{B}'$ be identical with $(\metavariable{C}\mid\metavariable{x})\metavariable{B}$.
+Then:
+\begin{enumerate}
+\item $(\metavariable{C}\mid\metavariable{x})\neg\metavariable{A}$ is
+  identical with $\neg\metavariable{A}'$;
+\item $(\metavariable{C}\mid\metavariable{x})\metavariable{A}\lor\metavariable{B}$
+  is identical with $\metavariable{A}'\lor\metavariable{B}'$;
+\item $(\metavariable{C}\mid\metavariable{x})\metavariable{A}\implies\metavariable{B}$
+  is identical with $\metavariable{A}'\implies\metavariable{B}'$;
+\item If $\metavariable{s}$ is a specific sign, then
+  $(\metavariable{C}\mid\metavariable{x})\metavariable{s}\metavariable{A}\metavariable{B}$
+  is identical with $\metavariable{s}\metavariable{A}'\metavariable{B}'$.
+\end{enumerate}
+\end{cs}
+
+\subsubsection{Insufficient criteria}
+We need to specify how substitution works on letters for this to be
+well-defined. It's literally the base case for the inductive definition.
+
+Also note that the remarks about ambiguity (\S\ref{sec:1-1:ambiguity}).
