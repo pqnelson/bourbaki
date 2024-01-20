@@ -1,5 +1,5 @@
 \subsection{Methods of Proof}
-\section*{I. Method of Auxiliary Hypothesis}
+\sect{I. Method of Auxiliary Hypothesis}
 
 \begin{lemma}[Hypothetical syllogism]\label{lemma:hypothetical-syllogism}
 If $\vdash\metavariable{A}\implies(\metavariable{B}\implies\metavariable{C})$
@@ -49,7 +49,7 @@ Recall (\S\ref{subsec:2-2:proofs}) there are three possible cases:
   \item[IH${}_{1}$:] $\vdash\metavariable{A}\implies(\metavariable{C}\implies\metavariable{B})$
   \item[IH${}_{2}$:] $\vdash\metavariable{A}\implies\metavariable{C}$
   \end{itemize}
-\noindent Then $\vdash\metavariable{A}\implies\metavariable{B}$ by Lm\ref{lemma:hypothetical-syllogism}(IH${}_{1}$, IH${}_{2}$).
+\noindent Then $\vdash\metavariable{A}\implies\metavariable{B}$ by Lm\ref{lemma:hypothetical-syllogism}(IH${}_{1}$, IH${}_{2}$).\qedhere
 \end{description}
 \end{proof}
 
@@ -65,7 +65,7 @@ $\implies$-introduction, so I'm not sure Bourbaki is correct. But the
 peculiarities of Hilbert's $\varepsilon$-calculus might allow the two to
 coincide. 
 
-\section*{II. Method of Reductio ad Absurdum}
+\sect{II. Method of Reductio ad Absurdum}
 
 \begin{dc}\label{c15}
 If adjoining to the theory $\theory{T}$ the axiom $\neg\metavariable{A}$
@@ -139,7 +139,7 @@ by \ref{c14}(\ref{step:c17:5})
 by \ref{c14}(\ref{step:c17:6}).
 \end{pf}
 
-\section*{Method of Disjunction of Cases}
+\sect{Method of Disjunction of Cases}
 
 \begin{dc}\label{c18}
 If $\vdash\metavariable{A}\lor\metavariable{B}$ and
@@ -162,7 +162,7 @@ This corresponds to ``Per cases [by
 suppose $\metavariable{A}$, [then proof of $\metavariable{C}$]; suppose
 $\metavariable{B}$ [, then proof of $\metavariable{C}$]''.
 
-\section*{IV. Method of the Auxiliary Constant}
+\sect{IV. Method of the Auxiliary Constant}
 
 \begin{dc}\label{c19}
 Let $\metavariable{x}$ be a letter, let $\metavariable{A}$ and
@@ -192,3 +192,11 @@ by \ref{cs5}(\ref{step:c19:4}), hypothesis \ref{c19:hypo:1}
 by hypothesis \ref{c19:hypo:2}
 \item\label{step:c19:7} $\vdash\metavariable{B}$ by MP(\ref{step:c19:5}, \ref{step:c19:6}).
 \end{pf}
+
+\subsubsection{Theorem of Legitimation}\label{subsubsec:3-3:theorem-of-legitimation}
+Bourbaki calls the theorem
+$\vdash(\metavariable{T}\mid\metavariable{x})\metavariable{A}$
+a ``theorem of legitimation'', which is necessary to prove for us to use
+the method of auxiliary constant [i.e., auxiliary parameter].
+Really, we will see (\S\ref{subsubsec:4-1:existence-thms}) that it
+suffices to use an existence theorem.

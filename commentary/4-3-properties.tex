@@ -1,0 +1,63 @@
+\subsection{Properties of Quantified Theories}
+
+\subsubsection{Reservation}
+Bourbaki, for the rest of this section, considers $\theory{T}$ to be a
+quantified theory. Further, the theory $\theory{T}_{0}$ consists of the
+same signs as $\theory{T}$ but $\theory{T}_{0}$ has no explicit axioms
+and only schemes \ref{axiom:s1} through \ref{axiom:s5}. Observe that
+$\theory{T}$ is stronger (\S\ref{defn:stronger-theory}) than $\theory{T}_{0}$.
+
+\begin{dc}\label{c29}
+Let $\metavariable{R}$ be a relation in $\theory{T}$, let
+$\metavariable{x}$ be a letter. Then $\vdash\bigl(\neg(\exists\metavariable{x})\metavariable{R}\bigr)\iff\bigl((\forall\metavariable{x})\neg\metavariable{R}\bigr)$
+\end{dc}
+
+\begin{dc}\label{c30}
+Let $\metavariable{R}$ be a relation in $\theory{T}$, let
+$\metavariable{T}$ be a term in $\theory{T}$, let $\metavariable{x}$ be
+a letter. Then $\vdash(\forall\metavariable{x})\metavariable{R}\implies(\metavariable{T}\mid\metavariable{x})\metavariable{R}$.
+\end{dc}
+
+\begin{dc}\label{c31}
+Let $\metavariable{R}$ and $\metavariable{S}$ be relations in $\theory{T}$.
+Let $\metavariable{x}$ be a variable (i.e., a letter which is not a
+constant in $\theory{T}$). Then:
+\begin{enumerate}
+\item If $\vdash\metavariable{R}\implies\metavariable{S}$, then $\vdash(\forall\metavariable{x})\metavariable{R}\implies(\forall\metavariable{x})\metavariable{S}$
+\item If $\vdash\metavariable{R}\implies\metavariable{S}$, then $\vdash(\exists\metavariable{x})\metavariable{R}\implies(\exists\metavariable{x})\metavariable{S}$
+\item If $\vdash\metavariable{R}\iff\metavariable{S}$, then $\vdash(\forall\metavariable{x})\metavariable{R}\iff(\forall\metavariable{x})\metavariable{S}$
+\item If $\vdash\metavariable{R}\iff\metavariable{S}$, then $\vdash(\exists\metavariable{x})\metavariable{R}\iff(\exists\metavariable{x})\metavariable{S}$
+\end{enumerate}
+\end{dc}
+
+\subsubsection{Addendum} Observe that $\vdash(\forall\metavariable{x})\metavariable{R}\implies\metavariable{R}$
+by \ref{c30}($\metavariable{R}$, $\metavariable{x}$, $\metavariable{x}$).
+
+\begin{dc}\label{c32}
+Let $\metavariable{R}$ and $\metavariable{S}$ be relations in $\theory{T}$.
+\begin{enumerate}
+\item $\vdash(\forall\metavariable{x})(\metavariable{R}\land\metavariable{S})\iff\Bigl(\bigl((\forall\metavariable{x})\metavariable{R}\bigr)\land\bigl((\forall\metavariable{x})\metavariable{S}\bigr)\Bigr)$
+\item $\vdash(\exists\metavariable{x})(\metavariable{R}\lor\metavariable{S})\iff\Bigl(\bigl((\exists\metavariable{x})\metavariable{R}\bigr)\lor\bigl((\exists\metavariable{x})\metavariable{S}\bigr)\Bigr)$
+\end{enumerate}
+\end{dc}
+
+\begin{dc}\label{c33}
+Let $\metavariable{R}$ and $\metavariable{S}$ be relations in $\theory{T}$.
+Let $\metavariable{x}$ be a letter. Assume $\metavariable{x}$ does not
+appear in $\metavariable{R}$.
+\begin{enumerate}
+\item $\vdash(\forall\metavariable{x})(\metavariable{R}\lor\metavariable{S})\iff\Bigl(\metavariable{R}\lor\bigl((\forall\metavariable{x})\metavariable{S}\bigr)\Bigr)$
+\item $\vdash(\exists\metavariable{x})(\metavariable{R}\land\metavariable{S})\iff\Bigl(\metavariable{R}\land\bigl((\exists\metavariable{x})\metavariable{S}\bigr)\Bigr)$
+\end{enumerate}
+Note the use of disjunction and conjunction is paired with opposite
+quantifiers as found in \ref{c32}.
+\end{dc}
+
+\begin{dc}\label{c34}
+Let $\metavariable{R}$ be a relation in $\theory{T}$.
+\begin{enumerate}
+\item $\vdash(\forall\metavariable{x})(\forall\metavariable{y})\metavariable{R}\iff(\forall\metavariable{y})(\forall\metavariable{x})\metavariable{R}$
+\item $\vdash(\exists\metavariable{x})(\exists\metavariable{y})\metavariable{R}\iff(\exists\metavariable{y})(\exists\metavariable{x})\metavariable{R}$
+\item $\vdash(\exists\metavariable{x})(\forall\metavariable{y})\metavariable{R}\implies(\forall\metavariable{y})(\exists\metavariable{x})\metavariable{R}$
+\end{enumerate}
+\end{dc}

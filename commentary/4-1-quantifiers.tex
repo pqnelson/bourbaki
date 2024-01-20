@@ -1,0 +1,117 @@
+\subsection{Definition of Quantifiers}
+
+\begin{definition}
+Bourbaki defines the \define{Existential Quantifier} $(\exists\metavariable{x})\metavariable{R}$
+as identical to $(\tau_{\metavariable{x}}(\metavariable{R})\mid\metavariable{x})\metavariable{R}$,
+which is common in Hilbert's $\varepsilon$-calculus.
+
+The \define{Universal Quantifier}
+$(\forall\metavariable{x})\metavariable{R}$ is defined to be identical
+with $\neg(\exists\metavariable{x})(\neg\metavariable{R})$. We observe
+by plugging this back into the definition of the existential quantifier
+that this is identical with $\neg(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\neg\metavariable{R}$
+and by the law of double negation $(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}$.
+\end{definition}
+
+\begin{proposition}
+The letter $\metavariable{x}$ does not appear in $\tau_{\metavariable{x}}(\metavariable{R})$.
+Therefore the letter $\metavariable{x}$ does not appear in either
+$(\exists\metavariable{x})\metavariable{R}$ or $(\forall\metavariable{x})\metavariable{R}$.
+
+For this reason, it seems appealing to use de Bruijn indices (or levels) for bound variables.
+\end{proposition}
+
+\begin{cs}\label{cs8}
+Let $\metavariable{x}$ and $\metavariable{x}'$ be letters, let
+$\metavariable{R}$ be an assembly. Assume $\metavariable{x}'$ does not
+appear in $\metavariable{R}$. Then
+$(\exists\metavariable{x})\metavariable{R}$ is identical with
+$(\exists\metavariable{x}')\metavariable{R}'$, and
+$(\forall\metavariable{x})\metavariable{R}$ is identical with
+$(\exists\metavariable{x}')\metavariable{R}'$ where $\metavariable{R}'$
+is identical with $(\metavariable{x}'\mid\metavariable{x})\metavariable{R}$.
+\end{cs}
+
+\begin{proof}[Proof sketch]
+This follows from \ref{cs1} and \ref{cs3}.
+\end{proof}
+
+\begin{cs}\label{cs9}
+Let $\metavariable{R}$ and $\metavariable{U}$ be assemblies, let
+$\metavariable{x}$ and $\metavariable{y}$ be distinct letters. If
+$\metavariable{x}$ does not appear in $\metavariable{U}$, then
+$(\metavariable{U}\mid\metavariable{y})(\exists\metavariable{x})\metavariable{R}$
+is identical with $(\exists\metavariable{x})\metavariable{R}'$, and 
+$(\metavariable{U}\mid\metavariable{y})(\forall\metavariable{x})\metavariable{R}$
+is identical with $(\forall\metavariable{x})\metavariable{R}'$, where
+$\metavariable{R}'$ is identical with $(\metavariable{U}\mid\metavariable{y})\metavariable{R}$.
+\end{cs}
+
+\begin{proof}[Proof sketch]
+This follows from \ref{cs2} and \ref{cs4}.
+\end{proof}
+
+\begin{cf}\label{cf11}
+If $\metavariable{R}$ is a formula in $\theory{T}$ and
+$\metavariable{x}$ is a letter, then
+$(\exists\metavariable{x})\metavariable{R}$ and
+$(\forall\metavariable{x})\metavariable{R}$ are formulas in $\theory{T}$.
+\end{cf}
+
+\subsubsection{Intuition of quantifiers}
+From the intuition of $\tau$ (\S\ref{subsubsec:1-3:intuition-of-tau}),
+we see that $(\exists\metavariable{x})\metavariable{R}$ corresponds to
+our intuitive understanding that ``There exists some $\metavariable{x}$
+such that $\metavariable{R}$''. Similarly,
+$\neg(\exists\metavariable{x})\neg\metavariable{R}$ corresponds to
+``There is no object $\metavariable{x}$ which has the property `not
+$\metavariable{R}$'\,'' (and therefore all objects have property
+$\metavariable{R}$).
+
+\subsubsection{Existence theorem}\label{subsubsec:4-1:existence-thms}
+If we have a theorem $\vdash(\exists)$, then it can act as a theorem of
+legitimation (\S\ref{subsubsec:3-3:theorem-of-legitimation}). I suspect
+the reason we don't speak of ``theorems of legitimation'' is because
+``existence theorems'' suffice.
+
+\begin{dc}\label{c26}
+Let $\metavariable{R}$ be a relation in theory $\theory{T}$, let
+$\metavariable{x}$ be a letter. Then $\vdash\bigl((\forall\metavariable{x})\metavariable{R}\bigr)\iff\bigl((\tau_{\metavariable{x}}\mid\metavariable{x})\metavariable{R}\bigr)$.
+\end{dc}
+
+\begin{proof}[Proof sketch]
+\begin{align*}
+(\forall\metavariable{x})\metavariable{R} &\iff\neg(\exists\metavariable{x})\neg\metavariable{R}\\
+&\iff\neg(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\neg\metavariable{R}\\
+&\iff\neg\neg(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}\quad\mbox{by \ref{cs5}}\\
+&\iff(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}\qedhere
+\end{align*}
+\end{proof}
+
+\begin{dc}\label{c27} \textup{(\textsc{Generalization})}
+If $\vdash\metavariable{R}$ and $\metavariable{x}$ is any letter, then
+$\vdash(\forall\metavariable{x})\metavariable{R}$.
+\end{dc}
+
+\begin{proof}[Proof sketch]
+We have $\vdash(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}$
+by \ref{c3}.
+\end{proof}
+
+\begin{remark*}
+If $\metavariable{x}$ is a ``constant'' [i.e., parameter] of the theory
+$\theory{T}$, then $\vdash\metavariable{R}$ proves a property concerning
+the parameter. Generalization becomes vacuous, and we just obtain
+$\vdash\metavariable{R}$ in Bourbaki's system.
+\end{remark*}
+
+\begin{dc}\label{c28}
+$\vdash\neg(\forall\metavariable{x})\metavariable{R}\iff(\exists\metavariable{x})\neg\metavariable{R}$.
+\end{dc}
+
+\begin{proof}[Proof sketch]
+\begin{align*}
+\neg(\forall\metavariable{x})\metavariable{R} &\iff\neg\bigl(\neg(\exists\metavariable{x})\neg\metavariable{R}\bigr)\\
+&\iff(\exists\metavariable{x})\neg\metavariable{R}.\qedhere
+\end{align*}
+\end{proof}

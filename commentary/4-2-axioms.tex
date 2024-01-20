@@ -1,0 +1,16 @@
+\subsection{Axioms of Quantified Theories}
+
+\begin{definition}
+A \define{Quantified Theory} is any theory with axiom schemes
+\ref{axiom:s1} through \ref{axiom:s4}, plus the axiom scheme \ref{axiom:s5}:
+\begin{enumerate}[label=(S\arabic*),ref={S\arabic*},start=5]
+\item\label{axiom:s5} If $\metavariable{R}$ is a relation in theory $\theory{T}$, if
+  $\metavariable{T}$ is a term in $\theory{T}$, if $\metavariable{x}$ is
+  a letter, then $\vdash(\metavariable{T}\mid\metavariable{x})\metavariable{R}\implies(\exists\metavariable{x})\metavariable{R}$.
+\end{enumerate}
+\end{definition}
+
+\begin{remark*}
+Bourbaki spends an extraordinary amount of time proving that
+\ref{axiom:s5} is, in fact, a scheme. I found it rather unenlightening.
+\end{remark*}

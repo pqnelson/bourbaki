@@ -1,0 +1,37 @@
+\subsection{The Axioms}
+
+\begin{definition}
+An \define{Equalitarian Theory} is any theory with axiom schemes
+\ref{axiom:s1} through \ref{axiom:s4}, plus the axiom scheme \ref{axiom:s5}
+and the following two schemes:
+\begin{enumerate}[label=(S\arabic*),ref={S\arabic*},start=6]
+\item\label{axiom:s6} Let $\metavariable{x}$ be a letter, let
+  $\metavariable{T}$ and $\metavariable{U}$ be terms in $\theory{T}$,
+  let $\metavariable{R}[\metavariable{x}]$ be a relation in
+  $\theory{T}$. Then $\vdash(\metavariable{T}=\metavariable{U})\implies(\metavariable{R}[\metavariable{T}]\iff\metavariable{R}[\metavariable{U}])$.
+\item\label{axiom:s7} Let $\metavariable{R}$ and $\metavariable{S}$ be
+  relations in $\theory{T}$, let $\metavariable{x}$ be a letter. Then $\vdash(\metavariable{R}\iff\metavariable{S})\implies(\tau_{\metavariable{x}}(\metavariable{R})=\tau_{\metavariable{x}}(\metavariable{S}))$.
+\end{enumerate}
+\end{definition}
+
+\begin{remark*}
+We have not proven that equality is an equivalence relation
+yet. Bourbaki does this in the next subsection. Care must be taken in
+proofs until then, because our intuition will lead us awry.
+\end{remark*}
+
+\setcounter{dc}{42}
+
+\begin{dc}\label{c43}
+$\vdash(\metavariable{T}=\metavariable{U}\land\metavariable{R}[\metavariable{T}])\iff(\metavariable{T}=\metavariable{U}\land\metavariable{R}[\metavariable{U}])$
+\end{dc}
+
+\subsubsection{Abuse of language} Bourbaki (correctly) notes we abuse
+language saying ``$\metavariable{T}$ is identical with
+$\metavariable{U}$'' to mean ``$\metavariable{T}=\metavariable{U}$'',
+and ``$\metavariable{T}$ is distinct from $\metavariable{U}$'' to mean
+``$\metavariable{T}\neq\metavariable{U}$''.
+Also note we use the conventional shorthand
+$\metavariable{T}\neq\metavariable{U}$ to mean
+$\neg(\metavariable{T}=\metavariable{U})$.
+

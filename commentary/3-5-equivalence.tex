@@ -39,6 +39,58 @@ then $\vdash\metavariable{A}\iff\metavariable{C}$.
 \end{enumerate}
 \end{dc}
 
+\begin{proof}[Proof sketch]
+(0) follows from \ref{c20}(\ref{c8}($\metavariable{A}$), \ref{c8}($\metavariable{A}$)).
+
+(1) and (2) follows from \ref{c20} and \ref{c21}.
+\end{proof}
+
 At this point, it's painfully clear that Bourbaki is ``running out of steam'',
 because the proofs are increasingly sketch for \ref{c22}, and completely
-omitted afterwards.
+omitted afterwards. The remaining deductive criteria given are
+enumerated faithfully (i.e., Bourbaki just gives a list of results).
+
+\begin{dc}\label{c23}
+Let $\metavariable{A}$ and $\metavariable{B}$ be equivalent relations
+(i.e., $\vdash\metavariable{A}\iff\metavariable{B}$), let
+$\metavariable{C}$ be an arbitrary relation. Then:
+\begin{enumerate}
+\item $\vdash(\neg\metavariable{A})\iff(\neg\metavariable{B})$
+\item $\vdash(\metavariable{A}\implies\metavariable{C})\iff(\metavariable{B}\implies\metavariable{C})$
+\item $\vdash(\metavariable{A}\land\metavariable{C})\iff(\metavariable{B}\land\metavariable{C})$
+\item $\vdash(\metavariable{C}\implies\metavariable{A})\iff(\metavariable{C}\implies\metavariable{B})$
+\item $\vdash(\metavariable{A}\lor\metavariable{C})\iff(\metavariable{B}\lor\metavariable{C})$
+\end{enumerate}
+\end{dc}
+
+\begin{dc}\label{c24}
+Let $\metavariable{A}$, $\metavariable{B}$, $\metavariable{C}$ be
+arbitrary relations. Then:
+\begin{enumerate}
+\item $\vdash(\neg\neg\metavariable{A})\iff\metavariable{A}$ [hint: \ref{c11}($\metavariable{A}$),
+\ref{c16}($\metavariable{A}$)]
+\item $\vdash(\metavariable{A}\implies\metavariable{B})\iff(\neg\metavariable{B}\implies\neg\metavariable{A})$
+[hint: \ref{c12}($\metavariable{A}$, $\metavariable{B}$),
+  \ref{c17}($\metavariable{A}$, $\metavariable{B}$)]
+\item $\vdash(\metavariable{A}\land\metavariable{A})\iff\metavariable{A}$
+\item $\vdash(\metavariable{A}\land\metavariable{B})\iff(\metavariable{B}\land\metavariable{A})$
+\item $\vdash\metavariable{A}\land(\metavariable{B}\land\metavariable{C})\iff(\metavariable{A}\land\metavariable{B})\land\metavariable{C}$
+\item $\vdash(\metavariable{A}\lor\metavariable{B})\iff\neg((\neg\metavariable{A})\lor(\neg\metavariable{B}))$
+\item $\vdash\metavariable{A}\lor\metavariable{A}\iff\metavariable{A}$
+\item $\vdash\metavariable{A}\lor\metavariable{B}\iff\metavariable{B}\lor\metavariable{A}$
+by \ref{axiom:s3}($\metavariable{A}$, $\metavariable{B}$) and \ref{axiom:s3}($\metavariable{B}$, $\metavariable{A}$)
+\item $\vdash\metavariable{A}\lor(\metavariable{B}\lor\metavariable{C})\iff(\metavariable{A}\lor\metavariable{B})\lor\metavariable{C}$
+\item $\vdash\metavariable{A}\land(\metavariable{B}\lor\metavariable{C})\iff(\metavariable{A}\land\metavariable{B})\lor(\metavariable{A}\land\metavariable{C})$
+\item $\vdash\metavariable{A}\lor(\metavariable{B}\land\metavariable{C})\iff(\metavariable{A}\lor\metavariable{B})\land(\metavariable{A}\land\metavariable{C})$
+\item $\vdash\metavariable{A}\land(\neg\metavariable{B})\iff\neg(\metavariable{A}\implies\metavariable{B})$
+\item $\vdash\metavariable{A}\lor\metavariable{B}\iff((\neg\metavariable{A})\implies\metavariable{B})$
+\end{enumerate}
+\end{dc}
+
+\begin{dc}\label{c25}
+Let $\metavariable{A}$ and $\metavariable{B}$ be any formulas. Then:
+\begin{enumerate}
+\item If $\vdash\metavariable{A}$, then $\vdash(\metavariable{A}\land\metavariable{B})\iff\metavariable{B}$.
+\item If $\vdash\neg\metavariable{A}$, then $\vdash(\metavariable{A}\lor\metavariable{B})\iff\metavariable{B}$.
+\end{enumerate}
+\end{dc}
