@@ -68,27 +68,28 @@ $\neg(\exists\metavariable{x})\neg\metavariable{R}$ corresponds to
 $\metavariable{R}$'\,'' (and therefore all objects have property
 $\metavariable{R}$).
 
-\subsubsection{Existence theorem}\label{subsubsec:4-1:existence-thms}
-If we have a theorem $\vdash(\exists)$, then it can act as a theorem of
-legitimation (\S\ref{subsubsec:3-3:theorem-of-legitimation}). I suspect
-the reason we don't speak of ``theorems of legitimation'' is because
-``existence theorems'' suffice.
+\subsubsection{Existence theorems}\label{subsubsec:4-1:existence-thms}
+If we have a theorem $\vdash(\exists\metavariable{x})\metavariable{R}$,
+then it can act as a theorem of legitimation
+(\S\ref{subsubsec:3-3:theorem-of-legitimation}). I suspect the reason we
+don't speak of ``theorems of legitimation'' is because ``existence
+theorems'' suffice.
 
 \begin{dc}\label{c26}%
 Let $\metavariable{R}$ be a relation in theory $\theory{T}$, let
-$\metavariable{x}$ be a letter. Then $\vdash\bigl((\forall\metavariable{x})\metavariable{R}\bigr)\iff\bigl((\tau_{\metavariable{x}}\mid\metavariable{x})\metavariable{R}\bigr)$.
+$\metavariable{x}$ be a letter. Then $\vdash\bigl((\forall\metavariable{x})\metavariable{R}\bigr)\iff\bigl((\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}\bigr)$.
 \end{dc}
 
 \begin{proof}[Proof sketch]
 \begin{align*}
-(\forall\metavariable{x})\metavariable{R} &\iff\neg(\exists\metavariable{x})\neg\metavariable{R}\\
-&\iff\neg(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\neg\metavariable{R}\\
+(\forall\metavariable{x})\metavariable{R} &\iff\neg(\exists\metavariable{x})\neg\metavariable{R}\quad\mbox{by definition of $\forall$}\\
+&\iff\neg(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\neg\metavariable{R}\quad\mbox{by definition of $\exists$}\\
 &\iff\neg\neg(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}\quad\mbox{by \ref{cs5}}\\
-&\iff(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}\qedhere
+&\iff(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}\quad\mbox{by \ref{c24}.1}\qedhere
 \end{align*}
 \end{proof}
 
-\begin{dc}\label{c27}\textup{(\textsc{Generalization})}%
+\begin{dc}\label{c27}\textup{(\textsc{Generalization})}\enspace\ignorespaces%
 If $\vdash\metavariable{R}$ and $\metavariable{x}$ is any letter, then
 $\vdash(\forall\metavariable{x})\metavariable{R}$.
 \end{dc}
@@ -111,7 +112,7 @@ $\vdash\neg(\forall\metavariable{x})\metavariable{R}\iff(\exists\metavariable{x}
 
 \begin{proof}[Proof sketch]
 \begin{align*}
-\neg(\forall\metavariable{x})\metavariable{R} &\iff\neg\bigl(\neg(\exists\metavariable{x})\neg\metavariable{R}\bigr)\\
-&\iff(\exists\metavariable{x})\neg\metavariable{R}.\qedhere
+\neg(\forall\metavariable{x})\metavariable{R} &\iff\neg\bigl(\neg(\exists\metavariable{x})\neg\metavariable{R}\bigr)\quad\mbox{by definition of $\forall$}\\
+&\iff(\exists\metavariable{x})\neg\metavariable{R}\quad\mbox{by \ref{c24}.1}.\qedhere
 \end{align*}
 \end{proof}
