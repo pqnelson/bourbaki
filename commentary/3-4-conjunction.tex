@@ -6,7 +6,7 @@ is denoted ``$\metavariable{A}\land\metavariable{B}$'' (or
 ``$\metavariable{A}$ and $\metavariable{B}$'').
 \end{definition}
 
-\begin{cs}\label{cs6}
+\begin{cs}\label{cs6}%
 Let $\metavariable{A}$, $\metavariable{B}$, $\metavariable{T}$ be
 assemblies and let $\metavariable{x}$ be a letter. Then $(\metavariable{T}\mid\metavariable{x})(\metavariable{A}\land\metavariable{B})$
 is identical to $\metavariable{A}'\land\metavariable{B}'$ where
@@ -29,7 +29,7 @@ This is a direct consequence of \ref{cs5}
 as desired.
 \end{proof}
 
-\begin{cf}\label{cf9}
+\begin{cf}\label{cf9}%
 If $\metavariable{A}$ and $\metavariable{B}$ are relations in $\theory{T}$,
 then $\metavariable{A}\land\metavariable{B}$ is a relation in $\theory{T}$
 (called the \define{Conjunction} of $\metavariable{A}$ and $\metavariable{B}$).
@@ -37,7 +37,7 @@ then $\metavariable{A}\land\metavariable{B}$ is a relation in $\theory{T}$
 
 This follows from \ref{cf1} and \ref{cf2}.
 
-\begin{dc}\label{c20}
+\begin{dc}\label{c20}%
 If $\vdash\metavariable{A}$ and $\vdash\metavariable{B}$, then $\vdash\metavariable{A}\land\metavariable{B}$.
 \end{dc}
 I formalize Bourbaki's proof, there is almost certainly a more optimal proof.
@@ -64,12 +64,13 @@ by weakening(\ref{step:c20:2})
 by \ref{c15}(\ref{step:c20:10}, \ref{step:c20:9}).
 \end{pf}
 
-\begin{dc}\label{c21} We have the following results for any formulas
-  $\metavariable{A}$ and $\metavariable{B}$:
-  \begin{enumerate}
-  \item $\vdash(\metavariable{A}\land\metavariable{B})\implies\metavariable{A}$
-  \item $\vdash(\metavariable{A}\land\metavariable{B})\implies\metavariable{B}$
-  \end{enumerate}
+\begin{dc}\label{c21}%
+We have the following results for any formulas
+$\metavariable{A}$ and $\metavariable{B}$:
+\begin{enumerate}
+\item $\vdash(\metavariable{A}\land\metavariable{B})\implies\metavariable{A}$
+\item $\vdash(\metavariable{A}\land\metavariable{B})\implies\metavariable{B}$
+\end{enumerate}
 \end{dc}
 
 \begin{enumerate}

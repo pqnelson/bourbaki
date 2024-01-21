@@ -1,7 +1,35 @@
-\subsection{Methods of Proof}
+\subsection{Methods of Proof} Bourbaki introduces a number of
+metatheorems which directly relate to common phrases used in
+``informal'' [i.e., ordinary] mathematical proofs. I borrow the
+anachronistic phrase ``proof steps'' (used to describe declarative
+formal proof languages for proof assistants) to show how certain ``proof
+steps'' would ``compile'' [translate] to Bourbaki's foundations.
+
+It is tempting, therefore, to think of Bourbaki's formal system as
+the ``machine code'' of mathematics. We could ``compile'' a controlled
+language for proofs down to Bourbaki's ``machine code''. Bourbaki seems
+to suspect that such an approach is ``on the table'' for consideration
+as a strategy for doing formal mathematics, but dismisses it out of hand
+(see page 10 of the paperback edition of their book). Apparently
+Bourbaki feared that the ``compilation process'' would be unsound, or be
+a source of unsoundness. Although such concerns seem ridiculous \emph{now},
+that's because we have the benefit of 60 years of experience with
+compilers, whereas Bourbaki had pre-dated compilers.
+
+\begin{puzzle}
+Construct a compiler for a formal language for a declarative proof
+assistant which produces output in Bourbaki's formal system. Is it possible?
+What considerations do we need to bear in mind for the backend? Is it
+possible to use an LCF-style prover for the backend, or will this run
+into performance problems?
+
+For inspiration on declarative proof systems, look at Mizar\footnote{\url{https://mizar.uwb.edu.pl/}}~\cite{mizar}
+and Wiedijk's vernacular~\cite{wiedijk2000vernacular}.
+\end{puzzle}
+
 \sect{I. Method of Auxiliary Hypothesis}
 
-\begin{lemma}[Hypothetical syllogism]\label{lemma:hypothetical-syllogism}
+\begin{lemma}[Hypothetical syllogism]\label{lemma:hypothetical-syllogism}%
 If $\vdash\metavariable{A}\implies(\metavariable{B}\implies\metavariable{C})$
 and $\vdash\metavariable{A}\implies\metavariable{B}$,
 then $\vdash\metavariable{A}\implies\metavariable{C}$.
@@ -26,7 +54,7 @@ then $\vdash\metavariable{A}\implies\metavariable{C}$.
   by MP(\ref{step:3-3-1:6}, \ref{step:3-3-1:7})
 \end{pf}
 
-\begin{dc}\label{c14}
+\begin{dc}\label{c14}%
 If $\metavariable{A}\vdash\metavariable{B}$, then $\vdash\metavariable{A}\implies\metavariable{B}$.
 \end{dc}
 
@@ -67,7 +95,7 @@ coincide.
 
 \sect{II. Method of Reductio ad Absurdum}
 
-\begin{dc}\label{c15}
+\begin{dc}\label{c15}%
 If adjoining to the theory $\theory{T}$ the axiom $\neg\metavariable{A}$
 results in a contradictory theory (\S\S\ref{defn:contradictory-theory}, \ref{thm:explode}),
 then $\vdash_{\theory{T}}\metavariable{A}$.
@@ -94,7 +122,7 @@ by Th\ref{thm:explode-explicit}($\metavariable{B}$, $\metavariable{A}$)
 \item\label{step:c15:10} $\vdash\metavariable{A}\lor\metavariable{A}$ by MP(\ref{step:c15:8}, \ref{step:c15:9})
 \item\label{step:c15:11} $\vdash\metavariable{A}\lor\metavariable{A}\implies\metavariable{A}$
   by \ref{axiom:s1}($\metavariable{A}$)
-\item\label{step:c15:1} $\vdash\metavariable{A}$ by MP(\ref{step:c15:11}, \ref{step:c15:10})
+\item\label{step:c15:12} $\vdash\metavariable{A}$ by MP(\ref{step:c15:11}, \ref{step:c15:10})
 \end{pf}
 
 \subsubsection{Proof step}
@@ -103,7 +131,7 @@ contradiction that $\neg\metavariable{A}$''. Then deduce both
 $\metavariable{B}$ and $\neg\metavariable{B}$. This is the desired
 contradiction. Therefore $\metavariable{A}$.
 
-\begin{dc}\label{c16}
+\begin{dc}\label{c16}%
 $\vdash(\neg\neg\metavariable{A})\implies\metavariable{A}$
 \end{dc}
 
@@ -118,7 +146,7 @@ by assumption
   by \ref{c14}(\ref{step:c16:3}).
 \end{pf}
 
-\begin{dc}\label{c17}\textup{(Contrapositive)}
+\begin{dc}\label{c17}\textup{(Contrapositive)}%
 $\vdash((\neg\metavariable{B})\implies(\neg\metavariable{A}))\implies(\metavariable{A}\implies\metavariable{B})$
 \end{dc}
 
@@ -141,7 +169,7 @@ by \ref{c14}(\ref{step:c17:6}).
 
 \sect{Method of Disjunction of Cases}
 
-\begin{dc}\label{c18}
+\begin{dc}\label{c18}%
 If $\vdash\metavariable{A}\lor\metavariable{B}$ and
 $\vdash\metavariable{A}\implies\metavariable{C}$ and $\vdash\metavariable{B}\implies\metavariable{C}$,
 then $\vdash\metavariable{C}$.
@@ -164,7 +192,7 @@ $\metavariable{B}$ [, then proof of $\metavariable{C}$]''.
 
 \sect{IV. Method of the Auxiliary Constant}
 
-\begin{dc}\label{c19}
+\begin{dc}\label{c19}%
 Let $\metavariable{x}$ be a letter, let $\metavariable{A}$ and
 $\metavariable{B}$ be relations in $\theory{T}$ such that
 \begin{enumerate}

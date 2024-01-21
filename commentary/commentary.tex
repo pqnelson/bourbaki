@@ -7,30 +7,40 @@
 \begin{document}
 \maketitle
 
+\tableofcontents
+
+\vfill\eject
 \section{Preface}
 
-This is my commentary on the first chapter of Bourbaki's \textit{Theory of Sets},
-specifically the first chapter. A lot of it is based on the
-anachronistic perspective of trying to articulate Bourbaki's formalism
-into something which could become a proof assistant. Most of the time I
-will rely on the English translation, only rarely do I return to the
-French edition and note differences in translations.
+\subsection{Urtext}
+This is my commentary on the first chapter of Bourbaki's \textit{Theory of Sets}~\cite{bourbaki1970sets},
+specifically the first chapter. I am mostly relying on the English
+translation --- apparently the 1968 English translation of the French 1970
+edition. Apparently the English translators had access to a time-machine.
+(I suspect the publisher erred in the dates, but it's the softcover
+English translation available right now by Springer.)
 
-Bourbaki didn't actually adopt Hilbert's $\varepsilon$-calculus until
-July 1950, when Chevellay wrote the fifth draft of the chapter on formal
-mathematics~\cite{archives-no139}. The previous four drafts appear to be
-written \emph{before} World War 2, so there's a span of more than a
-decade separating these drafts. I mention this because a lot of the
-concepts which Bourbaki introduces are rather clunky, and predate the
-conventional ideas of a formal grammar (introduced by Chomsky in 1957)
-and compiler technology (introduced around 1956, but not popularized
-until well into the 1960s).
+There are only one or two times I return to the French edition being
+translated. The English translation appears to be faithful to the point
+of being a literal translation. However, there is a critical passage
+which omits an important phrase, and fails to capture the idiomatic
+meaning of the passage in the original.
+
+%% A lot of it is based on the
+%% anachronistic perspective of trying to articulate Bourbaki's formalism
+%% into something which could become a proof assistant. Most of the time I
+%% will rely on the English translation, only rarely do I return to the
+%% French edition and note differences in translations.
 
 \subsection{Organization of these notes}
 The ``sections'' and ``subsections'' are organized after Bourbaki's
 sections and subsections. I make a number of observations, which are
 organized into ``subsubsections''. So note ``1.3.4'' refers to section
 1, subsection 3, and it's my fourth note on that section.
+
+\subsubsection{Puzzles} There are a number of puzzles which are numbered
+sequentially. These are questions for myself, which are really points of
+discussion for the reader as well.
 
 \subsection{Pronouns}
 Bourbaki is both a group and an individual. I'm not sure what pronoun to
@@ -45,7 +55,49 @@ Therefore, I cannot claim to be clarifying Bourbaki's underlying intent.
 But I knowingly deviate from Bourbaki's notation in the following ways:
 Bourbaki uses Polish notation (``lispy syntax'') and then immediately
 discards it, I just avoid it; Bourbaki uses a 2-dimensional syntax for
-linkages, I just use de Bruijn indices.
+linkages, I just intuitively think of using de Bruijn indices.
+
+\subsubsection{Anachronisms}
+Bourbaki didn't actually adopt Hilbert's $\varepsilon$-calculus until
+July 1950, when Chevellay wrote the fifth draft of the chapter on formal
+mathematics~\cite{archives-no139}. The previous four drafts appear to be
+written \emph{before} World War 2, so there's a span of more than a
+decade separating these drafts. I mention this because a lot of the
+concepts which Bourbaki introduces are rather clunky, and predate the
+conventional ideas of a formal grammar (introduced by Chomsky in 1956~\cite{chomsky1956})
+and compiler technology (introduced around \textit{c}.1954, but not popularized
+until well into the 1960s).
+
+\subsubsection{Methodology}
+Raymond Chandler once remarked something along the lines of, ``People
+who write about writing know nothing about how to write well.'' I fear
+the same could be said about writing commentaries. Roughly, I am guided
+by a desire to write a proof assistant. Consequently, I am interested in
+forming a sort of ``rational reconstruction'' of Bourbaki's formal system.
+
+Loosely, what I mean by a ``rational reconstruction'' is that I am
+trying to implement these ideas in a computer program, so how can I
+faithfully implement this? A lot of the ideas ``sound'' very close to
+ideas that emerged later (formal grammars, production rules, judgements,
+inference rules, inductive definitions, etc.). For me, a ``rational reconstruction''
+is a \emph{translation} of the original text into a different formal
+language which tries to preserve the critical aspects of the original
+text. Because ``translation is interpretation'', this forces us to
+interpret the original text and weigh what is important.
+
+There is one or two instances where I have a ``close reading'' of
+certain key passages of Bourbaki, consulting the French original. I'd
+like to thank Stanley Oropesa for his help with certain French phrases. 
+
+\subsection{Other commentaries}
+Wayne Aitken~\cite{aitken2023} has written a good commentary about the
+first chapter of Bourbaki~\cite{bourbaki1970sets}. Aitken has similar
+goals as me, but wishes to clarify Bourbaki's rushed chapter (which
+really is rather austere as a text).
+
+Adrian Mathias has written a number of articles~\cite{mathias1992ignorance,mathias2002term,mathias2014hilbert}
+about Bourbaki's formal system and its flaws. Mathias's articles are
+classics and worth reading in their own right.
 
 \section{Terms and Relations}
 
@@ -76,10 +128,17 @@ linkages, I just use de Bruijn indices.
 \input{5-1-axioms}
 
 \begin{thebibliography}{99}
+\bibitem{abadi1991explicit}
+  M. Abadi, L. Cardelli, P-L. Curien and J-J. Levy,
+  ``Explicit Substitutions''.
+  \textit{Journal of Functional Programming} \textbf{1} no.4 (1991) 375--416.
 \bibitem{aitken2023} Wayne Aitken,
   ``Bourbaki, Theory of Sets, Chapter I, \textit{Description of Formal Mathematics}: Summary and Commentary''.
   Manuscript dated June 2022,
   \url{https://public.csusm.edu/aitken_html/Essays/Bourbaki/BourbakiSetTheory1.pdf}
+\bibitem{mizar} Grzegorz Bancerek, Czesław Byli\'{n}ski, Adam Grabowski, Artur Korni\l{}owicz, Roman Matuszewski, Adam Naumowicz, Karol Pak, and Josef Urban.
+  ``Mizar: State-of-the-art and beyond.''
+  In Manfred Kerber, Jacques Carette, Cezary Kaliszyk, Florian Rabe, and Volker Sorge, editors, \textit{Intelligent Computer Mathematics}, volume 9150 of Lecture Notes in Computer Science, pages 261--279. Springer International Publishing, 2015. \texttt{doi:\href{http://dx.doi.org/10.1007/978-3-319-20615-8_17}{10.1007/978-3-319-20615-8 17}}.
 \bibitem{bernays1926} Paul Bernays, ``Axiomatische Untersuchungen des
 Aussagen-Kalkuls der \textit{Principia Mathematica}.''
 \textit{Mathematische Zeitschrift} \textbf{25} (1926) 305--320;
@@ -89,9 +148,36 @@ translated into English in Richard Zach's \textit{Universal Logic: An
   \textit{Theory of Sets}.
   Springer, softcover reprint, 1968 English translation.
 \bibitem{archives-no139}
-Claude Chevalley, ``Editorial No. 139. Sets. Chapter I (state 5).''
-Manuscript with handwritten note dating it as July 1950.
-Identifier \verb#R139_nbr042#, accessed January 17, 2024 \url{http://archives-bourbaki.ahp-numerique.fr/items/show/548}
---- first introduced the Hilbert $\varepsilon$ operator into Bourbaki's system.
+  Claude Chevalley, ``Editorial No. 139. Sets. Chapter I (state 5).''
+  Manuscript with handwritten note dating it as July 1950.
+  Identifier \verb#R139_nbr042#, accessed January 17, 2024 \url{http://archives-bourbaki.ahp-numerique.fr/items/show/548}
+  --- first introduced the Hilbert $\varepsilon$ operator into Bourbaki's system.
+\bibitem{chomsky1956}
+  Noam Chomsky,
+  ``Three models for the description of language''.
+  \textit{IRE Transactions on Information Theory} \textbf{2} no.3 (1956) 113--124.
+\bibitem{corcoran2006schemata}
+  John Corcoran,
+  ``Schemata: The Concept of Schema in the History of Logic''.
+  \textit{Bulletin of Symbolic Logic} \textbf{12} no.2 (2006) 219--240;
+  \texttt{doi:\href{https://doi.org/10.2178/bsl/1146620060}{10.2178/bsl/1146620060}}
+\bibitem{mathias1992ignorance}
+  Adrian RD Mathias,
+  ``The ignorance of Bourbaki''.
+  \textit{Mathematical Intelligencer} \textbf{14} no.3 (1992) 4--13
+\bibitem{mathias2002term}
+  Adrian RD Mathias,
+  ``A term of length 4,523,659,424,929''.
+  \textit{Synthese} \textbf{133} (2002) 75--86
+\bibitem{mathias2014hilbert}
+  Adrian RD Mathias,
+  ``Hilbert, Bourbaki and the scorning of logic''.
+  In \textit{Infinity and truth} (World Scientific, 2014) pp.47--156.
+  \url{https://www.dpmms.cam.ac.uk/~ardm/lbmkemily5.pdf}
+\bibitem{wiedijk2000vernacular}
+  Freek Wiedijk,
+  ``The Mathematical Vernacular''.
+  Unpublished manuscript, 2000
+  \url{http://www.cs.ru.nl/F.Wiedijk/notes/mv.pdf}
 \end{thebibliography}
 \end{document}

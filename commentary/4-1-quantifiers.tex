@@ -21,7 +21,7 @@ $(\exists\metavariable{x})\metavariable{R}$ or $(\forall\metavariable{x})\metava
 For this reason, it seems appealing to use de Bruijn indices (or levels) for bound variables.
 \end{proposition}
 
-\begin{cs}\label{cs8}
+\begin{cs}\label{cs8}%
 Let $\metavariable{x}$ and $\metavariable{x}'$ be letters, let
 $\metavariable{R}$ be an assembly. Assume $\metavariable{x}'$ does not
 appear in $\metavariable{R}$. Then
@@ -36,7 +36,7 @@ is identical with $(\metavariable{x}'\mid\metavariable{x})\metavariable{R}$.
 This follows from \ref{cs1} and \ref{cs3}.
 \end{proof}
 
-\begin{cs}\label{cs9}
+\begin{cs}\label{cs9}%
 Let $\metavariable{R}$ and $\metavariable{U}$ be assemblies, let
 $\metavariable{x}$ and $\metavariable{y}$ be distinct letters. If
 $\metavariable{x}$ does not appear in $\metavariable{U}$, then
@@ -51,7 +51,7 @@ $\metavariable{R}'$ is identical with $(\metavariable{U}\mid\metavariable{y})\me
 This follows from \ref{cs2} and \ref{cs4}.
 \end{proof}
 
-\begin{cf}\label{cf11}
+\begin{cf}\label{cf11}%
 If $\metavariable{R}$ is a formula in $\theory{T}$ and
 $\metavariable{x}$ is a letter, then
 $(\exists\metavariable{x})\metavariable{R}$ and
@@ -74,7 +74,7 @@ legitimation (\S\ref{subsubsec:3-3:theorem-of-legitimation}). I suspect
 the reason we don't speak of ``theorems of legitimation'' is because
 ``existence theorems'' suffice.
 
-\begin{dc}\label{c26}
+\begin{dc}\label{c26}%
 Let $\metavariable{R}$ be a relation in theory $\theory{T}$, let
 $\metavariable{x}$ be a letter. Then $\vdash\bigl((\forall\metavariable{x})\metavariable{R}\bigr)\iff\bigl((\tau_{\metavariable{x}}\mid\metavariable{x})\metavariable{R}\bigr)$.
 \end{dc}
@@ -88,7 +88,7 @@ $\metavariable{x}$ be a letter. Then $\vdash\bigl((\forall\metavariable{x})\meta
 \end{align*}
 \end{proof}
 
-\begin{dc}\label{c27} \textup{(\textsc{Generalization})}
+\begin{dc}\label{c27}\textup{(\textsc{Generalization})}%
 If $\vdash\metavariable{R}$ and $\metavariable{x}$ is any letter, then
 $\vdash(\forall\metavariable{x})\metavariable{R}$.
 \end{dc}
@@ -105,7 +105,7 @@ the parameter. Generalization becomes vacuous, and we just obtain
 $\vdash\metavariable{R}$ in Bourbaki's system.
 \end{remark*}
 
-\begin{dc}\label{c28}
+\begin{dc}\label{c28}%
 $\vdash\neg(\forall\metavariable{x})\metavariable{R}\iff(\exists\metavariable{x})\neg\metavariable{R}$.
 \end{dc}
 

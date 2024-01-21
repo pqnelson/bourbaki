@@ -30,25 +30,25 @@ Hilbert and Ackermann.
 
 We will be painfully explicit in our proofs, so we introduce axioms for
 this syntactic sugar:
-\begin{syn}\label{unfold-implies}
+\begin{syn}\label{unfold-implies}%
 If $\vdash\metavariable{A}\implies\metavariable{B}$
 then $\vdash\neg\metavariable{A}\lor\metavariable{B}$.
 \end{syn}
 
-\begin{syn}\label{fold-implies}
+\begin{syn}\label{fold-implies}%
 If $\vdash\neg\metavariable{A}\lor\metavariable{B}$,
 then $\vdash\metavariable{A}\implies\metavariable{B}$.
 \end{syn}
 
-\begin{syn}\label{syn:tautology:implies-to-lor}
+\begin{syn}\label{syn:tautology:implies-to-lor}%
 $\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\metavariable{A}\lor\metavariable{B})$
 \end{syn}
 
-\begin{syn}\label{syn:tautology:lor-to-implies}
+\begin{syn}\label{syn:tautology:lor-to-implies}%
 $\vdash(\neg\metavariable{A}\lor\metavariable{B})\implies(\metavariable{A}\implies\metavariable{B})$
 \end{syn}
 
-\begin{theorem}\label{thm:explode-explicit}
+\begin{theorem}\label{thm:explode-explicit}%
 $\vdash\neg\metavariable{A}\implies(\metavariable{A}\implies\metavariable{B})$
 \end{theorem}
 
@@ -59,7 +59,7 @@ by \ref{axiom:s4}($\neg\metavariable{A}$, $\metavariable{B}$)
 by definition of implies.
 \end{pf}
 
-\begin{theorem}\label{thm:explode}
+\begin{theorem}\label{thm:explode}%
 If $\theory{T}$ is contradictory theory~(\S\ref{defn:contradictory-theory})
 [i.e., if $\vdash_{\theory{T}}\metavariable{A}$ and $\vdash_{\theory{T}}\neg\metavariable{A}$],
 then $\vdash_{\theory{T}}\metavariable{B}$ for any formula $\metavariable{B}$
@@ -80,7 +80,7 @@ If $\Gamma=\metavariable{A}_{1},\Gamma'$ is our set of assumptions, we
 can write $\Gamma\vdash\metavariable{A}_{1}$ and justify it ``by assumption''.
 However, theorems must have $\Gamma=\emptyset$.
 
-\begin{theorem}[Weakening]
+\begin{theorem}[Weakening]%
 If $\Gamma_{1}\subset\Gamma_{2}$ and if $\Gamma_{1}\vdash\metavariable{A}$,
 then we can infer $\Gamma_{2}\vdash\metavariable{A}$.
 \end{theorem}

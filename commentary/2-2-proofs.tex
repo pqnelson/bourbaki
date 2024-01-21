@@ -31,6 +31,21 @@ manner that every formula printed is either an axiom or follows from
 \textit{modus ponens} applied to previous theorems. (The modern
 terminology we'd use now would be a ``Turing machine''.)
 
+\begin{remark}
+In Bourbaki's \textit{Elements of Mathematics} series of books, the
+astute reader will recognize there are no ``Proof: \dots. $\Box$''
+environments, unlike modern mathematics texts. I suspect the reason is
+that their underlying philosophical view is that
+\emph{mathematics is a stream of theorems}. If so, then it is especially
+bewildering to modern readers, since Bourbaki's formal system (as we
+shall see) is a Hilbert system with one inference rule and 7 or 8 axiom
+schemas---i.e., their foundations are what we'd expect from Model
+theorists, not Proof theorists. This is all said with the benefit of
+hindsight and some 70 years of collective experience, which Bourbaki
+lacked. (Although it does appear that Bourbaki is just following Hilbert without
+thinking too much about it.)
+\end{remark}
+
 \begin{definition}
 A \define{Theorem} in $\theory{T}$ is a formula which appears in a proof
 in $\theory{T}$.
@@ -127,10 +142,9 @@ as inference rules.
 
 \begin{dc}\label{c1}%
 Let $\metavariable{A}$ and $\metavariable{B}$ be relations in a theory
-$\theory{T}$. If $\vdash_{\theory{T}}\metavariable{A}$ and
-$\vdash_{\theory{T}}\metavariable{A}\implies\metavariable{B}$ are
-theorems in $\theory{T}$, then $\vdash_{\theory{T}}\metavariable{B}$ is
-a theorem in $\theory{T}$.
+$\theory{T}$. If $\vdash_{\theory{T}}\metavariable{A}\implies\metavariable{B}$ 
+and $\vdash_{\theory{T}}\metavariable{A}$ are theorems in $\theory{T}$,
+then $\vdash_{\theory{T}}\metavariable{B}$ is a theorem in $\theory{T}$.
 \end{dc}
 
 \begin{remark*}
