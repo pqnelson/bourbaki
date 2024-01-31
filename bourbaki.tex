@@ -282,6 +282,7 @@
 \title{Bourbaki's Formal System in Haskell}
 \author{Alex Nelson}
 \date{January 7, 2024}
+\urladdr{https://github.com/pqnelson/bourbaki}
 \begin{document}
 \maketitle
 
@@ -519,20 +520,22 @@ This gives us enough information to define substitution for terms:
 \column{B}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{3}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{5}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{8}{@{}>{\hspre}c<{\hspost}@{}}%
-\column{8E}{@{}l@{}}%
-\column{12}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{15}{@{}>{\hspre}c<{\hspost}@{}}%
 \column{15E}{@{}l@{}}%
 \column{19}{@{}>{\hspre}l<{\hspost}@{}}%
-\column{21}{@{}>{\hspre}c<{\hspost}@{}}%
-\column{21E}{@{}l@{}}%
+\column{20}{@{}>{\hspre}c<{\hspost}@{}}%
+\column{20E}{@{}l@{}}%
+\column{21}{@{}>{\hspre}l<{\hspost}@{}}%
+\column{24}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{25}{@{}>{\hspre}l<{\hspost}@{}}%
 \column{E}{@{}>{\hspre}l<{\hspost}@{}}%
 \>[B]{}\mathbf{instance}\;\Conid{Subst}\;\Conid{Term}\;\mathbf{where}{}\<[E]%
 \\
 \>[B]{}\hsindent{3}{}\<[3]%
 \>[3]{}\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{t'}\mathrel{=}\mathbf{case}\;\Varid{t'}\;\mathbf{of}{}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}(\Conid{TBox}\;\anonymous \;\anonymous )\to \Varid{t'}{}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}(\Conid{TVar}\;\Varid{x}){}\<[15]%
@@ -545,17 +548,26 @@ This gives us enough information to define substitution for terms:
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
 \>[5]{}(\Conid{TSubst}\;\Varid{b}\;\Varid{x}\;\Varid{a}){}\<[21]%
-\>[21]{}\to {}\<[21E]%
+\>[21]{}\to {}\<[25]%
 \>[25]{}\mathbf{if}\;\Varid{x}\equiv \Varid{y}{}\<[E]%
 \\
-\>[25]{}\mathbf{then}\;(\Conid{TSubst}\;\Varid{b}\;\Varid{x}\;\Varid{a}){}\<[E]%
+\>[25]{}\mathbf{then}\;(\Conid{TSubst}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{b})\;\Varid{x}\;\Varid{a}){}\<[E]%
 \\
 \>[25]{}\mathbf{else}\;(\Conid{TSubst}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{b})\;\Varid{x}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{a})){}\<[E]%
 \\
 \>[3]{}\hsindent{2}{}\<[5]%
-\>[5]{}\anonymous {}\<[8]%
-\>[8]{}\to {}\<[8E]%
-\>[12]{}\Varid{t'}{}\<[E]%
+\>[5]{}(\Conid{TTau}\;\Varid{n}\;\Varid{x}\;\Varid{p})\to \mathbf{if}\;\Varid{x}\equiv \Varid{y}{}\<[E]%
+\\
+\>[5]{}\hsindent{16}{}\<[21]%
+\>[21]{}\mathbf{then}\;\Varid{t'}{}\<[E]%
+\\
+\>[5]{}\hsindent{16}{}\<[21]%
+\>[21]{}\mathbf{else}\;(\Conid{TSubst}\;\Varid{t}\;\Varid{y}\;\Varid{t'}){}\<[E]%
+\\
+\>[3]{}\hsindent{2}{}\<[5]%
+\>[5]{}(\Conid{TPair}\;\Varid{t1}\;\Varid{t2}){}\<[20]%
+\>[20]{}\to {}\<[20E]%
+\>[24]{}\Conid{TPair}\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{t1})\;(\Varid{subst}\;\Varid{y}\;\Varid{t}\;\Varid{t2}){}\<[E]%
 \ColumnHook
 \end{hscode}\resethooks
 

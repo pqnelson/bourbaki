@@ -24,6 +24,7 @@
 \title{Bourbaki's Formal System in Haskell}
 \author{Alex Nelson}
 \date{January 7, 2024}
+\urladdr{https://github.com/pqnelson/bourbaki}
 \begin{document}
 \maketitle
 
@@ -196,13 +197,17 @@ This gives us enough information to define substitution for terms:
 \begin{code}
 instance Subst Term where
   subst y t t' = case t' of
+    (TBox _ _) -> t'
     (TVar x)  ->  if x==y
                   then t
                   else t'
     (TSubst b x a)  ->  if x==y
-                        then (TSubst b x a)
+                        then (TSubst (subst y t b) x a)
                         else (TSubst (subst y t b) x (subst y t a))
-    _  ->  t'
+    (TTau n x p) -> if x==y
+                    then t'
+                    else (TSubst t y t')
+    (TPair t1 t2)  ->  TPair (subst y t t1) (subst y t t2)
 \end{code}
 
 When we work with relations, criteria of substitution CS5 from (I~\S1.2)
