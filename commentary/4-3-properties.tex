@@ -18,6 +18,19 @@ $\metavariable{T}$ be a term in $\theory{T}$, let $\metavariable{x}$ be
 a letter. Then $\vdash(\forall\metavariable{x})\metavariable{R}\implies(\metavariable{T}\mid\metavariable{x})\metavariable{R}$.
 \end{dc}
 
+\begin{pf}
+\item\label{step:c30:1}\Pf $\vdash(\metavariable{T}\mid\metavariable{x})\neg\metavariable{R}\implies(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\neg\metavariable{R}$
+by \ref{axiom:s5}($\neg\metavariable{R}$, $\metavariable{T}$, $\metavariable{x}$)
+\item\label{step:c30:2} $\vdash\neg(\metavariable{T}\mid\metavariable{x})\metavariable{R}\implies\neg(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}$
+by \ref{cs5}
+\item\label{step:c30:3} $\vdash(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}\implies(\metavariable{T}\mid\metavariable{x})\metavariable{R}$
+  by contrapositive of \ref{step:c30:2}
+\item\label{step:c30:4} $\vdash(\forall\metavariable{x})\metavariable{R}\implies(\tau_{\metavariable{x}}(\neg\metavariable{R})\mid\metavariable{x})\metavariable{R}$
+  by \ref{c26}($\metavariable{R}$, $\metavariable{x}$)
+\item\label{step:c30:5} $\vdash(\forall\metavariable{x})\metavariable{R}\implies(\metavariable{T}\mid\metavariable{x})\metavariable{R}$
+  by \ref{c6}(\ref{step:c30:4}, \ref{step:c30:3})
+\end{pf}
+
 \begin{dc}\label{c31}%
 Let $\metavariable{R}$ and $\metavariable{S}$ be relations in $\theory{T}$.
 Let $\metavariable{x}$ be a variable (i.e., a letter which is not a
@@ -29,6 +42,41 @@ constant in $\theory{T}$). Then:
 \item If $\vdash\metavariable{R}\iff\metavariable{S}$, then $\vdash(\exists\metavariable{x})\metavariable{R}\iff(\exists\metavariable{x})\metavariable{S}$
 \end{enumerate}
 \end{dc}
+Observe that (3) follows from (1), and (4) follows from (2). Therefore
+it suffices to prove only (1) and (2).
+\begin{enumerate}
+\item
+\begin{pf}
+\item\label{step:c31a:1}\Pf $\vdash\metavariable{R}\implies\metavariable{S}$
+by hypothesis
+\item\label{step:c31a:2} $(\forall\metavariable{x})\metavariable{R}\vdash(\forall\metavariable{x})\metavariable{R}\implies\metavariable{R}$
+by \ref{c30}
+\item\label{step:c31a:3} $(\forall\metavariable{x})\metavariable{R}\vdash(\forall\metavariable{x})\metavariable{R}$
+by assumption
+\item\label{step:c31a:4} $(\forall\metavariable{x})\metavariable{R}\vdash\metavariable{R}$
+by MP(\ref{step:c31a:2}, \ref{step:c31a:3})
+\item\label{step:c31a:5} $(\forall\metavariable{x})\metavariable{R}\vdash\metavariable{R}\implies\metavariable{S}$
+by weakening \ref{step:c31a:1}
+\item\label{step:c31a:6} $(\forall\metavariable{x})\metavariable{R}\vdash\metavariable{S}$
+by MP(\ref{step:c31a:5}, \ref{step:c31a:4})
+\item\label{step:c31a:7} $(\forall\metavariable{x})\metavariable{R}\vdash(\forall\metavariable{x})\metavariable{S}$
+by \ref{c27}(\ref{step:c31a:6}, $\metavariable{x}$) 
+\item\label{step:c31a:8} $\vdash(\forall\metavariable{x})\metavariable{R}\implies(\forall\metavariable{x})\metavariable{S}$
+by \ref{c14}(\ref{step:c31a:7})
+\end{pf}
+\item
+\begin{pf}
+\item\label{step:c31b:1} $\vdash\metavariable{R}\implies\metavariable{S}$
+by hypothesis
+\item\label{step:c31b:2} $\vdash\neg\metavariable{S}\implies\neg\metavariable{R}$
+by contrapositive of \ref{step:c31b:1}
+\item\label{step:c31b:3} $\vdash(\forall\metavariable{x})\neg\metavariable{S}\implies(\forall\metavariable{x})\neg\metavariable{R}$
+by applying (1) of this theorem to \ref{step:c31b:2}
+\item\label{step:c31b:4} $\vdash\neg(\forall\metavariable{x})\neg\metavariable{R}\implies\neg(\forall\metavariable{x})\neg\metavariable{S}$
+by contrapositive of \ref{step:c31b:3}, and using Bourbaki's definition
+of $\forall$.
+\end{pf}
+\end{enumerate}
 
 \subsubsection{Addendum} Observe that $\vdash(\forall\metavariable{x})\metavariable{R}\implies\metavariable{R}$
 by \ref{c30}($\metavariable{R}$, $\metavariable{x}$, $\metavariable{x}$).
@@ -40,6 +88,35 @@ Let $\metavariable{R}$ and $\metavariable{S}$ be relations in $\theory{T}$.
 \item $\vdash(\exists\metavariable{x})(\metavariable{R}\lor\metavariable{S})\iff\Bigl(\bigl((\exists\metavariable{x})\metavariable{R}\bigr)\lor\bigl((\exists\metavariable{x})\metavariable{S}\bigr)\Bigr)$
 \end{enumerate}
 \end{dc}
+It suffices to prove (1), since (2) follows from (1) and \ref{c29}.
+\begin{pf}
+\item\label{step:c32:1}\Pf $(\forall\metavariable{x})(\metavariable{R}\land\metavariable{S})\vdash\metavariable{R}\land\metavariable{S}$
+by \ref{c30}($\metavariable{R}$, $\metavariable{x}$, $\metavariable{x}$)
+\item\label{step:c32:2} $(\forall\metavariable{x})(\metavariable{R}\land\metavariable{S})\vdash\metavariable{R}$
+\item\label{step:c32:3} $(\forall\metavariable{x})(\metavariable{R}\land\metavariable{S})\vdash(\forall\metavariable{x})\metavariable{R}$
+\item\label{step:c32:4} $(\forall\metavariable{x})(\metavariable{R}\land\metavariable{S})\vdash\metavariable{S}$
+\item\label{step:c32:5} $(\forall\metavariable{x})(\metavariable{R}\land\metavariable{S})\vdash(\forall\metavariable{x})\metavariable{S}$
+\item\label{step:c32:6} $(\forall\metavariable{x})(\metavariable{R}\land\metavariable{S})\vdash((\forall\metavariable{x})\metavariable{R})\land((\forall\metavariable{x})\metavariable{S})$
+\item\label{step:c32:7} $\vdash(\forall\metavariable{x})(\metavariable{R}\land\metavariable{S})\implies((\forall\metavariable{x})\metavariable{R})\land((\forall\metavariable{x})\metavariable{S})$
+by \ref{c14}(\ref{step:c32:6})
+\item\label{step:c32:8} $(\forall\metavariable{x})\metavariable{R},(\forall\metavariable{x})\metavariable{S}\vdash(\forall\metavariable{x})\metavariable{R}$
+by assumption
+\item\label{step:c32:9} $(\forall\metavariable{x})\metavariable{R},(\forall\metavariable{x})\metavariable{S}\vdash(\forall\metavariable{x})\metavariable{R}\implies\metavariable{R}$
+by \ref{c30}($\metavariable{R}$, $\metavariable{x}$, $\metavariable{x}$)
+\item\label{step:c32:10} $(\forall\metavariable{x})\metavariable{R},(\forall\metavariable{x})\metavariable{S}\vdash\metavariable{R}$
+by MP(\ref{step:c32:9}, \ref{step:c32:8})
+\item\label{step:c32:11} $(\forall\metavariable{x})\metavariable{R},(\forall\metavariable{x})\metavariable{S}\vdash(\forall\metavariable{x})\metavariable{S}$
+by assumption
+\item\label{step:c32:12} $(\forall\metavariable{x})\metavariable{R},(\forall\metavariable{x})\metavariable{S}\vdash(\forall\metavariable{x})\metavariable{S}\implies\metavariable{S}$
+by \ref{c30}($\metavariable{S}$, $\metavariable{x}$, $\metavariable{x}$)
+\item\label{step:c32:13} $(\forall\metavariable{x})\metavariable{R},(\forall\metavariable{x})\metavariable{S}\vdash\metavariable{S}$
+by MP(\ref{step:c32:12}, \ref{step:c32:11})
+\item\label{step:c32:14} $(\forall\metavariable{x})\metavariable{R},(\forall\metavariable{x})\metavariable{S}\vdash\metavariable{R}\land\metavariable{S}$
+by \ref{c20}(\ref{step:c32:10}, \ref{step:c32:13})
+\item\label{step:c32:15} $(\forall\metavariable{x})\metavariable{R},(\forall\metavariable{x})\metavariable{S}\vdash(\forall\metavariable{x})(\metavariable{R}\land\metavariable{S})$
+by \ref{c27}(\ref{step:c32:14}, $\metavariable{x}$)
+\item\label{step:c32:16} $\vdash(\forall\metavariable{x})\metavariable{R}\land(\forall\metavariable{x})\metavariable{S}\implies(\forall\metavariable{x})(\metavariable{R}\land\metavariable{S})$
+\end{pf}
 
 \begin{dc}\label{c33}%
 Let $\metavariable{R}$ and $\metavariable{S}$ be relations in $\theory{T}$.
@@ -52,6 +129,7 @@ appear in $\metavariable{R}$.
 Note the use of disjunction and conjunction is paired with opposite
 quantifiers as found in \ref{c32}.
 \end{dc}
+Observe (2) follows from (1) and \ref{c29}.
 
 \begin{dc}\label{c34}%
 Let $\metavariable{R}$ be a relation in $\theory{T}$.

@@ -42,7 +42,7 @@ If $\vdash\metavariable{A}$ and $\vdash\metavariable{B}$, then $\vdash\metavaria
 \end{dc}
 I formalize Bourbaki's proof, there is almost certainly a more optimal proof.
 \begin{pf}
-\item\label{step:c20:1} $\vdash\metavariable{A}$ by hypothesis
+\item\label{step:c20:1}\Pf $\vdash\metavariable{A}$ by hypothesis
 \item\label{step:c20:2} $\vdash\metavariable{B}$ by hypothesis
 \item\label{step:c20:3} $\neg(\metavariable{A}\land\metavariable{B})\vdash\neg\neg((\neg\metavariable{A})\lor(\neg\metavariable{B}))$
 by assumption, definition of conjunction
@@ -76,7 +76,7 @@ $\metavariable{A}$ and $\metavariable{B}$:
 \begin{enumerate}
 \item 
 \begin{pf}
-\item\label{step:c21:1} $\vdash\phantom{(}(\neg\metavariable{A})\implies\neg(\metavariable{A}\land\metavariable{B})$
+\item\label{step:c21:1}\Pf $\vdash\phantom{(}(\neg\metavariable{A})\implies\neg(\metavariable{A}\land\metavariable{B})$
 by \ref{axiom:s3}($\neg\metavariable{A}$, $\neg\metavariable{B}$),
 definition of conjunction
 \item\label{step:c21:2} $\vdash((\neg\metavariable{A})\implies\neg(\metavariable{A}\land\metavariable{B}))\implies(\metavariable{A}\land\metavariable{B}\implies\metavariable{A})$

@@ -36,7 +36,7 @@ then $\vdash\metavariable{A}\implies\metavariable{C}$.
 \end{lemma}
 
 \begin{pf}
-\item\label{step:3-3-1:1} $\vdash\metavariable{A}\implies(\metavariable{B}\implies\metavariable{C})$
+\item\label{step:3-3-1:1}\Pf $\vdash\metavariable{A}\implies(\metavariable{B}\implies\metavariable{C})$
   by hypothesis
 \item\label{step:3-3-1:2} $\vdash\metavariable{A}\implies\metavariable{B}$
   by hypothesis
@@ -102,7 +102,7 @@ then $\vdash_{\theory{T}}\metavariable{A}$.
 \end{dc}
 
 \begin{pf}
-\item\label{step:c15:1} $\neg\metavariable{A}\vdash\metavariable{B}$
+\item\label{step:c15:1}\Pf $\neg\metavariable{A}\vdash\metavariable{B}$
 by hypothesis
 \item\label{step:c15:2} $\neg\metavariable{A}\vdash\neg\metavariable{B}$
 by hypothesis
@@ -136,7 +136,7 @@ $\vdash(\neg\neg\metavariable{A})\implies\metavariable{A}$
 \end{dc}
 
 \begin{pf}
-\item\label{step:c16:1} $\neg\metavariable{A},\neg\neg\metavariable{A}\vdash\neg\metavariable{A}$
+\item\label{step:c16:1}\Pf $\neg\metavariable{A},\neg\neg\metavariable{A}\vdash\neg\metavariable{A}$
 by assumption
 \item\label{step:c16:2} $\neg\metavariable{A},\neg\neg\metavariable{A}\vdash\neg(\neg\metavariable{A})$
 by assumption
@@ -151,7 +151,7 @@ $\vdash((\neg\metavariable{B})\implies(\neg\metavariable{A}))\implies(\metavaria
 \end{dc}
 
 \begin{pf}
-\item\label{step:c17:1} $\neg\metavariable{B},(\neg\metavariable{B})\implies(\neg\metavariable{A}),\metavariable{A}\vdash\neg\metavariable{B}$
+\item\label{step:c17:1}\Pf $\neg\metavariable{B},(\neg\metavariable{B})\implies(\neg\metavariable{A}),\metavariable{A}\vdash\neg\metavariable{B}$
 by assumption
 \item\label{step:c17:2} $\neg\metavariable{B},(\neg\metavariable{B})\implies(\neg\metavariable{A}),\metavariable{A}\vdash(\neg\metavariable{B})\implies(\neg\metavariable{A})$
 by assumption
@@ -176,7 +176,7 @@ then $\vdash\metavariable{C}$.
 \end{dc}
 (Bourbaki's proof is thrice as long, here's an optimized proof)
 \begin{pf}
-\item\label{c18:step:1} $\vdash\metavariable{A}\lor\metavariable{B}$ by hypothesis
+\item\label{c18:step:1}\Pf $\vdash\metavariable{A}\lor\metavariable{B}$ by hypothesis
 \item\label{c18:step:2} $\vdash\metavariable{A}\implies\metavariable{C}$ by hypothesis
 \item\label{c18:step:3} $\vdash\metavariable{B}\implies\metavariable{C}$ by hypothesis
 \item\label{c18:step:4} $\vdash(\metavariable{A}\lor\metavariable{B})\implies\metavariable{C}$
@@ -208,7 +208,7 @@ $\vdash_{\theory{T}}\metavariable{B}$ is a theorem in $\theory{T}$.
 \end{dc}
 
 \begin{pf}
-\item\label{step:c19:1} $\vdash_{\theory{T}'}\metavariable{B}$ by hypothesis
+\item\label{step:c19:1}\Pf $\vdash_{\theory{T}'}\metavariable{B}$ by hypothesis
 \item\label{step:c19:2} $\metavariable{A}\vdash_{\theory{T}}\metavariable{B}$
 \item\label{step:c19:3} $\vdash\metavariable{A}\implies\metavariable{B}$
 by \ref{c14}(\ref{step:c19:2})

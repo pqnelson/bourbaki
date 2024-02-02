@@ -1,3 +1,4 @@
+\usepackage{marginnote}
 \usepackage{enumitem}
 \usepackage{amsmath,amssymb,amsthm}
 \usepackage{mathrsfs}
@@ -97,5 +98,16 @@
 \def\sect#1{\leavevmode\vskip .7\linespacing\@plus\linespacing
   {\normalfont\scshape\centering#1\par}
   \vskip .5\linespacing}
+
+% so that marginpar is always on the left-hand side
+\reversemarginpar
+\@mparswitchfalse%
+
+% When starting a proof (or multiple proofs), this will write "Pf:"
+% into the left-margin
+\newcommand{\Pf}{% Print "Pf:"
+  \leavevmode\marginpar{\makebox[\marginparwidth][r]{Pf:}}\ignorespaces}
+
+
 
 \endinput

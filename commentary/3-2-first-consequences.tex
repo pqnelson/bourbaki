@@ -6,7 +6,7 @@ then $\vdash\metavariable{A}\implies\metavariable{C}$.
 \end{dc}
 
 \begin{pf}
-\item\label{dc6:1} $\vdash(\metavariable{A}\implies\metavariable{B})$
+\item\label{dc6:1}\Pf $\vdash(\metavariable{A}\implies\metavariable{B})$
   by hypothesis
 \item\label{dc6:2} $\vdash(\metavariable{B}\implies\metavariable{C})$
   by hypothesis
@@ -25,7 +25,7 @@ $\vdash\metavariable{B}\implies(\metavariable{A}\lor\metavariable{B})$.
 \end{dc}
 
 \begin{pf}
-\item\label{dc7:1} $\vdash\metavariable{B}\implies(\metavariable{B}\lor\metavariable{A})$
+\item\label{dc7:1}\Pf $\vdash\metavariable{B}\implies(\metavariable{B}\lor\metavariable{A})$
   by $\ref{axiom:s2}(\metavariable{B},\metavariable{A})$
 \item\label{dc7:2} $\vdash(\metavariable{B}\lor\metavariable{A})\implies(\metavariable{A}\lor\metavariable{B})$
   by $\ref{axiom:s3}(\metavariable{B},\metavariable{A})$
@@ -38,7 +38,7 @@ $\vdash\metavariable{A}\implies\metavariable{A}$
 \end{dc}
 
 \begin{pf}
-\item\label{dc8:1} $\vdash\metavariable{A}\implies(\metavariable{A}\lor\metavariable{A})$
+\item\label{dc8:1}\Pf $\vdash\metavariable{A}\implies(\metavariable{A}\lor\metavariable{A})$
   by \ref{axiom:s2}($\metavariable{A}$, $\metavariable{A}$)
 \item\label{dc8:2} $\vdash(\metavariable{A}\lor\metavariable{A})\implies\metavariable{A}$
   by \ref{axiom:s1}($\metavariable{A}$)
@@ -52,7 +52,7 @@ we have $\vdash\metavariable{A}\implies\metavariable{B}$.
 \end{dc}
 
 \begin{pf}
-\item\label{dc9:1} $\vdash\metavariable{B}$ by hypothesis
+\item\label{dc9:1}\Pf $\vdash\metavariable{B}$ by hypothesis
 \item\label{dc9:2} $\vdash\metavariable{B}\implies(\neg\metavariable{A}\lor\metavariable{B})$
   by \ref{c7}($\neg{\metavariable{A}}$, $\metavariable{B}$)
 \item\label{dc9:3} $\vdash\neg\metavariable{A}\lor\metavariable{B}$ by
@@ -64,7 +64,7 @@ we have $\vdash\metavariable{A}\implies\metavariable{B}$.
 $\vdash\metavariable{A}\lor\neg\metavariable{A}$
 \end{dc}
 \begin{pf}
-\item\label{dc10:1} $\vdash\metavariable{A}\implies\metavariable{A}$
+\item\label{dc10:1}\Pf $\vdash\metavariable{A}\implies\metavariable{A}$
   by \ref{c8}($\metavariable{A}$)
 \item\label{dc10:2} $\vdash\neg\metavariable{A}\lor\metavariable{A}$
   by \ref{unfold-implies}(\ref{dc10:1})
@@ -79,7 +79,7 @@ $\vdash\metavariable{A}\implies(\neg\neg\metavariable{A})$
 \end{dc}
 
 \begin{pf}
-\item\label{dc11:1} $\vdash(\neg\metavariable{A})\lor(\neg\neg\metavariable{A})$
+\item\label{dc11:1}\Pf $\vdash(\neg\metavariable{A})\lor(\neg\neg\metavariable{A})$
   by \ref{c10}($\metavariable{A}$)
 \item $\vdash\metavariable{A}\implies\neg\neg\metavariable{A}$
   by \ref{fold-implies}(\ref{dc11:1})
@@ -90,7 +90,7 @@ $\vdash(\metavariable{A}\implies\metavariable{B})\implies((\neg\metavariable{B})
 \end{dc}
 
 \begin{pf}
-\item\label{dc12:1} $\vdash\metavariable{B}\implies\neg\neg\metavariable{B}$
+\item\label{dc12:1}\Pf $\vdash\metavariable{B}\implies\neg\neg\metavariable{B}$
   by \ref{c11}($\metavariable{B}$)
 \item\label{dc12:2} $\vdash(\metavariable{B}\implies\neg\neg\metavariable{B})\implies((\neg\metavariable{A}\lor\metavariable{B})\implies(\neg\metavariable{A}\lor\neg\neg\metavariable{B}))$
   by \ref{axiom:s4}($\metavariable{B}$, $\neg\neg\metavariable{B}$, $\neg\metavariable{A}$)
@@ -116,7 +116,7 @@ then $\vdash(\metavariable{B}\implies\metavariable{C})\implies(\metavariable{A}\
 \end{dc}
 
 \begin{pf}
-\item\label{dc13:1} $\vdash\metavariable{A}\implies\metavariable{B}$ by hypothesis
+\item\label{dc13:1}\Pf $\vdash\metavariable{A}\implies\metavariable{B}$ by hypothesis
 \item\label{dc13:2} $\vdash(\metavariable{A}\implies\metavariable{B})\implies(\neg\metavariable{B}\implies\neg\metavariable{A})$
   by \ref{c12}($\metavariable{A}$, $\metavariable{B}$)
 \item\label{dc13:3} $\vdash\neg\metavariable{B}\implies\neg\metavariable{A}$
@@ -142,7 +142,7 @@ If $\vdash\metavariable{A}\implies\metavariable{B}$, then $\vdash\metavariable{A
 \end{theorem}
 
 \begin{pf}
-\item\label{step:3-2-1:1} $\vdash\metavariable{A}\implies\metavariable{B}$
+\item\label{step:3-2-1:1}\Pf $\vdash\metavariable{A}\implies\metavariable{B}$
   by hypothesis
 \item\label{step:3-2-1:2} $\vdash(\metavariable{A}\implies\metavariable{B})\implies((\metavariable{B}\lor\metavariable{A})\implies(\metavariable{B}\lor\metavariable{B}))$
 by \ref{axiom:s4}($\metavariable{A}$, $\metavariable{B}$, $\metavariable{B}$)
@@ -165,7 +165,7 @@ then $\vdash\metavariable{A}\lor\metavariable{B}\implies\metavariable{C}$.
 \end{theorem}
 
 \begin{pf}
-\item\label{step:3-2-2:1} $\vdash\metavariable{A}\implies\metavariable{C}$
+\item\label{step:3-2-2:1}\Pf $\vdash\metavariable{A}\implies\metavariable{C}$
   by hypothesis
 \item\label{step:3-2-2:2} $\vdash\metavariable{B}\implies\metavariable{C}$
   by hypothesis
