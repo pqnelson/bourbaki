@@ -6,7 +6,12 @@ a fragment of Bourbaki's formal system. It is what we would now call
 
 \begin{definition}
 A \define{Logical Theory} is a theory $\theory{T}$ which includes the
-following four schemes:
+following four schemes\footnote{These correspond to the following
+axioms in Russell and Whitehead's \emph{Principia}:
+*1.2 ``Taut'' (principle of tautology),
+*1.3 ``Add'' (principle of addition),
+*1.4 ``Perm'' (principle of permutation),
+*1.6 ``Sum'' (principle of summation).}:
 \begin{enumerate}[label=(S\arabic*),ref={S\arabic*}]
 \item\label{axiom:s1} $(\metavariable{A}\lor\metavariable{A})\implies\metavariable{A}$
 \item\label{axiom:s2} $\metavariable{A}\implies(\metavariable{A}\lor\metavariable{B})$
@@ -20,7 +25,8 @@ are formulas in the theory.
 \subsubsection{Russell--Bernays axioms}
 These axioms are precisely those used by Russell and Whitehead's
 \textit{Principia Mathematica}, and simplified by Paul
-Bernays~\cite{bernays1926}. Originally Russell and Whitehead had 5
+Bernays in his habilitation thesis in 1918 later
+published~\cite{bernays1926}. Originally Russell and Whitehead had 5
 axioms, but Bernays proved one of them was redundant.
 Recall (\S\ref{subsec:1-1:definitions:abbreviating-symbols})
 Bourbaki defined $\metavariable{A}\implies\metavariable{B}$ as an

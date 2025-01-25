@@ -81,6 +81,27 @@ Recall (\S\ref{subsec:2-2:proofs}) there are three possible cases:
 \end{description}
 \end{proof}
 
+\subsubsection{Trouble with \ref{c14}}
+There are difficulties with \ref{c14} as presented and proven: it's a
+metatheorem. We're doing induction on the proofs! So we're stepping
+``outside'' of Bourbaki's system, which they seem to not realize.
+
+What happens in practice nowadays is that we construct a calculus of natural
+deduction with ``sequents'' $\Gamma\longrightarrow\metavariable{B}$
+where $\Gamma=\metavariable{A}_{1},\dots,\metavariable{A}_{n}$ and
+``compile'' this to theorems
+$\vdash\metavariable{A}_{1}\land\cdots\land\metavariable{A}_{n}\implies\metavariable{B}$. We
+then implement the natural deduction inference rules using these
+sequents, and showing they compile properly to theorems, which lets us
+reason\dots naturally.
+
+Bourbaki offers a ``kludge'' with their usage of theories $\mathcal{T}$
+parametrizing their judgements $\vdash_{\mathcal{T}}$. Then writing
+$\mathcal{T}\cup\{\metavariable{A}\}$ for temporarily extending
+$\mathcal{T}$ to include $\metavariable{A}$ as an axiom, they take the
+deduction theorem to be: If
+$\vdash_{\mathcal{T}\cup\{\metavariable{A}\}}\metavariable{B}$, then $\vdash_{\mathcal{T}}\metavariable{A}\implies\metavariable{B}$.
+
 \subsubsection{Proof step}
 Bourbaki tells us that, in practice, we see this occur in the proof step
 ``Suppose $\metavariable{A}$ [is true].'' Then we just need to prove
@@ -228,3 +249,4 @@ a ``theorem of legitimation'', which is necessary to prove for us to use
 the method of auxiliary constant [i.e., auxiliary parameter].
 Really, we will see (\S\ref{subsubsec:4-1:existence-thms}) that it
 suffices to use an existence theorem.
+
